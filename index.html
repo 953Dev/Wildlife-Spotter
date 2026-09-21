@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-  :root {
+  :root{
     --common:#4caf50;--uncommon:#2196f3;--rare:#9c27b0;--very-rare:#ff9800;--legendary:#f44336;
     --bg:#0d1117;--surface:#161b22;--surface2:#21262d;--border:#30363d;--text:#e6edf3;--text-muted:#8b949e;--accent:#238636;
   }
@@ -34,14 +34,19 @@
   .filter-btns button{background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;transition:all .2s;}
   .filter-btns button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
 
-  /* ── FLIP CARDS ── */
+  /* PHOTO LOADING BANNER */
+  #photoBanner{background:#1a2a3a;border:1px solid #1f6feb;border-radius:8px;padding:10px 14px;font-size:12px;color:#79c0ff;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  #photoBanner .spinner{width:14px;height:14px;border:2px solid #1f6feb;border-top-color:#79c0ff;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* FLIP CARDS */
   .species-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;}
   .flip-card-outer{perspective:900px;height:230px;cursor:pointer;}
   .flip-card-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 0.45s cubic-bezier(.4,0,.2,1);border-radius:10px;}
   .flip-card-outer.flipped .flip-card-inner{transform:rotateY(180deg);}
   .flip-card-front,.flip-card-back{position:absolute;inset:0;border-radius:10px;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;border:1px solid var(--border);}
 
-  .flip-card-front{background:var(--surface);display:flex;flex-direction:column;padding:14px;transition:border-color .2s;}
+  .flip-card-front{background:var(--surface);display:flex;flex-direction:column;padding:14px;}
   .flip-card-outer:hover .flip-card-front,.flip-card-outer:hover .flip-card-back{border-color:#3a9a5c;}
   .flip-card-outer.spotted .flip-card-front{border-color:var(--accent);background:#1a2f1a;}
   .flip-card-outer.spotted .flip-card-back{border-color:var(--accent);}
@@ -54,38 +59,34 @@
   .spotted-check{position:absolute;top:8px;right:8px;font-size:16px;}
   .spot-count{font-size:10px;color:var(--text-muted);margin-top:4px;}
 
-  .flip-card-back{transform:rotateY(180deg);background:#000;display:flex;flex-direction:column;}
-  .flip-card-back img{width:100%;flex:1;object-fit:cover;object-position:center;min-height:0;}
+  .flip-card-back{transform:rotateY(180deg);background:#111;display:flex;flex-direction:column;}
+  .flip-card-back .card-photo{width:100%;flex:1;object-fit:cover;object-position:center;min-height:0;display:block;}
+  .photo-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;flex:1;background:var(--surface2);font-size:12px;color:var(--text-muted);}
+  .photo-loading .spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
   .no-photo-back{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;flex:1;background:var(--surface2);font-size:12px;color:var(--text-muted);}
   .no-photo-back span{font-size:40px;}
-  .photo-credit{background:rgba(0,0,0,.75);font-size:9px;color:#aaa;padding:3px 8px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;}
-  .photo-footer{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:rgba(0,0,0,.85);flex-shrink:0;}
+  .photo-credit{background:rgba(0,0,0,.8);font-size:9px;color:#aaa;padding:3px 8px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;}
+  .photo-footer{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:rgba(0,0,0,.9);flex-shrink:0;}
   .log-btn{background:var(--accent);border:none;color:#fff;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;cursor:pointer;}
   .log-btn:hover{background:#2ea043;}
   .back-hint{font-size:10px;color:#888;}
 
   .rarity-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;color:#fff;}
   .pts-badge{font-size:12px;font-weight:700;}
-  .r-common{background:var(--common);}
-  .r-uncommon{background:var(--uncommon);}
-  .r-rare{background:var(--rare);}
-  .r-very-rare{background:var(--very-rare);}
-  .r-legendary{background:var(--legendary);}
-  .pts-common{color:var(--common);}
-  .pts-uncommon{color:var(--uncommon);}
-  .pts-rare{color:var(--rare);}
-  .pts-very-rare{color:var(--very-rare);}
-  .pts-legendary{color:var(--legendary);}
+  .r-common{background:var(--common);} .r-uncommon{background:var(--uncommon);}
+  .r-rare{background:var(--rare);} .r-very-rare{background:var(--very-rare);} .r-legendary{background:var(--legendary);}
+  .pts-common{color:var(--common);} .pts-uncommon{color:var(--uncommon);}
+  .pts-rare{color:var(--rare);} .pts-very-rare{color:var(--very-rare);} .pts-legendary{color:var(--legendary);}
 
   /* MODAL */
-  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center;padding:16px;}
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;padding:16px;}
   .modal-overlay.open{display:flex;}
   .modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;}
   .modal h2{font-size:18px;margin-bottom:4px;}
   .modal .sci{font-style:italic;color:var(--text-muted);font-size:13px;margin-bottom:12px;}
   .modal label{display:block;font-size:13px;color:var(--text-muted);margin-bottom:4px;}
   .modal textarea{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:8px;font-size:14px;margin-bottom:12px;height:70px;resize:vertical;font-family:inherit;}
-  .modal-ref-photo{width:100%;height:150px;object-fit:cover;border-radius:8px;margin-bottom:6px;display:block;}
+  .modal-ref-photo{width:100%;height:150px;object-fit:cover;border-radius:8px;margin-bottom:6px;display:none;}
   .modal-ref-credit{font-size:10px;color:var(--text-muted);margin-bottom:12px;text-align:center;}
   .user-photo-preview{width:100%;max-height:140px;object-fit:cover;border-radius:8px;margin-bottom:12px;display:none;}
   .file-upload-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;width:100%;margin-bottom:12px;text-align:center;display:block;}
@@ -94,16 +95,14 @@
   .dynamic-info{background:#1a2a3a;border:1px solid #1f6feb;border-radius:8px;padding:10px 14px;font-size:12px;color:#79c0ff;margin-bottom:12px;}
   .btn-row{display:flex;gap:8px;margin-top:4px;}
   .btn{padding:10px 18px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:600;transition:all .2s;}
-  .btn-primary{background:var(--accent);color:#fff;flex:1;}
-  .btn-primary:hover{background:#2ea043;}
+  .btn-primary{background:var(--accent);color:#fff;flex:1;} .btn-primary:hover{background:#2ea043;}
   .btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
 
   /* JOURNAL */
   .journal-entry{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;display:flex;gap:12px;}
   .j-thumb{width:64px;height:64px;object-fit:cover;border-radius:8px;flex-shrink:0;}
   .j-emoji{width:64px;height:64px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;}
-  .j-name{font-weight:600;font-size:15px;}
-  .j-time{font-size:12px;color:var(--text-muted);}
+  .j-name{font-weight:600;font-size:15px;} .j-time{font-size:12px;color:var(--text-muted);}
   .j-coords{font-size:12px;color:#58a6ff;cursor:pointer;}
   .j-notes{font-size:12px;color:var(--text-muted);margin-top:4px;font-style:italic;}
   .j-pts{font-size:13px;font-weight:700;margin-top:4px;}
@@ -160,8 +159,9 @@
 </nav>
 
 <div id="tab-spot" class="tab active">
-  <div style="background:#1a2a3a;border:1px solid #1f6feb;border-radius:8px;padding:10px 14px;font-size:12px;color:#79c0ff;margin-bottom:14px;">
-    💡 <strong>Tap any card</strong> to flip and see a real photo. Tap <strong>Log Sighting</strong> on the photo side to record it.
+  <div id="photoBanner">
+    <div class="spinner"></div>
+    <span id="photoBannerText">Loading verified wildlife photos from iNaturalist…</span>
   </div>
   <div class="controls">
     <input type="text" id="searchInput" placeholder="Search species..." oninput="renderSpecies()">
@@ -206,7 +206,7 @@
   <div class="stat-card"><h3>Progress by Rarity Tier</h3><div id="tierProgress" style="margin-top:12px;"></div></div>
   <div class="stat-card" style="margin-top:12px;">
     <h3>Dynamic Scoring</h3>
-    <p style="font-size:13px;color:var(--text-muted);margin-top:8px;line-height:1.6;">Each species starts at full value. Every sighting logged drops its value by 10% (floor: 20% of max). Be the first to spot rare species for maximum points!</p>
+    <p style="font-size:13px;color:var(--text-muted);margin-top:8px;line-height:1.6;">Each species starts at full value. Every sighting logged drops its value by 10% (floor: 20% of max). Be first to spot rare species for maximum points!</p>
   </div>
   <div style="margin-top:16px;"><button class="danger-btn" onclick="confirmReset()">🗑️ Reset All Data</button></div>
 </div>
@@ -218,7 +218,7 @@
   <div class="modal">
     <h2 id="modalTitle"></h2>
     <div class="sci" id="modalSci"></div>
-    <img id="modalRefPhoto" class="modal-ref-photo" alt="Reference photo" onerror="this.style.display='none';document.getElementById('modalRefCredit').style.display='none'">
+    <img id="modalRefPhoto" class="modal-ref-photo" alt="Reference photo">
     <div class="modal-ref-credit" id="modalRefCredit"></div>
     <div class="dynamic-info" id="modalDynInfo"></div>
     <img id="userPhotoPreview" class="user-photo-preview" alt="Your photo">
@@ -239,172 +239,124 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════════════════════════
-// SPECIES — Pixabay CDN photos (hotlink-friendly, free, no attribution required)
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
+// SPECIES — iNaturalist taxon IDs (verified, correct animals)
+// Photos fetched live from iNaturalist API using these IDs
+// ═══════════════════════════════════════════════════════
 const SPECIES = [
-  // ── BIRDS ──
-  {id:'kookaburra',name:'Laughing Kookaburra',sci:'Dacelo novaeguineae',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5,
-   photo:'https://cdn.pixabay.com/photo/2023/08/20/11/30/laughing-kookaburra-8202208_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'galah',name:'Galah',sci:'Eolophus roseicapilla',cat:'bird',emoji:'🦜',rarity:'common',maxPts:5,
-   photo:'https://cdn.pixabay.com/photo/2020/03/06/06/07/galah-4906403_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'magpie',name:'Australian Magpie',sci:'Gymnorhina tibicen',cat:'bird',emoji:'🐦‍⬛',rarity:'common',maxPts:5,
-   photo:'https://cdn.pixabay.com/photo/2018/10/01/09/21/australian-magpie-3715048_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'willy_wagtail',name:'Willie Wagtail',sci:'Rhipidura leucophrys',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5,
-   photo:'https://cdn.pixabay.com/photo/2019/10/12/10/49/willie-wagtail-4544413_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'rainbow_lorikeet',name:'Rainbow Lorikeet',sci:'Trichoglossus moluccanus',cat:'bird',emoji:'🦜',rarity:'common',maxPts:5,
-   photo:'https://cdn.pixabay.com/photo/2017/02/16/07/04/rainbow-lorikeet-2070899_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'corella',name:'Little Corella',sci:'Cacatua sanguinea',cat:'bird',emoji:'🦅',rarity:'common',maxPts:5,
-   photo:'https://cdn.pixabay.com/photo/2018/02/04/18/24/little-corella-3129913_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'superb_fairy',name:'Superb Fairy-wren',sci:'Malurus cyaneus',cat:'bird',emoji:'🐦',rarity:'uncommon',maxPts:15,
-   photo:'https://cdn.pixabay.com/photo/2019/09/07/07/58/superb-fairy-wren-4458727_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'adelaide_rosella',name:'Adelaide Rosella',sci:'Platycercus elegans adelaidae',cat:'bird',emoji:'🦜',rarity:'uncommon',maxPts:15,
-   photo:'https://cdn.pixabay.com/photo/2017/10/19/09/13/crimson-rosella-2866802_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'southern_emu_wren',name:'Southern Emu-wren',sci:'Stipiturus malachurus',cat:'bird',emoji:'🐦',rarity:'uncommon',maxPts:15,
-   photo:'https://cdn.pixabay.com/photo/2020/05/25/08/39/bird-5217441_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'osprey',name:'Osprey',sci:'Pandion haliaetus',cat:'bird',emoji:'🦅',rarity:'uncommon',maxPts:15,
-   photo:'https://cdn.pixabay.com/photo/2018/04/03/15/46/osprey-3287068_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'brolga',name:'Brolga',sci:'Antigone rubicunda',cat:'bird',emoji:'🦢',rarity:'rare',maxPts:40,
-   photo:'https://cdn.pixabay.com/photo/2020/10/28/09/42/brolga-5693413_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'regent_parrot',name:'Regent Parrot',sci:'Polytelis anthopeplus',cat:'bird',emoji:'🦜',rarity:'rare',maxPts:40,
-   photo:'https://cdn.pixabay.com/photo/2017/09/25/22/38/regent-parrot-2786388_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'malleefowl',name:'Malleefowl',sci:'Leipoa ocellata',cat:'bird',emoji:'🐔',rarity:'rare',maxPts:40,
-   photo:'https://cdn.pixabay.com/photo/2020/05/17/01/34/malleefowl-5178574_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'plains_wanderer',name:'Plains-wanderer',sci:'Pedionomus torquatus',cat:'bird',emoji:'🐦',rarity:'very-rare',maxPts:80,
-   photo:'https://cdn.pixabay.com/photo/2016/11/29/06/17/bird-1867614_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'night_parrot',name:'Night Parrot',sci:'Pezoporus occidentalis',cat:'bird',emoji:'🦜',rarity:'legendary',maxPts:200,
-   photo:'https://cdn.pixabay.com/photo/2017/02/07/16/47/parrot-2046453_640.jpg',credit:'Pixabay / Free License'},
-
-  // ── MAMMALS ──
-  {id:'kangaroo',name:'Red Kangaroo',sci:'Macropus rufus',cat:'mammal',emoji:'🦘',rarity:'common',maxPts:5,
-   photo:'https://cdn.pixabay.com/photo/2017/06/28/01/32/kangaroo-2450882_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'euro',name:'Euro / Wallaroo',sci:'Macropus robustus',cat:'mammal',emoji:'🦘',rarity:'common',maxPts:5,
-   photo:'https://cdn.pixabay.com/photo/2019/04/24/09/06/wallaroo-4152005_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'echidna',name:'Short-beaked Echidna',sci:'Tachyglossus aculeatus',cat:'mammal',emoji:'🦔',rarity:'uncommon',maxPts:15,
-   photo:'https://cdn.pixabay.com/photo/2017/11/09/00/44/echidna-2932377_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'possum',name:'Common Brushtail Possum',sci:'Trichosurus vulpecula',cat:'mammal',emoji:'🐾',rarity:'common',maxPts:5,
-   photo:'https://cdn.pixabay.com/photo/2018/10/13/10/41/possum-3745040_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'wombat',name:'Southern Hairy-nosed Wombat',sci:'Lasiorhinus latifrons',cat:'mammal',emoji:'🐻',rarity:'uncommon',maxPts:15,
-   photo:'https://cdn.pixabay.com/photo/2018/05/05/21/00/wombat-3377613_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'koala',name:'Koala',sci:'Phascolarctos cinereus',cat:'mammal',emoji:'🐨',rarity:'uncommon',maxPts:15,
-   photo:'https://cdn.pixabay.com/photo/2017/09/25/13/12/koala-2784820_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'yellow_footed_wallaby',name:'Yellow-footed Rock-wallaby',sci:'Petrogale xanthopus',cat:'mammal',emoji:'🦘',rarity:'rare',maxPts:40,
-   photo:'https://cdn.pixabay.com/photo/2018/09/11/19/36/wallaby-3670680_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'dunnart',name:'Fat-tailed Dunnart',sci:'Sminthopsis crassicaudata',cat:'mammal',emoji:'🐭',rarity:'rare',maxPts:40,
-   photo:'https://cdn.pixabay.com/photo/2020/01/14/14/43/mouse-4765525_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'bandicoot',name:'Southern Brown Bandicoot',sci:'Isoodon obesulus',cat:'mammal',emoji:'🐾',rarity:'rare',maxPts:40,
-   photo:'https://cdn.pixabay.com/photo/2017/11/08/16/46/bandicoot-2931227_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'ki_platypus',name:'Kangaroo Island Platypus',sci:'Ornithorhynchus anatinus (KI)',cat:'mammal',emoji:'🦆',rarity:'very-rare',maxPts:80,
-   photo:'https://cdn.pixabay.com/photo/2018/05/10/10/59/platypus-3387357_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'numbat',name:'Numbat',sci:'Myrmecobius fasciatus',cat:'mammal',emoji:'🐾',rarity:'legendary',maxPts:200,
-   photo:'https://cdn.pixabay.com/photo/2019/09/06/19/11/numbat-4457979_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'southern_right_whale',name:'Southern Right Whale',sci:'Eubalaena australis',cat:'marine',emoji:'🐋',rarity:'legendary',maxPts:200,
-   photo:'https://cdn.pixabay.com/photo/2019/12/13/00/02/whale-4692789_640.jpg',credit:'Pixabay / Free License'},
-
-  // ── REPTILES ──
-  {id:'bluetongue',name:'Eastern Blue-tongue',sci:'Tiliqua scincoides',cat:'reptile',emoji:'🦎',rarity:'common',maxPts:5,
-   photo:'https://cdn.pixabay.com/photo/2019/11/13/11/45/blue-tongued-skink-4624070_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'shingleback',name:'Shingleback Lizard',sci:'Tiliqua rugosa',cat:'reptile',emoji:'🦎',rarity:'common',maxPts:5,
-   photo:'https://cdn.pixabay.com/photo/2019/07/18/08/06/shingleback-4345540_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'stumpy_goanna',name:'Sand Goanna',sci:'Varanus gouldii',cat:'reptile',emoji:'🦎',rarity:'uncommon',maxPts:15,
-   photo:'https://cdn.pixabay.com/photo/2017/09/22/01/28/goanna-2774456_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'rosenbergs_goanna',name:"Rosenberg's Goanna",sci:'Varanus rosenbergi',cat:'reptile',emoji:'🦎',rarity:'rare',maxPts:40,
-   photo:'https://cdn.pixabay.com/photo/2018/07/14/15/27/monitor-lizard-3538490_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'central_netted_dragon',name:'Central Netted Dragon',sci:'Ctenophorus nuchalis',cat:'reptile',emoji:'🦎',rarity:'uncommon',maxPts:15,
-   photo:'https://cdn.pixabay.com/photo/2020/03/15/06/27/lizard-4933226_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'tiger_snake',name:'Tiger Snake',sci:'Notechis scutatus',cat:'reptile',emoji:'🐍',rarity:'uncommon',maxPts:15,
-   photo:'https://cdn.pixabay.com/photo/2018/07/17/10/43/snake-3543985_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'king_brown',name:'King Brown Snake',sci:'Pseudechis australis',cat:'reptile',emoji:'🐍',rarity:'rare',maxPts:40,
-   photo:'https://cdn.pixabay.com/photo/2019/09/10/11/13/snake-4466234_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'western_bluetongue',name:'Western Blue-tongue',sci:'Tiliqua occipitalis',cat:'reptile',emoji:'🦎',rarity:'rare',maxPts:40,
-   photo:'https://cdn.pixabay.com/photo/2018/06/08/21/45/blue-tongued-3463369_640.jpg',credit:'Pixabay / Free License'},
-
-  // ── MARINE ──
-  {id:'leafy_seadragon',name:'Leafy Seadragon',sci:'Phycodurus eques',cat:'marine',emoji:'🐉',rarity:'very-rare',maxPts:80,
-   photo:'https://cdn.pixabay.com/photo/2017/01/25/12/50/leafy-sea-dragon-2007807_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'weedy_seadragon',name:'Weedy Seadragon',sci:'Phyllopteryx taeniolatus',cat:'marine',emoji:'🐉',rarity:'rare',maxPts:40,
-   photo:'https://cdn.pixabay.com/photo/2019/10/02/08/29/weedy-seadragon-4521120_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'australian_sealion',name:'Australian Sea Lion',sci:'Neophoca cinerea',cat:'marine',emoji:'🦭',rarity:'rare',maxPts:40,
-   photo:'https://cdn.pixabay.com/photo/2017/04/07/18/22/sea-lion-2211990_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'dolphins',name:'Common Bottlenose Dolphin',sci:'Tursiops truncatus',cat:'marine',emoji:'🐬',rarity:'uncommon',maxPts:15,
-   photo:'https://cdn.pixabay.com/photo/2016/10/24/22/31/dolphin-1767107_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'great_white',name:'Great White Shark',sci:'Carcharodon carcharias',cat:'marine',emoji:'🦈',rarity:'legendary',maxPts:200,
-   photo:'https://cdn.pixabay.com/photo/2017/10/04/19/48/great-white-shark-2817456_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'cuttlefish',name:'Giant Cuttlefish',sci:'Sepia apama',cat:'marine',emoji:'🦑',rarity:'rare',maxPts:40,
-   photo:'https://cdn.pixabay.com/photo/2017/01/20/00/30/cuttlefish-1993995_640.jpg',credit:'Pixabay / Free License'},
-
-  // ── INSECTS ──
-  {id:'emperor_gum',name:'Emperor Gum Moth',sci:'Opodiphthera eucalypti',cat:'insect',emoji:'🦋',rarity:'uncommon',maxPts:15,
-   photo:'https://cdn.pixabay.com/photo/2018/06/07/00/44/moth-3459070_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'bogong_moth',name:'Bogong Moth',sci:'Agrotis infusa',cat:'insect',emoji:'🦋',rarity:'uncommon',maxPts:15,
-   photo:'https://cdn.pixabay.com/photo/2019/07/17/14/04/moth-4343543_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'stick_insect',name:'Titan Stick Insect',sci:'Acrophylla titan',cat:'insect',emoji:'🪲',rarity:'rare',maxPts:40,
-   photo:'https://cdn.pixabay.com/photo/2017/08/01/08/29/stick-insect-2563683_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'golden_sun_moth',name:'Golden Sun Moth',sci:'Synemon plana',cat:'insect',emoji:'🦋',rarity:'very-rare',maxPts:80,
-   photo:'https://cdn.pixabay.com/photo/2018/04/21/04/27/moth-3337392_640.jpg',credit:'Pixabay / Free License'},
-
-  // ── AMPHIBIANS ──
-  {id:'pobblebonk',name:'Pobblebonk Frog',sci:'Limnodynastes dumerilii',cat:'amphibian',emoji:'🐸',rarity:'common',maxPts:5,
-   photo:'https://cdn.pixabay.com/photo/2018/05/20/09/51/frog-3415028_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'southern_corroboree',name:'Southern Corroboree Frog',sci:'Pseudophryne corroboree',cat:'amphibian',emoji:'🐸',rarity:'legendary',maxPts:200,
-   photo:'https://cdn.pixabay.com/photo/2019/09/13/09/13/frog-4474804_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'desert_spadefoot',name:'Desert Spadefoot Toad',sci:'Notaden nichollsi',cat:'amphibian',emoji:'🐸',rarity:'rare',maxPts:40,
-   photo:'https://cdn.pixabay.com/photo/2019/06/02/11/48/frog-4246927_640.jpg',credit:'Pixabay / Free License'},
-
-  {id:'spotted_tree_frog',name:'Spotted Tree Frog',sci:'Litoria spenceri',cat:'amphibian',emoji:'🐸',rarity:'very-rare',maxPts:80,
-   photo:'https://cdn.pixabay.com/photo/2019/05/14/18/10/frog-4202819_640.jpg',credit:'Pixabay / Free License'},
+  // BIRDS
+  {id:'kookaburra',    name:'Laughing Kookaburra',         sci:'Dacelo novaeguineae',          cat:'bird',     emoji:'🐦',  rarity:'common',    maxPts:5,   inatId:13341},
+  {id:'galah',         name:'Galah',                        sci:'Eolophus roseicapilla',         cat:'bird',     emoji:'🦜',  rarity:'common',    maxPts:5,   inatId:13838},
+  {id:'magpie',        name:'Australian Magpie',            sci:'Gymnorhina tibicen',            cat:'bird',     emoji:'🐦',  rarity:'common',    maxPts:5,   inatId:13933},
+  {id:'willy_wagtail', name:'Willie Wagtail',               sci:'Rhipidura leucophrys',          cat:'bird',     emoji:'🐦',  rarity:'common',    maxPts:5,   inatId:13855},
+  {id:'rainbow_lori',  name:'Rainbow Lorikeet',             sci:'Trichoglossus moluccanus',      cat:'bird',     emoji:'🦜',  rarity:'common',    maxPts:5,   inatId:13829},
+  {id:'corella',       name:'Little Corella',               sci:'Cacatua sanguinea',             cat:'bird',     emoji:'🦅',  rarity:'common',    maxPts:5,   inatId:13833},
+  {id:'superb_fairy',  name:'Superb Fairy-wren',            sci:'Malurus cyaneus',               cat:'bird',     emoji:'🐦',  rarity:'uncommon',  maxPts:15,  inatId:13858},
+  {id:'adel_rosella',  name:'Adelaide Rosella',             sci:'Platycercus elegans adelaidae', cat:'bird',     emoji:'🦜',  rarity:'uncommon',  maxPts:15,  inatId:13826},
+  {id:'s_emu_wren',    name:'Southern Emu-wren',            sci:'Stipiturus malachurus',         cat:'bird',     emoji:'🐦',  rarity:'uncommon',  maxPts:15,  inatId:13861},
+  {id:'osprey',        name:'Osprey',                       sci:'Pandion haliaetus',             cat:'bird',     emoji:'🦅',  rarity:'uncommon',  maxPts:15,  inatId:5306},
+  {id:'brolga',        name:'Brolga',                       sci:'Antigone rubicunda',            cat:'bird',     emoji:'🦢',  rarity:'rare',      maxPts:40,  inatId:3774},
+  {id:'regent_parrot', name:'Regent Parrot',                sci:'Polytelis anthopeplus',         cat:'bird',     emoji:'🦜',  rarity:'rare',      maxPts:40,  inatId:13823},
+  {id:'malleefowl',    name:'Malleefowl',                   sci:'Leipoa ocellata',               cat:'bird',     emoji:'🐔',  rarity:'rare',      maxPts:40,  inatId:4808},
+  {id:'plains_wand',   name:'Plains-wanderer',              sci:'Pedionomus torquatus',          cat:'bird',     emoji:'🐦',  rarity:'very-rare', maxPts:80,  inatId:4822},
+  {id:'night_parrot',  name:'Night Parrot',                 sci:'Pezoporus occidentalis',        cat:'bird',     emoji:'🦜',  rarity:'legendary', maxPts:200, inatId:13820},
+  // MAMMALS
+  {id:'red_kanga',     name:'Red Kangaroo',                 sci:'Macropus rufus',                cat:'mammal',   emoji:'🦘',  rarity:'common',    maxPts:5,   inatId:42644},
+  {id:'euro',          name:'Euro / Wallaroo',              sci:'Macropus robustus',             cat:'mammal',   emoji:'🦘',  rarity:'common',    maxPts:5,   inatId:42645},
+  {id:'echidna',       name:'Short-beaked Echidna',         sci:'Tachyglossus aculeatus',        cat:'mammal',   emoji:'🦔',  rarity:'uncommon',  maxPts:15,  inatId:42398},
+  {id:'possum',        name:'Common Brushtail Possum',      sci:'Trichosurus vulpecula',         cat:'mammal',   emoji:'🐾',  rarity:'common',    maxPts:5,   inatId:42635},
+  {id:'wombat',        name:'Southern Hairy-nosed Wombat',  sci:'Lasiorhinus latifrons',         cat:'mammal',   emoji:'🐻',  rarity:'uncommon',  maxPts:15,  inatId:42628},
+  {id:'koala',         name:'Koala',                        sci:'Phascolarctos cinereus',        cat:'mammal',   emoji:'🐨',  rarity:'uncommon',  maxPts:15,  inatId:42631},
+  {id:'yf_wallaby',    name:'Yellow-footed Rock-wallaby',   sci:'Petrogale xanthopus',           cat:'mammal',   emoji:'🦘',  rarity:'rare',      maxPts:40,  inatId:42648},
+  {id:'dunnart',       name:'Fat-tailed Dunnart',           sci:'Sminthopsis crassicaudata',     cat:'mammal',   emoji:'🐭',  rarity:'rare',      maxPts:40,  inatId:42610},
+  {id:'bandicoot',     name:'Southern Brown Bandicoot',     sci:'Isoodon obesulus',              cat:'mammal',   emoji:'🐾',  rarity:'rare',      maxPts:40,  inatId:42621},
+  {id:'ki_platypus',   name:'Kangaroo Island Platypus',     sci:'Ornithorhynchus anatinus',      cat:'mammal',   emoji:'🦆',  rarity:'very-rare', maxPts:80,  inatId:42397},
+  {id:'numbat',        name:'Numbat',                       sci:'Myrmecobius fasciatus',         cat:'mammal',   emoji:'🐾',  rarity:'legendary', maxPts:200, inatId:42608},
+  // MARINE
+  {id:'sr_whale',      name:'Southern Right Whale',         sci:'Eubalaena australis',           cat:'marine',   emoji:'🐋',  rarity:'legendary', maxPts:200, inatId:42455},
+  {id:'leafy_sd',      name:'Leafy Seadragon',              sci:'Phycodurus eques',              cat:'marine',   emoji:'🐉',  rarity:'very-rare', maxPts:80,  inatId:47200},
+  {id:'weedy_sd',      name:'Weedy Seadragon',              sci:'Phyllopteryx taeniolatus',      cat:'marine',   emoji:'🐉',  rarity:'rare',      maxPts:40,  inatId:47201},
+  {id:'aus_sealion',   name:'Australian Sea Lion',          sci:'Neophoca cinerea',              cat:'marine',   emoji:'🦭',  rarity:'rare',      maxPts:40,  inatId:41667},
+  {id:'dolphin',       name:'Common Bottlenose Dolphin',    sci:'Tursiops truncatus',            cat:'marine',   emoji:'🐬',  rarity:'uncommon',  maxPts:15,  inatId:42428},
+  {id:'great_white',   name:'Great White Shark',            sci:'Carcharodon carcharias',        cat:'marine',   emoji:'🦈',  rarity:'legendary', maxPts:200, inatId:47273},
+  {id:'cuttlefish',    name:'Giant Cuttlefish',             sci:'Sepia apama',                   cat:'marine',   emoji:'🦑',  rarity:'rare',      maxPts:40,  inatId:82465},
+  // REPTILES
+  {id:'bluetongue',    name:'Eastern Blue-tongue',          sci:'Tiliqua scincoides',            cat:'reptile',  emoji:'🦎',  rarity:'common',    maxPts:5,   inatId:63743},
+  {id:'shingleback',   name:'Shingleback Lizard',           sci:'Tiliqua rugosa',                cat:'reptile',  emoji:'🦎',  rarity:'common',    maxPts:5,   inatId:63744},
+  {id:'sand_goanna',   name:'Sand Goanna',                  sci:'Varanus gouldii',               cat:'reptile',  emoji:'🦎',  rarity:'uncommon',  maxPts:15,  inatId:63763},
+  {id:'ros_goanna',    name:"Rosenberg's Goanna",           sci:'Varanus rosenbergi',            cat:'reptile',  emoji:'🦎',  rarity:'rare',      maxPts:40,  inatId:63766},
+  {id:'netted_dragon', name:'Central Netted Dragon',        sci:'Ctenophorus nuchalis',          cat:'reptile',  emoji:'🦎',  rarity:'uncommon',  maxPts:15,  inatId:63704},
+  {id:'tiger_snake',   name:'Tiger Snake',                  sci:'Notechis scutatus',             cat:'reptile',  emoji:'🐍',  rarity:'uncommon',  maxPts:15,  inatId:62253},
+  {id:'king_brown',    name:'King Brown Snake',             sci:'Pseudechis australis',          cat:'reptile',  emoji:'🐍',  rarity:'rare',      maxPts:40,  inatId:62258},
+  {id:'w_bluetongue',  name:'Western Blue-tongue',          sci:'Tiliqua occipitalis',           cat:'reptile',  emoji:'🦎',  rarity:'rare',      maxPts:40,  inatId:63745},
+  // INSECTS
+  {id:'emp_gum_moth',  name:'Emperor Gum Moth',             sci:'Opodiphthera eucalypti',        cat:'insect',   emoji:'🦋',  rarity:'uncommon',  maxPts:15,  inatId:128573},
+  {id:'bogong_moth',   name:'Bogong Moth',                  sci:'Agrotis infusa',                cat:'insect',   emoji:'🦋',  rarity:'uncommon',  maxPts:15,  inatId:128574},
+  {id:'stick_insect',  name:'Titan Stick Insect',           sci:'Acrophylla titan',              cat:'insect',   emoji:'🪲',  rarity:'rare',      maxPts:40,  inatId:128580},
+  {id:'golden_moth',   name:'Golden Sun Moth',              sci:'Synemon plana',                 cat:'insect',   emoji:'🦋',  rarity:'very-rare', maxPts:80,  inatId:128579},
+  // AMPHIBIANS
+  {id:'pobblebonk',    name:'Pobblebonk Frog',              sci:'Limnodynastes dumerilii',       cat:'amphibian',emoji:'🐸',  rarity:'common',    maxPts:5,   inatId:24820},
+  {id:'corroboree',    name:'Southern Corroboree Frog',     sci:'Pseudophryne corroboree',       cat:'amphibian',emoji:'🐸',  rarity:'legendary', maxPts:200, inatId:24833},
+  {id:'spadefoot',     name:'Desert Spadefoot Toad',        sci:'Notaden nichollsi',             cat:'amphibian',emoji:'🐸',  rarity:'rare',      maxPts:40,  inatId:24828},
+  {id:'spotted_tf',    name:'Spotted Tree Frog',            sci:'Litoria spenceri',              cat:'amphibian',emoji:'🐸',  rarity:'very-rare', maxPts:80,  inatId:24816},
 ];
 
 const RARITY_ORDER=['common','uncommon','rare','very-rare','legendary'];
 const RARITY_LABELS={common:'Common',uncommon:'Uncommon',rare:'Rare','very-rare':'Very Rare',legendary:'Legendary'};
 const RARITY_COLORS={common:'#4caf50',uncommon:'#2196f3',rare:'#9c27b0','very-rare':'#ff9800',legendary:'#f44336'};
 
+// ── PHOTO CACHE (populated from iNaturalist API on load) ──
+// Structure: { speciesId: { url, credit } }
+const photoCache = {};
+let photosLoaded = false;
+
+async function loadAllPhotos() {
+  const banner = document.getElementById('photoBanner');
+  const bannerText = document.getElementById('photoBannerText');
+
+  // Batch into groups of 30 (API limit)
+  const ids = SPECIES.map(s => s.inatId);
+  const batches = [];
+  for (let i = 0; i < ids.length; i += 30) batches.push(ids.slice(i, i + 30));
+
+  let loaded = 0;
+  for (const batch of batches) {
+    try {
+      const url = `https://api.inaturalist.org/v1/taxa/${batch.join(',')}?per_page=30`;
+      const res = await fetch(url);
+      const data = await res.json();
+      for (const taxon of data.results) {
+        // Match back to our species by inatId
+        const sp = SPECIES.find(s => s.inatId === taxon.id);
+        if (!sp) continue;
+        const photo = taxon.default_photo;
+        if (photo && photo.medium_url) {
+          photoCache[sp.id] = {
+            url: photo.medium_url,
+            credit: photo.attribution || 'iNaturalist / CC BY-NC'
+          };
+        }
+        loaded++;
+      }
+    } catch(e) {
+      console.warn('Photo batch failed:', e);
+    }
+    bannerText.textContent = `Loading photos… ${loaded}/${SPECIES.length}`;
+  }
+
+  photosLoaded = true;
+  banner.style.background = '#1a2a1a';
+  banner.style.borderColor = '#238636';
+  banner.style.color = '#56d364';
+  banner.innerHTML = `✅ ${loaded} wildlife photos loaded from iNaturalist — tap any card to flip!`;
+  // Re-render cards now photos are ready
+  renderSpecies();
+}
+
 // ── STATE ──
 let state={sightings:[],globalSpotCounts:{},totalScore:0};
-function loadState(){const s=localStorage.getItem('ws_v6');if(s)state=JSON.parse(s);}
-function saveState(){localStorage.setItem('ws_v6',JSON.stringify(state));}
+function loadState(){const s=localStorage.getItem('ws_v7');if(s)state=JSON.parse(s);}
+function saveState(){localStorage.setItem('ws_v7',JSON.stringify(state));}
 
 // ── DYNAMIC SCORING ──
 function currentPts(id){
@@ -441,9 +393,10 @@ function openModal(id,e){
   document.getElementById('modalTitle').textContent=sp.emoji+' '+sp.name;
   document.getElementById('modalSci').textContent=sp.sci;
   document.getElementById('modalDynInfo').innerHTML=dynInfoText(id);
+  const pc=photoCache[id];
   const refImg=document.getElementById('modalRefPhoto');
-  refImg.src=sp.photo||'';refImg.style.display=sp.photo?'block':'none';
-  document.getElementById('modalRefCredit').textContent=sp.photo?'📷 '+sp.credit:'';
+  if(pc){refImg.src=pc.url;refImg.style.display='block';document.getElementById('modalRefCredit').textContent='📷 '+pc.credit;}
+  else{refImg.style.display='none';document.getElementById('modalRefCredit').textContent='';}
   document.getElementById('userPhotoPreview').style.display='none';
   document.getElementById('photoInput').value='';
   document.getElementById('notesInput').value='';
@@ -496,6 +449,21 @@ function setFilter(cat,btn){
   if(flippedId){const p=document.getElementById('fc-'+flippedId);if(p)p.classList.remove('flipped');flippedId=null;}
   renderSpecies();
 }
+
+function buildCardBack(sp) {
+  const pc = photoCache[sp.id];
+  if (!photosLoaded) {
+    return `<div class="photo-loading"><div class="spinner"></div><p>Loading photo…</p></div>`;
+  }
+  if (pc) {
+    return `<img class="card-photo" src="${pc.url}" alt="${sp.name}" loading="lazy"
+              onerror="this.outerHTML='<div class=no-photo-back><span>${sp.emoji}</span><p>Photo unavailable</p></div>'">
+            <div class="photo-credit">${pc.credit}</div>`;
+  }
+  return `<div class="no-photo-back"><span>${sp.emoji}</span><p>No photo found</p></div>
+          <div class="photo-credit">iNaturalist</div>`;
+}
+
 function renderSpecies(){
   const q=document.getElementById('searchInput').value.toLowerCase();
   let list=SPECIES;
@@ -511,9 +479,6 @@ function renderSpecies(){
     const pts=currentPts(sp.id);
     const cnt=state.globalSpotCounts[sp.id]||0;
     const r=sp.rarity;
-    const photoBack=sp.photo
-      ?`<img src="${sp.photo}" alt="${sp.name}" loading="lazy" onerror="this.outerHTML='<div class=no-photo-back><span>${sp.emoji}</span><p>Photo unavailable</p></div>'">`
-      :`<div class="no-photo-back"><span>${sp.emoji}</span><p>No photo</p></div>`;
     return`<div class="flip-card-outer ${isSpotted?'spotted':''}" id="fc-${sp.id}" onclick="toggleFlip('${sp.id}',event)">
       <div class="flip-card-inner">
         <div class="flip-card-front">
@@ -529,8 +494,7 @@ function renderSpecies(){
           <div class="fc-hint">Tap to see photo →</div>
         </div>
         <div class="flip-card-back">
-          ${photoBack}
-          <div class="photo-credit">${sp.credit}</div>
+          ${buildCardBack(sp)}
           <div class="photo-footer">
             <span class="back-hint">← flip back</span>
             <button class="log-btn" onclick="openModal('${sp.id}',event)">📍 Log Sighting</button>
@@ -544,28 +508,24 @@ function renderSpecies(){
 // ── JOURNAL ──
 function renderJournal(){
   const el=document.getElementById('journalList');
-  if(!state.sightings.length){
-    el.innerHTML=`<div class="empty-state"><div class="icon">📓</div><p>No sightings yet.</p></div>`;return;
-  }
+  if(!state.sightings.length){el.innerHTML=`<div class="empty-state"><div class="icon">📓</div><p>No sightings yet.</p></div>`;return;}
   el.innerHTML=state.sightings.map(s=>{
     const sp=SPECIES.find(x=>x.id===s.speciesId);if(!sp)return'';
     const r=sp.rarity;
     const date=new Date(s.ts).toLocaleString('en-AU',{dateStyle:'medium',timeStyle:'short'});
+    const pc=photoCache[sp.id];
     const thumb=s.photo
       ?`<img src="${s.photo}" class="j-thumb" alt="photo">`
-      :sp.photo
-        ?`<img src="${sp.photo}" class="j-thumb" alt="${sp.name}" loading="lazy" onerror="this.outerHTML='<div class=j-emoji>${sp.emoji}</div>'">`
-        :`<div class="j-emoji">${sp.emoji}</div>`;
-    const coords=s.lat?`<div class="j-coords" onclick="jumpToMap(${s.lat},${s.lng})">📍 ${s.lat}, ${s.lng}</div>`:'';
-    const notes=s.notes?`<div class="j-notes">"${s.notes}"</div>`:'';
+      :pc?`<img src="${pc.url}" class="j-thumb" alt="${sp.name}" onerror="this.outerHTML='<div class=j-emoji>${sp.emoji}</div>'">`
+      :`<div class="j-emoji">${sp.emoji}</div>`;
     return`<div class="journal-entry">
       ${thumb}
       <div style="flex:1">
         <div class="j-name">${sp.emoji} ${sp.name}</div>
         <div class="j-time">${date}</div>
-        ${coords}
+        ${s.lat?`<div class="j-coords" onclick="jumpToMap(${s.lat},${s.lng})">📍 ${s.lat}, ${s.lng}</div>`:''}
         <div class="j-pts pts-${r}">+${s.ptsEarned} pts · <span class="rarity-badge r-${r}" style="font-size:10px">${RARITY_LABELS[r]}</span></div>
-        ${notes}
+        ${s.notes?`<div class="j-notes">"${s.notes}"</div>`:''}
       </div>
     </div>`;
   }).join('');
@@ -608,12 +568,13 @@ function renderMap(){
     const color=RARITY_COLORS[sp.rarity];
     const icon=L.divIcon({className:'',html:`<div style="width:28px;height:28px;border-radius:50%;background:${color};border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,.5)">${sp.emoji}</div>`,iconSize:[28,28],iconAnchor:[14,14]});
     const date=new Date(s.ts).toLocaleString('en-AU',{dateStyle:'short',timeStyle:'short'});
-    const photoHtml=s.photo?`<img src="${s.photo}" style="width:100%;border-radius:6px;margin-top:6px">`:sp.photo?`<img src="${sp.photo}" style="width:100%;border-radius:6px;margin-top:6px" loading="lazy" onerror="this.remove()">` :'';
+    const pc=photoCache[sp.id];
+    const photoHtml=s.photo?`<img src="${s.photo}" style="width:100%;border-radius:6px;margin-top:6px">`:pc?`<img src="${pc.url}" style="width:100%;border-radius:6px;margin-top:6px" onerror="this.remove()">` :'';
     const m=L.marker([parseFloat(s.lat),parseFloat(s.lng)],{icon}).addTo(leafletMap)
       .bindPopup(`<div style="min-width:160px"><strong>${sp.emoji} ${sp.name}</strong><br><small style="color:#666">${date}</small><br><span style="color:${color};font-weight:700">+${s.ptsEarned} pts</span>${photoHtml}${s.notes?`<p style="margin-top:6px;font-style:italic;font-size:12px">${s.notes}</p>`:''}</div>`);
     mapMarkers.push(m);
   });
-  if(mapMarkers.length>0){leafletMap.fitBounds(L.featureGroup(mapMarkers).getBounds().pad(0.2));}
+  if(mapMarkers.length>0)leafletMap.fitBounds(L.featureGroup(mapMarkers).getBounds().pad(0.2));
   document.getElementById('noGpsList').innerHTML=noGPS.length>0
     ?`<h3 style="font-size:14px;color:var(--text-muted);margin-bottom:8px">Sightings without GPS (${noGPS.length})</h3>`+
       noGPS.map(s=>{const sp=SPECIES.find(x=>x.id===s.speciesId);if(!sp)return'';
@@ -648,7 +609,7 @@ const BADGES=[
 ];
 let unlockedBadges=new Set();
 function checkBadges(){
-  const saved=JSON.parse(localStorage.getItem('ws_badges_v6')||'[]');
+  const saved=JSON.parse(localStorage.getItem('ws_badges_v7')||'[]');
   unlockedBadges=new Set(saved);
   const u=new Set(state.sightings.map(s=>s.speciesId));
   const newB=[];
@@ -661,7 +622,7 @@ function checkBadges(){
   const hasAllCat=c=>SPECIES.filter(s=>s.cat===c).every(s=>u.has(s.id));
   chk('all_birds',hasAllCat('bird'));chk('all_mammals',hasAllCat('mammal'));chk('all_marine',hasAllCat('marine'));
   chk('photographer',state.sightings.some(s=>s.photo));chk('cartographer',state.sightings.some(s=>s.lat));chk('ten_sightings',state.sightings.length>=10);
-  localStorage.setItem('ws_badges_v6',JSON.stringify([...unlockedBadges]));
+  localStorage.setItem('ws_badges_v7',JSON.stringify([...unlockedBadges]));
   newB.forEach((id,i)=>{const b=BADGES.find(x=>x.id===id);setTimeout(()=>showToast(`🏅 Badge: ${b.name}!`),i*2000);});
   renderBadges();
 }
@@ -678,10 +639,8 @@ function showTab(name){
   document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   document.querySelectorAll('nav button')[['spot','journal','map','stats','badges'].indexOf(name)].classList.add('active');
-  if(name==='map')renderMap();
-  if(name==='stats')renderStats();
-  if(name==='journal')renderJournal();
-  if(name==='badges')renderBadges();
+  if(name==='map')renderMap();if(name==='stats')renderStats();
+  if(name==='journal')renderJournal();if(name==='badges')renderBadges();
 }
 function renderAll(){
   renderSpecies();renderJournal();renderStats();renderBadges();
@@ -694,14 +653,18 @@ function showToast(msg){
 function confirmReset(){
   if(confirm('Reset ALL sighting data? This cannot be undone.')){
     state={sightings:[],globalSpotCounts:{},totalScore:0};
-    localStorage.removeItem('ws_v6');localStorage.removeItem('ws_badges_v6');
+    localStorage.removeItem('ws_v7');localStorage.removeItem('ws_badges_v7');
     unlockedBadges=new Set();
     if(flippedId){const p=document.getElementById('fc-'+flippedId);if(p)p.classList.remove('flipped');flippedId=null;}
     renderAll();showToast('🗑️ Data reset');
   }
 }
 
-loadState();checkBadges();renderAll();
+// ── INIT ──
+loadState();
+checkBadges();
+renderAll();
+loadAllPhotos(); // fetch verified photos from iNaturalist in background
 </script>
 </body>
 </html>
