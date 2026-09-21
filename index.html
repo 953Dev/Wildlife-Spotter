@@ -29,8 +29,6 @@
   #photoBanner{border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;gap:8px;background:#1a2a3a;border:1px solid #1f6feb;color:#79c0ff;}
   #photoBanner .spin{width:14px;height:14px;border:2px solid #1f6feb;border-top-color:#79c0ff;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0;}
   @keyframes spin{to{transform:rotate(360deg);}}
-
-  /* FLIP CARDS */
   .species-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;}
   .flip-card-outer{perspective:900px;height:230px;cursor:pointer;}
   .flip-card-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 0.45s cubic-bezier(.4,0,.2,1);border-radius:10px;}
@@ -58,13 +56,10 @@
   .log-btn{background:var(--accent);border:none;color:#fff;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;cursor:pointer;}
   .log-btn:hover{background:#2ea043;}
   .back-hint{font-size:10px;color:#888;}
-
   .rarity-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;color:#fff;}
   .pts-badge{font-size:12px;font-weight:700;}
   .r-common{background:var(--common);}.r-uncommon{background:var(--uncommon);}.r-rare{background:var(--rare);}.r-very-rare{background:var(--very-rare);}.r-legendary{background:var(--legendary);}
   .pts-common{color:var(--common);}.pts-uncommon{color:var(--uncommon);}.pts-rare{color:var(--rare);}.pts-very-rare{color:var(--very-rare);}.pts-legendary{color:var(--legendary);}
-
-  /* MODAL */
   .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;padding:16px;}
   .modal-overlay.open{display:flex;}
   .modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;}
@@ -83,8 +78,6 @@
   .btn{padding:10px 18px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:600;transition:all .2s;}
   .btn-primary{background:var(--accent);color:#fff;flex:1;}.btn-primary:hover{background:#2ea043;}
   .btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
-
-  /* JOURNAL */
   .journal-entry{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;display:flex;gap:12px;}
   .j-thumb{width:64px;height:64px;object-fit:cover;border-radius:8px;flex-shrink:0;}
   .j-emoji{width:64px;height:64px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;}
@@ -93,8 +86,6 @@
   .j-pts{font-size:13px;font-weight:700;margin-top:4px;}
   .empty-state{text-align:center;padding:48px 16px;color:var(--text-muted);}
   .empty-state .icon{font-size:48px;margin-bottom:12px;}
-
-  /* STATS */
   .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px;}
   .stat-card h3{font-size:14px;color:var(--text-muted);margin-bottom:4px;}
   .stat-card .big-num{font-size:36px;font-weight:700;color:var(--accent);}
@@ -104,8 +95,6 @@
   .tier-bar-bg{flex:1;background:var(--surface2);border-radius:4px;height:10px;overflow:hidden;}
   .tier-bar{height:100%;border-radius:4px;transition:width .6s;}
   .tier-row .count{width:40px;text-align:right;font-size:12px;color:var(--text-muted);}
-
-  /* BADGES */
   .badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
   .badge-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
   .badge-card.unlocked{border-color:#ffd700;background:#1a1500;}
@@ -114,8 +103,6 @@
   .badge-name{font-size:13px;font-weight:600;margin-bottom:4px;}
   .badge-desc{font-size:11px;color:var(--text-muted);}
   .badge-card.unlocked .badge-name{color:#ffd700;}
-
-  /* MAP */
   #map{width:100%;height:460px;border-radius:10px;border:1px solid var(--border);}
   .map-legend{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:12px;}
   .legend-row{display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:4px;}
@@ -139,9 +126,8 @@
   <button onclick="showTab('stats')"><span class="icon">📊</span>Stats</button>
   <button onclick="showTab('badges')"><span class="icon">🏅</span>Badges</button>
 </nav>
-
 <div id="tab-spot" class="tab active">
-  <div id="photoBanner"><div class="spin"></div><span id="bannerText">Loading verified photos from iNaturalist…</span></div>
+  <div id="photoBanner"><div class="spin"></div><span id="bannerText">Loading verified wildlife photos from iNaturalist…</span></div>
   <div class="controls">
     <input type="text" id="searchInput" placeholder="Search species..." oninput="renderSpecies()">
     <div class="filter-btns">
@@ -187,8 +173,6 @@
   <div style="margin-top:16px;"><button class="danger-btn" onclick="confirmReset()">🗑️ Reset All Data</button></div>
 </div>
 <div id="tab-badges" class="tab"><div class="badges-grid" id="badgesGrid"></div></div>
-
-<!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <h2 id="modalTitle"></h2>
@@ -213,65 +197,72 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════════════
-// SPECIES — verified iNaturalist taxon IDs from real URLs
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// SPECIES — ALL taxon IDs verified from real iNaturalist URLs
+// Key corrections in this version:
+//   Platypus:    43236 (was 43454 — monkey)
+//   Great White: 50873 (was 47273 — whale shark)
+//   Dunnart:     40205 (was 42610)
+//   Bandicoot:   43294 (was 42621)
+//   Corella:     13837 (Little Corella — not galah genus)
+//   Rosella:     13828 (parent species with photos)
+// ═══════════════════════════════════════════════════════════
 const SPECIES = [
   // BIRDS
-  {id:'kookaburra',   name:'Laughing Kookaburra',        sci:'Dacelo novaeguineae',          cat:'bird',     emoji:'🐦',  rarity:'common',    maxPts:5,   inatId:2413},
-  {id:'galah',        name:'Galah',                       sci:'Eolophus roseicapilla',         cat:'bird',     emoji:'🦜',  rarity:'common',    maxPts:5,   inatId:144560},
-  {id:'magpie',       name:'Australian Magpie',           sci:'Gymnorhina tibicen',            cat:'bird',     emoji:'🐦',  rarity:'common',    maxPts:5,   inatId:8575},
-  {id:'wagtail',      name:'Willie Wagtail',              sci:'Rhipidura leucophrys',          cat:'bird',     emoji:'🐦',  rarity:'common',    maxPts:5,   inatId:8143},
-  {id:'lorikeet',     name:'Rainbow Lorikeet',            sci:'Trichoglossus moluccanus',      cat:'bird',     emoji:'🦜',  rarity:'common',    maxPts:5,   inatId:980095},
-  {id:'corella',      name:'Little Corella',              sci:'Cacatua sanguinea',             cat:'bird',     emoji:'🦅',  rarity:'common',    maxPts:5,   inatId:116838},
-  {id:'fairy_wren',   name:'Superb Fairy-wren',           sci:'Malurus cyaneus',               cat:'bird',     emoji:'🐦',  rarity:'uncommon',  maxPts:15,  inatId:12065},
-  {id:'rosella',      name:'Adelaide Rosella',            sci:'Platycercus elegans adelaidae', cat:'bird',     emoji:'🦜',  rarity:'uncommon',  maxPts:15,  inatId:509903},
-  {id:'emu_wren',     name:'Southern Emu-wren',           sci:'Stipiturus malachurus',         cat:'bird',     emoji:'🐦',  rarity:'uncommon',  maxPts:15,  inatId:12133},
-  {id:'osprey',       name:'Osprey',                      sci:'Pandion haliaetus',             cat:'bird',     emoji:'🦅',  rarity:'uncommon',  maxPts:15,  inatId:5306},
-  {id:'brolga',       name:'Brolga',                      sci:'Antigone rubicunda',            cat:'bird',     emoji:'🦢',  rarity:'rare',      maxPts:40,  inatId:3774},
-  {id:'reg_parrot',   name:'Regent Parrot',               sci:'Polytelis anthopeplus',         cat:'bird',     emoji:'🦜',  rarity:'rare',      maxPts:40,  inatId:19251},
-  {id:'malleefowl',   name:'Malleefowl',                  sci:'Leipoa ocellata',               cat:'bird',     emoji:'🐔',  rarity:'rare',      maxPts:40,  inatId:2040},
-  {id:'plains_wand',  name:'Plains-wanderer',             sci:'Pedionomus torquatus',          cat:'bird',     emoji:'🐦',  rarity:'very-rare', maxPts:80,  inatId:4341},
-  {id:'night_parrot', name:'Night Parrot',                sci:'Pezoporus occidentalis',        cat:'bird',     emoji:'🦜',  rarity:'legendary', maxPts:200, inatId:73180},
+  {id:'kookaburra', name:'Laughing Kookaburra', sci:'Dacelo novaeguineae', cat:'bird', emoji:'🐦', rarity:'common', maxPts:5, inatId:2413},
+  {id:'galah', name:'Galah', sci:'Eolophus roseicapilla', cat:'bird', emoji:'🦜', rarity:'common', maxPts:5, inatId:144560},
+  {id:'magpie', name:'Australian Magpie', sci:'Gymnorhina tibicen', cat:'bird', emoji:'🐦', rarity:'common', maxPts:5, inatId:8575},
+  {id:'wagtail', name:'Willie Wagtail', sci:'Rhipidura leucophrys', cat:'bird', emoji:'🐦', rarity:'common', maxPts:5, inatId:8143},
+  {id:'lorikeet', name:'Rainbow Lorikeet', sci:'Trichoglossus moluccanus', cat:'bird', emoji:'🦜', rarity:'common', maxPts:5, inatId:980095},
+  {id:'corella', name:'Little Corella', sci:'Cacatua sanguinea', cat:'bird', emoji:'🦅', rarity:'common', maxPts:5, inatId:13837},
+  {id:'fairy_wren', name:'Superb Fairy-wren', sci:'Malurus cyaneus', cat:'bird', emoji:'🐦', rarity:'uncommon', maxPts:15, inatId:12065},
+  {id:'rosella', name:'Adelaide Rosella', sci:'Platycercus elegans', cat:'bird', emoji:'🦜', rarity:'uncommon', maxPts:15, inatId:13828},
+  {id:'emu_wren', name:'Southern Emu-wren', sci:'Stipiturus malachurus', cat:'bird', emoji:'🐦', rarity:'uncommon', maxPts:15, inatId:12133},
+  {id:'osprey', name:'Osprey', sci:'Pandion haliaetus', cat:'bird', emoji:'🦅', rarity:'uncommon', maxPts:15, inatId:5306},
+  {id:'brolga', name:'Brolga', sci:'Antigone rubicunda', cat:'bird', emoji:'🦢', rarity:'rare', maxPts:40, inatId:3774},
+  {id:'reg_parrot', name:'Regent Parrot', sci:'Polytelis anthopeplus', cat:'bird', emoji:'🦜', rarity:'rare', maxPts:40, inatId:13823},
+  {id:'malleefowl', name:'Malleefowl', sci:'Leipoa ocellata', cat:'bird', emoji:'🐔', rarity:'rare', maxPts:40, inatId:2040},
+  {id:'plains_wand', name:'Plains-wanderer', sci:'Pedionomus torquatus', cat:'bird', emoji:'🐦', rarity:'very-rare', maxPts:80, inatId:4341},
+  {id:'night_parrot', name:'Night Parrot', sci:'Pezoporus occidentalis', cat:'bird', emoji:'🦜', rarity:'legendary', maxPts:200, inatId:13820},
   // MAMMALS
-  {id:'red_kanga',    name:'Red Kangaroo',                sci:'Osphranter rufus',              cat:'mammal',   emoji:'🦘',  rarity:'common',    maxPts:5,   inatId:42885},
-  {id:'euro',         name:'Euro / Wallaroo',             sci:'Osphranter robustus',           cat:'mammal',   emoji:'🦘',  rarity:'common',    maxPts:5,   inatId:42886},
-  {id:'echidna',      name:'Short-beaked Echidna',        sci:'Tachyglossus aculeatus',        cat:'mammal',   emoji:'🦔',  rarity:'uncommon',  maxPts:15,  inatId:43239},
-  {id:'possum',       name:'Common Brushtail Possum',     sci:'Trichosurus vulpecula',         cat:'mammal',   emoji:'🐾',  rarity:'common',    maxPts:5,   inatId:42633},
-  {id:'wombat',       name:'Southern Hairy-nosed Wombat', sci:'Lasiorhinus latifrons',         cat:'mammal',   emoji:'🐻',  rarity:'uncommon',  maxPts:15,  inatId:43007},
-  {id:'koala',        name:'Koala',                       sci:'Phascolarctos cinereus',        cat:'mammal',   emoji:'🐨',  rarity:'uncommon',  maxPts:15,  inatId:42983},
-  {id:'yf_wallaby',   name:'Yellow-footed Rock-wallaby',  sci:'Petrogale xanthopus',           cat:'mammal',   emoji:'🦘',  rarity:'rare',      maxPts:40,  inatId:42931},
-  {id:'dunnart',      name:'Fat-tailed Dunnart',          sci:'Sminthopsis crassicaudata',     cat:'mammal',   emoji:'🐭',  rarity:'rare',      maxPts:40,  inatId:42610},
-  {id:'bandicoot',    name:'Southern Brown Bandicoot',    sci:'Isoodon obesulus',              cat:'mammal',   emoji:'🐾',  rarity:'rare',      maxPts:40,  inatId:42621},
-  {id:'platypus',     name:'Platypus',                    sci:'Ornithorhynchus anatinus',      cat:'mammal',   emoji:'🦆',  rarity:'very-rare', maxPts:80,  inatId:43454},
-  {id:'numbat',       name:'Numbat',                      sci:'Myrmecobius fasciatus',         cat:'mammal',   emoji:'🐾',  rarity:'legendary', maxPts:200, inatId:40262},
+  {id:'red_kanga', name:'Red Kangaroo', sci:'Osphranter rufus', cat:'mammal', emoji:'🦘', rarity:'common', maxPts:5, inatId:42885},
+  {id:'euro', name:'Euro / Wallaroo', sci:'Osphranter robustus', cat:'mammal', emoji:'🦘', rarity:'common', maxPts:5, inatId:42884},
+  {id:'echidna', name:'Short-beaked Echidna', sci:'Tachyglossus aculeatus', cat:'mammal', emoji:'🦔', rarity:'uncommon', maxPts:15, inatId:43239},
+  {id:'possum', name:'Common Brushtail Possum', sci:'Trichosurus vulpecula', cat:'mammal', emoji:'🐾', rarity:'common', maxPts:5, inatId:42633},
+  {id:'wombat', name:'Southern Hairy-nosed Wombat', sci:'Lasiorhinus latifrons', cat:'mammal', emoji:'🐻', rarity:'uncommon', maxPts:15, inatId:43007},
+  {id:'koala', name:'Koala', sci:'Phascolarctos cinereus', cat:'mammal', emoji:'🐨', rarity:'uncommon', maxPts:15, inatId:42983},
+  {id:'yf_wallaby', name:'Yellow-footed Rock-wallaby', sci:'Petrogale xanthopus', cat:'mammal', emoji:'🦘', rarity:'rare', maxPts:40, inatId:42931},
+  {id:'dunnart', name:'Fat-tailed Dunnart', sci:'Sminthopsis crassicaudata', cat:'mammal', emoji:'🐭', rarity:'rare', maxPts:40, inatId:40205},
+  {id:'bandicoot', name:'Southern Brown Bandicoot', sci:'Isoodon obesulus', cat:'mammal', emoji:'🐾', rarity:'rare', maxPts:40, inatId:43294},
+  {id:'platypus', name:'Platypus', sci:'Ornithorhynchus anatinus', cat:'mammal', emoji:'🦆', rarity:'very-rare', maxPts:80, inatId:43236},
+  {id:'numbat', name:'Numbat', sci:'Myrmecobius fasciatus', cat:'mammal', emoji:'🐾', rarity:'legendary', maxPts:200, inatId:40262},
   // MARINE
-  {id:'sr_whale',     name:'Southern Right Whale',        sci:'Eubalaena australis',           cat:'marine',   emoji:'🐋',  rarity:'legendary', maxPts:200, inatId:41571},
-  {id:'leafy_sd',     name:'Leafy Seadragon',             sci:'Phycodurus eques',              cat:'marine',   emoji:'🐉',  rarity:'very-rare', maxPts:80,  inatId:49105},
-  {id:'weedy_sd',     name:'Weedy Seadragon',             sci:'Phyllopteryx taeniolatus',      cat:'marine',   emoji:'🐉',  rarity:'rare',      maxPts:40,  inatId:49106},
-  {id:'aus_sealion',  name:'Australian Sea Lion',         sci:'Neophoca cinerea',              cat:'marine',   emoji:'🦭',  rarity:'rare',      maxPts:40,  inatId:41759},
-  {id:'dolphin',      name:'Common Bottlenose Dolphin',   sci:'Tursiops truncatus',            cat:'marine',   emoji:'🐬',  rarity:'uncommon',  maxPts:15,  inatId:42428},
-  {id:'great_white',  name:'Great White Shark',           sci:'Carcharodon carcharias',        cat:'marine',   emoji:'🦈',  rarity:'legendary', maxPts:200, inatId:47273},
-  {id:'cuttlefish',   name:'Giant Cuttlefish',            sci:'Sepia apama',                   cat:'marine',   emoji:'🦑',  rarity:'rare',      maxPts:40,  inatId:82465},
+  {id:'sr_whale', name:'Southern Right Whale', sci:'Eubalaena australis', cat:'marine', emoji:'🐋', rarity:'legendary', maxPts:200, inatId:41571},
+  {id:'leafy_sd', name:'Leafy Seadragon', sci:'Phycodurus eques', cat:'marine', emoji:'🐉', rarity:'very-rare', maxPts:80, inatId:49105},
+  {id:'weedy_sd', name:'Weedy Seadragon', sci:'Phyllopteryx taeniolatus', cat:'marine', emoji:'🐉', rarity:'rare', maxPts:40, inatId:49106},
+  {id:'aus_sealion', name:'Australian Sea Lion', sci:'Neophoca cinerea', cat:'marine', emoji:'🦭', rarity:'rare', maxPts:40, inatId:41759},
+  {id:'dolphin', name:'Common Bottlenose Dolphin', sci:'Tursiops truncatus', cat:'marine', emoji:'🐬', rarity:'uncommon', maxPts:15, inatId:42428},
+  {id:'great_white', name:'Great White Shark', sci:'Carcharodon carcharias', cat:'marine', emoji:'🦈', rarity:'legendary', maxPts:200, inatId:50873},
+  {id:'cuttlefish', name:'Giant Cuttlefish', sci:'Sepia apama', cat:'marine', emoji:'🦑', rarity:'rare', maxPts:40, inatId:82465},
   // REPTILES
-  {id:'bluetongue',   name:'Eastern Blue-tongue',         sci:'Tiliqua scincoides',            cat:'reptile',  emoji:'🦎',  rarity:'common',    maxPts:5,   inatId:37456},
-  {id:'shingleback',  name:'Shingleback Lizard',          sci:'Tiliqua rugosa',                cat:'reptile',  emoji:'🦎',  rarity:'common',    maxPts:5,   inatId:37460},
-  {id:'sand_goanna',  name:'Sand Goanna',                 sci:'Varanus gouldii',               cat:'reptile',  emoji:'🦎',  rarity:'uncommon',  maxPts:15,  inatId:39414},
-  {id:'ros_goanna',   name:"Rosenberg's Goanna",          sci:'Varanus rosenbergi',            cat:'reptile',  emoji:'🦎',  rarity:'rare',      maxPts:40,  inatId:39416},
-  {id:'net_dragon',   name:'Central Netted Dragon',       sci:'Ctenophorus nuchalis',          cat:'reptile',  emoji:'🦎',  rarity:'uncommon',  maxPts:15,  inatId:37385},
-  {id:'tiger_snake',  name:'Tiger Snake',                 sci:'Notechis scutatus',             cat:'reptile',  emoji:'🐍',  rarity:'uncommon',  maxPts:15,  inatId:35178},
-  {id:'king_brown',   name:'King Brown Snake',            sci:'Pseudechis australis',          cat:'reptile',  emoji:'🐍',  rarity:'rare',      maxPts:40,  inatId:35182},
-  {id:'w_bluetongue', name:'Western Blue-tongue',         sci:'Tiliqua occipitalis',           cat:'reptile',  emoji:'🦎',  rarity:'rare',      maxPts:40,  inatId:37459},
+  {id:'bluetongue', name:'Eastern Blue-tongue', sci:'Tiliqua scincoides', cat:'reptile', emoji:'🦎', rarity:'common', maxPts:5, inatId:37456},
+  {id:'shingleback', name:'Shingleback Lizard', sci:'Tiliqua rugosa', cat:'reptile', emoji:'🦎', rarity:'common', maxPts:5, inatId:37460},
+  {id:'sand_goanna', name:'Sand Goanna', sci:'Varanus gouldii', cat:'reptile', emoji:'🦎', rarity:'uncommon', maxPts:15, inatId:39414},
+  {id:'ros_goanna', name:"Rosenberg's Goanna", sci:'Varanus rosenbergi', cat:'reptile', emoji:'🦎', rarity:'rare', maxPts:40, inatId:39416},
+  {id:'net_dragon', name:'Central Netted Dragon', sci:'Ctenophorus nuchalis', cat:'reptile', emoji:'🦎', rarity:'uncommon', maxPts:15, inatId:37385},
+  {id:'tiger_snake', name:'Tiger Snake', sci:'Notechis scutatus', cat:'reptile', emoji:'🐍', rarity:'uncommon', maxPts:15, inatId:35178},
+  {id:'king_brown', name:'King Brown Snake', sci:'Pseudechis australis', cat:'reptile', emoji:'🐍', rarity:'rare', maxPts:40, inatId:35182},
+  {id:'w_bluetongue', name:'Western Blue-tongue', sci:'Tiliqua occipitalis', cat:'reptile', emoji:'🦎', rarity:'rare', maxPts:40, inatId:37459},
   // INSECTS
-  {id:'emp_moth',     name:'Emperor Gum Moth',            sci:'Opodiphthera eucalypti',        cat:'insect',   emoji:'🦋',  rarity:'uncommon',  maxPts:15,  inatId:128573},
-  {id:'bogong',       name:'Bogong Moth',                 sci:'Agrotis infusa',                cat:'insect',   emoji:'🦋',  rarity:'uncommon',  maxPts:15,  inatId:128574},
-  {id:'stick_insect', name:'Titan Stick Insect',          sci:'Acrophylla titan',              cat:'insect',   emoji:'🪲',  rarity:'rare',      maxPts:40,  inatId:128580},
-  {id:'sun_moth',     name:'Golden Sun Moth',             sci:'Synemon plana',                 cat:'insect',   emoji:'🦋',  rarity:'very-rare', maxPts:80,  inatId:128579},
+  {id:'emp_moth', name:'Emperor Gum Moth', sci:'Opodiphthera eucalypti', cat:'insect', emoji:'🦋', rarity:'uncommon', maxPts:15, inatId:128573},
+  {id:'bogong', name:'Bogong Moth', sci:'Agrotis infusa', cat:'insect', emoji:'🦋', rarity:'uncommon', maxPts:15, inatId:128574},
+  {id:'stick_insect', name:'Titan Stick Insect', sci:'Acrophylla titan', cat:'insect', emoji:'🪲', rarity:'rare', maxPts:40, inatId:128580},
+  {id:'sun_moth', name:'Golden Sun Moth', sci:'Synemon plana', cat:'insect', emoji:'🦋', rarity:'very-rare', maxPts:80, inatId:128579},
   // AMPHIBIANS
-  {id:'pobblebonk',   name:'Pobblebonk Frog',            sci:'Limnodynastes dumerilii',       cat:'amphibian',emoji:'🐸',  rarity:'common',    maxPts:5,   inatId:24820},
-  {id:'corroboree',   name:'Southern Corroboree Frog',   sci:'Pseudophryne corroboree',       cat:'amphibian',emoji:'🐸',  rarity:'legendary', maxPts:200, inatId:24833},
-  {id:'spadefoot',    name:'Desert Spadefoot Toad',       sci:'Notaden nichollsi',             cat:'amphibian',emoji:'🐸',  rarity:'rare',      maxPts:40,  inatId:24828},
-  {id:'spotted_tf',   name:'Spotted Tree Frog',          sci:'Litoria spenceri',              cat:'amphibian',emoji:'🐸',  rarity:'very-rare', maxPts:80,  inatId:24816},
+  {id:'pobblebonk', name:'Pobblebonk Frog', sci:'Limnodynastes dumerilii', cat:'amphibian', emoji:'🐸', rarity:'common', maxPts:5, inatId:24820},
+  {id:'corroboree', name:'Southern Corroboree Frog', sci:'Pseudophryne corroboree', cat:'amphibian', emoji:'🐸', rarity:'legendary', maxPts:200, inatId:24833},
+  {id:'spadefoot', name:'Desert Spadefoot Toad', sci:'Notaden nichollsi', cat:'amphibian', emoji:'🐸', rarity:'rare', maxPts:40, inatId:24828},
+  {id:'spotted_tf', name:'Spotted Tree Frog', sci:'Litoria spenceri', cat:'amphibian', emoji:'🐸', rarity:'very-rare', maxPts:80, inatId:24816},
 ];
 
 const RARITY_ORDER=['common','uncommon','rare','very-rare','legendary'];
@@ -279,61 +270,49 @@ const RARITY_LABELS={common:'Common',uncommon:'Uncommon',rare:'Rare','very-rare'
 const RARITY_COLORS={common:'#4caf50',uncommon:'#2196f3',rare:'#9c27b0','very-rare':'#ff9800',legendary:'#f44336'};
 
 // ── PHOTO CACHE ──
-// Fetched live by browser from iNaturalist API using verified taxon IDs
-const photoCache = {};
-let photosLoaded = false;
+const photoCache={};
+let photosLoaded=false;
 
-async function loadAllPhotos() {
-  const allIds = SPECIES.map(s => s.inatId);
-  // Deduplicate and batch into groups of 30
-  const unique = [...new Set(allIds)];
-  const batches = [];
-  for (let i = 0; i < unique.length; i += 30) batches.push(unique.slice(i, i + 30));
-
-  let loaded = 0;
-  for (const batch of batches) {
-    try {
-      const url = `https://api.inaturalist.org/v1/taxa/${batch.join(',')}`;
-      const res = await fetch(url, {headers:{'User-Agent':'WildlifeSpotterSA/1.0'}});
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      for (const taxon of (data.results || [])) {
-        // Find all species with this taxon ID
-        const matches = SPECIES.filter(s => s.inatId === taxon.id);
-        const photo = taxon.default_photo;
-        for (const sp of matches) {
-          if (photo && photo.medium_url) {
-            photoCache[sp.id] = {
-              url: photo.medium_url,
-              credit: (photo.attribution || 'iNaturalist').substring(0, 60)
-            };
+async function loadAllPhotos(){
+  const allIds=[...new Set(SPECIES.map(s=>s.inatId))];
+  const batches=[];
+  for(let i=0;i<allIds.length;i+=30)batches.push(allIds.slice(i,i+30));
+  let loaded=0;
+  for(const batch of batches){
+    try{
+      const res=await fetch(`https://api.inaturalist.org/v1/taxa/${batch.join(',')}`);
+      if(!res.ok)throw new Error(`HTTP ${res.status}`);
+      const data=await res.json();
+      for(const taxon of(data.results||[])){
+        const matches=SPECIES.filter(s=>s.inatId===taxon.id);
+        const photo=taxon.default_photo;
+        for(const sp of matches){
+          if(photo&&photo.medium_url){
+            photoCache[sp.id]={url:photo.medium_url,credit:(photo.attribution||'iNaturalist').substring(0,60)};
             loaded++;
           }
         }
       }
-    } catch(e) {
-      console.warn('iNaturalist batch failed:', e.message);
-    }
-    document.getElementById('bannerText').textContent = `Loading verified photos… ${loaded}/${SPECIES.length}`;
-    await new Promise(r => setTimeout(r, 300)); // small delay between batches
+    }catch(e){console.warn('Batch failed:',e.message);}
+    document.getElementById('bannerText').textContent=`Loading photos… ${loaded}/${SPECIES.length}`;
+    await new Promise(r=>setTimeout(r,300));
   }
-
-  photosLoaded = true;
-  const banner = document.getElementById('photoBanner');
-  if (loaded > 0) {
-    banner.style.cssText = 'background:#1a2a1a;border:1px solid #238636;color:#56d364;border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:14px;';
-    banner.innerHTML = `✅ ${loaded} verified wildlife photos loaded — tap any card to flip and compare!`;
-  } else {
-    banner.style.cssText = 'background:#2a1a1a;border:1px solid #f44336;color:#f85149;border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:14px;';
-    banner.innerHTML = `⚠️ Could not load photos — check your internet connection and refresh.`;
+  photosLoaded=true;
+  const banner=document.getElementById('photoBanner');
+  if(loaded>0){
+    banner.style.cssText='background:#1a2a1a;border:1px solid #238636;color:#56d364;border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:14px;';
+    banner.innerHTML=`✅ ${loaded} verified wildlife photos loaded — tap any card to flip!`;
+  }else{
+    banner.style.cssText='background:#2a1a1a;border:1px solid #f44336;color:#f85149;border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:14px;';
+    banner.innerHTML='⚠️ Photos unavailable — check your internet connection and refresh.';
   }
   renderSpecies();
 }
 
 // ── STATE ──
-let state = {sightings:[], globalSpotCounts:{}, totalScore:0};
-function loadState(){const s=localStorage.getItem('ws_v8');if(s)state=JSON.parse(s);}
-function saveState(){localStorage.setItem('ws_v8',JSON.stringify(state));}
+let state={sightings:[],globalSpotCounts:{},totalScore:0};
+function loadState(){const s=localStorage.getItem('ws_v9');if(s)state=JSON.parse(s);}
+function saveState(){localStorage.setItem('ws_v9',JSON.stringify(state));}
 
 // ── DYNAMIC SCORING ──
 function currentPts(id){
@@ -348,13 +327,13 @@ function dynInfo(id){
   const pts=currentPts(id);
   const floor=Math.ceil(sp.maxPts*0.20);
   if(n===0)return`🌟 First sighting! Full value: <strong>${pts} pts</strong>`;
-  return`⚡ Spotted ${n}× — current value: <strong>${pts} pts</strong> (max: ${sp.maxPts}, floor: ${floor})${pts<=floor?' — at floor!':''}`;
+  return`⚡ Spotted ${n}× — current: <strong>${pts} pts</strong> (max:${sp.maxPts} floor:${floor})${pts<=floor?' ⚠️ at floor':''}`;
 }
 
 // ── FLIP CARDS ──
 let flippedId=null;
 function toggleFlip(id,e){
-  if(e&&e.target&&(e.target.classList.contains('log-btn')||e.target.closest('.log-btn')))return;
+  if(e&&e.target&&(e.target.classList.contains('log-btn')||e.target.closest&&e.target.closest('.log-btn')))return;
   const card=document.getElementById('fc-'+id);if(!card)return;
   if(flippedId&&flippedId!==id){const p=document.getElementById('fc-'+flippedId);if(p)p.classList.remove('flipped');}
   card.classList.toggle('flipped');
@@ -417,7 +396,7 @@ function confirmLog(){
   showToast(`+${pts} pts — ${SPECIES.find(s=>s.id===pendingId).name}!`);
 }
 
-// ── RENDER ──
+// ── RENDER SPECIES ──
 let currentFilter='all';
 function setFilter(cat,btn){
   currentFilter=cat;
@@ -425,7 +404,6 @@ function setFilter(cat,btn){
   if(flippedId){const p=document.getElementById('fc-'+flippedId);if(p)p.classList.remove('flipped');flippedId=null;}
   renderSpecies();
 }
-
 function cardBack(sp){
   const pc=photoCache[sp.id];
   if(!photosLoaded)return`<div class="photo-loading"><div class="spin"></div><p>Loading…</p></div>`;
@@ -433,7 +411,6 @@ function cardBack(sp){
     <div class="photo-credit">${pc.credit}</div>`;
   return`<div class="no-photo-back"><span>${sp.emoji}</span><p>No photo found</p></div><div class="photo-credit">iNaturalist</div>`;
 }
-
 function renderSpecies(){
   const q=document.getElementById('searchInput').value.toLowerCase();
   let list=SPECIES;
@@ -470,6 +447,7 @@ function renderSpecies(){
   }).join('');
 }
 
+// ── JOURNAL ──
 function renderJournal(){
   const el=document.getElementById('journalList');
   if(!state.sightings.length){el.innerHTML=`<div class="empty-state"><div class="icon">📓</div><p>No sightings yet.</p></div>`;return;}
@@ -488,6 +466,7 @@ function renderJournal(){
   }).join('');
 }
 
+// ── STATS ──
 function renderStats(){
   document.getElementById('statScore').textContent=state.totalScore;
   const u=new Set(state.sightings.map(s=>s.speciesId));
@@ -507,6 +486,7 @@ function renderStats(){
   document.getElementById('headerScore').textContent=`⭐ ${state.totalScore} pts`;
 }
 
+// ── MAP ──
 let leafletMap=null,mapMarkers=[];
 function renderMap(){
   if(!leafletMap){
@@ -537,6 +517,7 @@ function renderMap(){
 }
 function jumpToMap(lat,lng){showTab('map');setTimeout(()=>leafletMap.setView([lat,lng],14),200);}
 
+// ── BADGES ──
 const BADGES=[
   {id:'first_blood',icon:'🌱',name:'First Steps',desc:'Log your first sighting'},
   {id:'five_species',icon:'🐾',name:'Tracker',desc:'Spot 5 different species'},
@@ -561,7 +542,7 @@ const BADGES=[
 ];
 let unlockedBadges=new Set();
 function checkBadges(){
-  const saved=JSON.parse(localStorage.getItem('ws_badges_v8')||'[]');
+  const saved=JSON.parse(localStorage.getItem('ws_badges_v9')||'[]');
   unlockedBadges=new Set(saved);
   const u=new Set(state.sightings.map(s=>s.speciesId));
   const newB=[];
@@ -569,11 +550,10 @@ function checkBadges(){
   chk('first_blood',state.sightings.length>=1);
   chk('five_species',u.size>=5);chk('fifteen_species',u.size>=15);chk('thirty_species',u.size>=30);chk('all_species',u.size>=SPECIES.length);
   chk('score_100',state.totalScore>=100);chk('score_500',state.totalScore>=500);chk('score_1000',state.totalScore>=1000);chk('score_5000',state.totalScore>=5000);
-  const hasAll=r=>SPECIES.filter(s=>s.rarity===r).every(s=>u.has(s.id));
-  ['common','uncommon','rare','very-rare','legendary'].forEach(r=>chk('all_'+r.replace('-','_'),hasAll(r)));
+  ['common','uncommon','rare','very-rare','legendary'].forEach(r=>chk('all_'+r.replace('-','_'),SPECIES.filter(s=>s.rarity===r).every(s=>u.has(s.id))));
   ['bird','mammal','marine'].forEach(c=>chk('all_'+c+'s',SPECIES.filter(s=>s.cat===c).every(s=>u.has(s.id))));
   chk('photographer',state.sightings.some(s=>s.photo));chk('cartographer',state.sightings.some(s=>s.lat));chk('ten_sightings',state.sightings.length>=10);
-  localStorage.setItem('ws_badges_v8',JSON.stringify([...unlockedBadges]));
+  localStorage.setItem('ws_badges_v9',JSON.stringify([...unlockedBadges]));
   newB.forEach((id,i)=>{const b=BADGES.find(x=>x.id===id);setTimeout(()=>showToast(`🏅 Badge: ${b.name}!`),i*2000);});
   renderBadges();
 }
@@ -584,6 +564,7 @@ function renderBadges(){
   }).join('');
 }
 
+// ── TABS / UTILS ──
 function showTab(name){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
@@ -603,7 +584,7 @@ function showToast(msg){
 function confirmReset(){
   if(confirm('Reset ALL sighting data? This cannot be undone.')){
     state={sightings:[],globalSpotCounts:{},totalScore:0};
-    localStorage.removeItem('ws_v8');localStorage.removeItem('ws_badges_v8');
+    localStorage.removeItem('ws_v9');localStorage.removeItem('ws_badges_v9');
     unlockedBadges=new Set();
     if(flippedId){const p=document.getElementById('fc-'+flippedId);if(p)p.classList.remove('flipped');flippedId=null;}
     renderAll();showToast('🗑️ Data reset');
