@@ -7,15 +7,13 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Wildlife SA">
 <meta name="theme-color" content="#1a3a2a">
-<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+CiAgPHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMDAiIGZpbGw9IiMxYTNhMmEiLz4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEwMCIgZmlsbD0idXJsKCNnKSIvPgogIDxkZWZzPgogICAgPHJhZGlhbEdyYWRpZW50IGlkPSJnIiBjeD0iNDAlIiBjeT0iMzUlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzIzODYzNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwZDIwMTgiLz4KICAgIDwvcmFkaWFsR3JhZGllbnQ+CiAgPC9kZWZzPgogIDx0ZXh0IHg9IjI1NiIgeT0iMzQwIiBmb250LXNpemU9IjMwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFwcGxlIENvbG9yIEVtb2ppLFNlZ29lIFVJIEVtb2ppLHNhbnMtc2VyaWYiPvCfppg8L3RleHQ+Cjwvc3ZnPg==">
-<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiV2lsZGxpZmUgU3BvdHRlciBTQSIsInNob3J0X25hbWUiOiJXaWxkbGlmZSBTQSIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjMGQxMTE3IiwidGhlbWVfY29sb3IiOiIjMWEzYTJhIn0=">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
 <title>Wildlife Spotter — South Australia</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
   import { getDatabase, ref, set, get, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
-
   const firebaseConfig = {
     apiKey: "AIzaSyD9CKeiFBLMx0SPM5WrKBv7-Zc8DDBsUQk",
     authDomain: "wildlife-spotter-361c0.firebaseapp.com",
@@ -26,23 +24,14 @@
     appId: "1:1057332031030:web:d6c483107111893cbe3297",
     measurementId: "G-TVE64X18Q2"
   };
-
   try {
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    window._db = db;
-    window._fbRef = ref;
-    window._fbSet = set;
-    window._fbGet = get;
-    window._fbOnValue = onValue;
-    window._fbReady = true;
-    console.log('Firebase connected ✅');
-    // Notify any waiting callbacks
+    window._db=db; window._fbRef=ref; window._fbSet=set;
+    window._fbGet=get; window._fbOnValue=onValue; window._fbReady=true;
     if(window._fbReadyCallback) window._fbReadyCallback();
-  } catch(e) {
-    window._fbReady = false;
-    console.warn('Firebase init failed:', e.message);
-  }
+    console.log('Firebase connected');
+  } catch(e) { window._fbReady=false; console.warn('Firebase failed',e.message); }
 </script>
 <style>
 :root{--common:#4caf50;--uncommon:#2196f3;--rare:#9c27b0;--very-rare:#ff9800;--legendary:#f44336;--bg:#0d1117;--surface:#161b22;--surface2:#21262d;--border:#30363d;--text:#e6edf3;--text-muted:#8b949e;--accent:#238636;}
@@ -54,7 +43,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .score-pill{background:var(--accent);color:#fff;padding:6px 14px;border-radius:20px;font-size:15px;font-weight:700;white-space:nowrap;flex-shrink:0;}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--surface);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:6px 0 8px;}
 .bottom-nav button{background:none;border:none;color:var(--text-muted);padding:4px 8px;border-radius:8px;cursor:pointer;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px;transition:all .2s;min-width:50px;}
-.bottom-nav button:hover{color:var(--text);}
 .bottom-nav button.active{color:#fff;}
 .bottom-nav button.active .nav-icon{background:var(--accent);border-radius:12px;padding:2px 10px;}
 .nav-icon{font-size:20px;display:block;}
@@ -106,14 +94,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .btn{padding:10px 18px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;}
 .btn-primary{background:var(--accent);color:#fff;flex:1;}.btn-primary:hover{background:#2ea043;}
 .btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
-/* USERNAME MODAL */
 .username-modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;width:100%;max-width:360px;}
 .username-modal h2{font-size:18px;margin-bottom:8px;}
 .username-modal p{font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6;}
 .username-modal input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-size:15px;margin-bottom:12px;}
-.restoring-banner{background:#1a2a1a;border:1px solid #238636;border-radius:10px;padding:16px;text-align:center;color:#56d364;font-size:14px;}
-.restoring-banner .spin{display:inline-block;width:16px;height:16px;border:2px solid #238636;border-top-color:#56d364;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:8px;}
-/* JOURNAL */
 .journal-entry{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;display:flex;gap:10px;}
 .j-thumb{width:60px;height:60px;object-fit:cover;border-radius:8px;flex-shrink:0;}
 .j-emoji{width:60px;height:60px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
@@ -123,7 +107,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .j-pts{font-size:12px;font-weight:700;margin-top:3px;}
 .empty-state{text-align:center;padding:48px 16px;color:var(--text-muted);}
 .empty-state .icon{font-size:48px;margin-bottom:12px;}
-/* STATS */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;}
 .stat-card h3{font-size:13px;color:var(--text-muted);margin-bottom:3px;}
@@ -133,24 +116,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tier-bar-bg{flex:1;background:var(--surface2);border-radius:4px;height:9px;overflow:hidden;}
 .tier-bar{height:100%;border-radius:4px;transition:width .6s;}
 .tier-row .count{width:38px;text-align:right;font-size:11px;color:var(--text-muted);}
-/* SCOREBOARD */
 .scoreboard-entry{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
 .sb-rank{font-size:22px;font-weight:800;min-width:36px;}
 .sb-name{font-weight:600;font-size:15px;flex:1;}
 .sb-score{font-size:16px;font-weight:700;color:var(--accent);}
 .sb-species{font-size:12px;color:var(--text-muted);}
 .sb-you{border-color:var(--accent);background:#1a2f1a;}
-.fb-status{font-size:12px;padding:8px 14px;border-radius:8px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.fb-status{font-size:12px;padding:8px 14px;border-radius:8px;margin-bottom:12px;}
 .fb-status.connected{background:#1a2f1a;border:1px solid #238636;color:#56d364;}
 .fb-status.offline{background:#2a1a1a;border:1px solid #6e3535;color:#f85149;}
 .fb-status.loading{background:#1a2a3a;border:1px solid #1f6feb;color:#79c0ff;}
-/* MAP */
 #map{width:100%;height:450px;border-radius:10px;border:1px solid var(--border);}
 .map-legend{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:10px;}
 .legend-row{display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:3px;}
 .legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
 .no-gps-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 12px;margin-bottom:5px;font-size:12px;display:flex;justify-content:space-between;align-items:center;}
-/* BADGES */
 .badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:9px;}
 .badge-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;}
 .badge-card.unlocked{border-color:#ffd700;background:#1a1500;}
@@ -159,26 +139,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .badge-name{font-size:12px;font-weight:600;margin-bottom:3px;}
 .badge-desc{font-size:10px;color:var(--text-muted);}
 .badge-card.unlocked .badge-name{color:#ffd700;}
-/* MISC */
-/* TOAST — top of screen, tap to dismiss, never blocks nav */
+/* TOAST — slides in from top, tap to dismiss, never blocks nav */
 .toast-container{position:fixed;top:70px;left:0;right:0;z-index:999;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;padding:0 16px;}
-.toast-item{background:rgba(30,30,30,.95);color:#e6edf3;padding:10px 18px 10px 14px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.5);border:1px solid var(--border);display:flex;align-items:center;gap:10px;pointer-events:all;cursor:pointer;transition:opacity .3s,transform .3s;transform:translateY(-8px);opacity:0;max-width:340px;width:100%;}
+.toast-item{background:rgba(22,27,34,.97);color:var(--text);padding:10px 16px 10px 14px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.6);border:1px solid var(--border);display:flex;align-items:center;gap:10px;pointer-events:all;cursor:pointer;transition:opacity .3s,transform .3s;transform:translateY(-12px);opacity:0;max-width:340px;width:100%;}
 .toast-item.show{transform:translateY(0);opacity:1;}
-.toast-item.score{border-color:var(--accent);background:rgba(35,134,54,.15);}
-.toast-item.badge{border-color:#ffd700;background:rgba(255,215,0,.1);}
-.toast-item .toast-close{margin-left:auto;font-size:16px;opacity:.6;flex-shrink:0;}
-.toast-item:hover .toast-close{opacity:1;}
+.toast-item.score{border-color:var(--accent);}
+.toast-item.badge{border-color:#ffd700;}
+.toast-close{margin-left:auto;font-size:15px;opacity:.5;flex-shrink:0;}
 .danger-btn{background:#3a1515;border:1px solid var(--legendary);color:#f85149;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;}
 .section-title{font-size:13px;color:var(--text-muted);margin-bottom:8px;font-weight:600;}
 </style>
 </head>
 <body>
-
 <div class="app-header">
-  <div>
-    <h1>🦘 Wildlife Spotter SA</h1>
-    <p id="headerUsername">Loading…</p>
-  </div>
+  <div><h1>🦘 Wildlife Spotter SA</h1><p id="headerUsername">54 species · tap to log</p></div>
   <div class="score-pill" id="headerScore">⭐ 0 pts</div>
 </div>
 
@@ -226,21 +200,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="stat-card"><h3>Progress by Rarity</h3><div id="tierProgress" style="margin-top:10px;"></div></div>
   <div class="stat-card" style="margin-top:10px;">
     <h3>⚡ Dynamic Scoring with Recovery</h3>
-    <p style="font-size:12px;color:var(--text-muted);margin-top:8px;line-height:1.7;">
-      Each sighting reduces a species' value by <strong>10%</strong> (floor: 20% of max).<br>
-      If you haven't spotted it for <strong>30 days</strong>, the value recovers one step.<br>
-      Eventually it returns to full value — so it's always worth going back out! 🔄
-    </p>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:8px;line-height:1.7;">Each sighting reduces a species value by <strong>10%</strong> (floor: 20% of max). After <strong>30 days</strong> without a sighting, the value recovers one step. Keep exploring — it always pays to go back out! 🔄</p>
   </div>
   <div style="margin-top:14px;"><button class="danger-btn" onclick="confirmReset()">🗑️ Reset All Data</button></div>
 </div>
 
 <div id="tab-scoreboard" class="tab">
-  <div id="fbStatus" class="fb-status loading"><span class="spin" style="width:12px;height:12px;border:2px solid #1f6feb;border-top-color:#79c0ff;border-radius:50%;animation:spin .8s linear infinite;display:inline-block;margin-right:6px;"></span>Connecting to scoreboard…</div>
-  <div id="sbUsernameRow" style="margin-bottom:12px;display:flex;gap:8px;align-items:center;">
+  <div id="fbStatus" class="fb-status loading">⏳ Connecting to scoreboard…</div>
+  <div style="margin-bottom:12px;display:flex;gap:8px;align-items:center;">
     <span style="font-size:13px;color:var(--text-muted)">Playing as:</span>
     <strong id="sbUsernameDisplay" style="font-size:14px;color:#ffd700">—</strong>
-    <button onclick="changeUsername()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:12px;">Change name</button>
+    <button onclick="changeUsername()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:12px;">Change</button>
   </div>
   <div id="scoreboardList"><div class="empty-state"><div class="icon">🏆</div><p>Loading scores…</p></div></div>
 </div>
@@ -256,7 +226,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <button onclick="showTab('badges')"><span class="nav-icon">🏅</span>Badges</button>
 </nav>
 
-<!-- LOG MODAL -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <h2 id="modalTitle"></h2>
@@ -279,24 +248,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
-<!-- USERNAME MODAL -->
 <div class="modal-overlay" id="usernameOverlay">
   <div class="username-modal">
     <h2 id="unModalTitle">👋 What's your name?</h2>
-    <p id="unModalDesc">Choose a display name for the live scoreboard. This is saved to your device and Firebase so you'll be recognised automatically next time — even if you open the app in a new tab.</p>
+    <p id="unModalDesc">Choose a display name for the live scoreboard. It's saved to Firebase so you'll be recognised automatically on any device.</p>
     <input type="text" id="usernameInput" placeholder="e.g. Sam T." maxlength="24">
     <button class="btn btn-primary" style="width:100%" onclick="saveUsername()">Start Spotting! 🦘</button>
   </div>
 </div>
 
 <div class="toast-container" id="toastContainer"></div>
-
 <script>
-// ═══════════════════════════════════════════════════════════════
-// SPECIES — 54 verified SA species (v10)
-// ═══════════════════════════════════════════════════════════════
 const SPECIES = [
-  // BIRDS
   {id:'kookaburra',    name:'Laughing Kookaburra',           sci:'Dacelo novaeguineae',         cat:'bird',     emoji:'🐦', rarity:'common',    maxPts:5,   inatId:2413},
   {id:'galah',         name:'Galah',                          sci:'Eolophus roseicapilla',        cat:'bird',     emoji:'🦜', rarity:'common',    maxPts:5,   inatId:144560},
   {id:'magpie',        name:'Australian Magpie',              sci:'Gymnorhina tibicen',           cat:'bird',     emoji:'🐦', rarity:'common',    maxPts:5,   inatId:8575},
@@ -316,7 +279,6 @@ const SPECIES = [
   {id:'reg_parrot',    name:'Regent Parrot',                  sci:'Polytelis anthopeplus',        cat:'bird',     emoji:'🦜', rarity:'rare',      maxPts:40,  inatId:19251},
   {id:'hooded_plover', name:'Hooded Plover',                  sci:'Thinornis cucullatus',         cat:'bird',     emoji:'🐦', rarity:'rare',      maxPts:40,  inatId:144487},
   {id:'brolga',        name:'Brolga',                         sci:'Antigone rubicunda',           cat:'bird',     emoji:'🦢', rarity:'very-rare', maxPts:80,  inatId:3774},
-  // MAMMALS
   {id:'wg_kanga',      name:'Western Grey Kangaroo',          sci:'Macropus fuliginosus',         cat:'mammal',   emoji:'🦘', rarity:'common',    maxPts:5,   inatId:42881},
   {id:'eg_kanga',      name:'Eastern Grey Kangaroo',          sci:'Macropus giganteus',           cat:'mammal',   emoji:'🦘', rarity:'common',    maxPts:5,   inatId:42888},
   {id:'red_kanga',     name:'Red Kangaroo',                   sci:'Osphranter rufus',             cat:'mammal',   emoji:'🦘', rarity:'common',    maxPts:5,   inatId:1453439},
@@ -333,7 +295,6 @@ const SPECIES = [
   {id:'bandicoot',     name:'Southern Brown Bandicoot',       sci:'Isoodon obesulus',             cat:'mammal',   emoji:'🐾', rarity:'rare',      maxPts:40,  inatId:43294},
   {id:'platypus',      name:'Platypus',                       sci:'Ornithorhynchus anatinus',     cat:'mammal',   emoji:'🦆', rarity:'very-rare', maxPts:80,  inatId:43236},
   {id:'numbat',        name:'Numbat',                         sci:'Myrmecobius fasciatus',        cat:'mammal',   emoji:'🐾', rarity:'very-rare', maxPts:80,  inatId:40262},
-  // MARINE
   {id:'little_penguin',name:'Little Penguin',                 sci:'Eudyptula minor',              cat:'marine',   emoji:'🐧', rarity:'uncommon',  maxPts:15,  inatId:3817},
   {id:'dolphin',       name:'Indo-Pacific Bottlenose Dolphin',sci:'Tursiops aduncus',             cat:'marine',   emoji:'🐬', rarity:'uncommon',  maxPts:15,  inatId:41481},
   {id:'aus_sealion',   name:'Australian Sea Lion',            sci:'Neophoca cinerea',             cat:'marine',   emoji:'🦭', rarity:'rare',      maxPts:40,  inatId:41759},
@@ -342,7 +303,6 @@ const SPECIES = [
   {id:'great_white',   name:'Great White Shark',              sci:'Carcharodon carcharias',       cat:'marine',   emoji:'🦈', rarity:'very-rare', maxPts:80,  inatId:50873},
   {id:'leafy_sd',      name:'Leafy Seadragon',                sci:'Phycodurus eques',             cat:'marine',   emoji:'🐉', rarity:'very-rare', maxPts:80,  inatId:49105},
   {id:'sr_whale',      name:'Southern Right Whale',           sci:'Eubalaena australis',          cat:'marine',   emoji:'🐋', rarity:'legendary', maxPts:200, inatId:41571},
-  // REPTILES
   {id:'bluetongue',    name:'Eastern Blue-tongue',            sci:'Tiliqua scincoides',           cat:'reptile',  emoji:'🦎', rarity:'common',    maxPts:5,   inatId:37456},
   {id:'shingleback',   name:'Shingleback Lizard',             sci:'Tiliqua rugosa',               cat:'reptile',  emoji:'🦎', rarity:'common',    maxPts:5,   inatId:37460},
   {id:'net_dragon',    name:'Central Netted Dragon',          sci:'Ctenophorus nuchalis',         cat:'reptile',  emoji:'🦎', rarity:'uncommon',  maxPts:15,  inatId:31230},
@@ -350,137 +310,82 @@ const SPECIES = [
   {id:'tiger_snake',   name:'Tiger Snake',                    sci:'Notechis scutatus',            cat:'reptile',  emoji:'🐍', rarity:'uncommon',  maxPts:15,  inatId:35178},
   {id:'king_brown',    name:'King Brown Snake',               sci:'Pseudechis australis',         cat:'reptile',  emoji:'🐍', rarity:'rare',      maxPts:40,  inatId:35161},
   {id:'w_bluetongue',  name:'Western Blue-tongue',            sci:'Tiliqua occipitalis',          cat:'reptile',  emoji:'🦎', rarity:'rare',      maxPts:40,  inatId:37459},
-  {id:'ros_goanna',    name:"Rosenberg's Goanna",             sci:'Varanus rosenbergi',           cat:'reptile',  emoji:'🦎', rarity:'rare',      maxPts:40,  inatId:39416},
-  // INSECTS
+  {id:'ros_goanna',    name:"Rosenberg's Goanna",            sci:'Varanus rosenbergi',           cat:'reptile',  emoji:'🦎', rarity:'rare',      maxPts:40,  inatId:39416},
   {id:'emp_moth',      name:'Emperor Gum Moth',               sci:'Opodiphthera eucalypti',       cat:'insect',   emoji:'🦋', rarity:'uncommon',  maxPts:15,  inatId:68135},
   {id:'bogong',        name:'Bogong Moth',                    sci:'Agrotis infusa',               cat:'insect',   emoji:'🦋', rarity:'uncommon',  maxPts:15,  inatId:200008},
-  // AMPHIBIANS
   {id:'pobblebonk',    name:'Pobblebonk Frog',               sci:'Limnodynastes dumerilii',      cat:'amphibian',emoji:'🐸', rarity:'common',    maxPts:5,   inatId:22038},
 ];
-
 const RARITY_ORDER=['common','uncommon','rare','very-rare','legendary'];
 const RARITY_LABELS={common:'Common',uncommon:'Uncommon',rare:'Rare','very-rare':'Very Rare',legendary:'Legendary'};
 const RARITY_COLORS={common:'#4caf50',uncommon:'#2196f3',rare:'#9c27b0','very-rare':'#ff9800',legendary:'#f44336'};
-const MS_PER_DAY=86400000;
-const RECOVERY_DAYS=30;
+const MS_PER_DAY=86400000, RECOVERY_DAYS=30;
 
-// ─── STATE ────────────────────────────────────────────────────────────────────
 const photoCache={};
 let photosLoaded=false;
 let state={sightings:[],globalSpotCounts:{},lastSightingDate:{},totalScore:0};
-let username='';
-let deviceId='';
-let unlockedBadges=new Set();
+let username='', deviceId='', unlockedBadges=new Set();
 
-// ─── DEVICE ID + PERSISTENT IDENTITY ─────────────────────────────────────────
-// How it works:
-//   1. On first ever open: generate a unique deviceId, save to localStorage
-//   2. Push deviceId → username mapping to Firebase
-//   3. On every open: read deviceId from localStorage
-//   4. Look up deviceId in Firebase → restore username automatically
-//   5. Even if localStorage is cleared by Safari ITP, user just re-enters name once
-//      and the mapping is re-saved for next time
-
-function generateDeviceId(){
-  return 'dev_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8);
-}
+function generateDeviceId(){ return 'dev_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8); }
 
 function loadLocalState(){
-  deviceId = localStorage.getItem('ws_deviceId');
-  if(!deviceId){
-    deviceId = generateDeviceId();
-    localStorage.setItem('ws_deviceId', deviceId);
-  }
+  deviceId=localStorage.getItem('ws_deviceId')||'';
+  if(!deviceId){ deviceId=generateDeviceId(); localStorage.setItem('ws_deviceId',deviceId); }
   const s=localStorage.getItem('ws_v13'); if(s) state=JSON.parse(s);
   username=localStorage.getItem('ws_username_v13')||'';
   const b=localStorage.getItem('ws_badges_v13'); if(b) unlockedBadges=new Set(JSON.parse(b));
 }
-
 function saveLocalState(){
   localStorage.setItem('ws_v13',JSON.stringify(state));
   localStorage.setItem('ws_username_v13',username);
   localStorage.setItem('ws_deviceId',deviceId);
 }
 
-// Try to restore username from Firebase using deviceId
 async function restoreIdentityFromFirebase(){
   if(!window._fbReady) return false;
   try{
-    const snap = await window._fbGet(window._fbRef(window._db, `devices/${deviceId}`));
-    if(snap.exists()){
-      const data = snap.val();
-      if(data.username){
-        username = data.username;
-        saveLocalState();
-        return true;
-      }
-    }
-  }catch(e){ console.warn('Identity restore failed:', e); }
+    const snap=await window._fbGet(window._fbRef(window._db,`devices/${deviceId}`));
+    if(snap.exists()&&snap.val().username){ username=snap.val().username; saveLocalState(); return true; }
+  }catch(e){}
   return false;
 }
-
-// Save deviceId → username mapping to Firebase
 function saveIdentityToFirebase(){
-  if(!window._fbReady || !username || !deviceId) return;
-  try{
-    window._fbSet(window._fbRef(window._db, `devices/${deviceId}`), {
-      username: username,
-      updatedAt: Date.now()
-    });
-  }catch(e){}
+  if(!window._fbReady||!username||!deviceId) return;
+  try{ window._fbSet(window._fbRef(window._db,`devices/${deviceId}`),{username,updatedAt:Date.now()}); }catch(e){}
 }
 
-// ─── SCORING ──────────────────────────────────────────────────────────────────
 function getEffectiveN(id){
-  const n=state.globalSpotCounts[id]||0;
-  if(n===0) return 0;
-  const lastTs=state.lastSightingDate[id];
-  if(!lastTs) return n;
-  const daysSince=(Date.now()-lastTs)/MS_PER_DAY;
-  const recoverySteps=Math.floor(daysSince/RECOVERY_DAYS);
-  return Math.max(0,n-recoverySteps);
+  const n=state.globalSpotCounts[id]||0; if(n===0) return 0;
+  const lastTs=state.lastSightingDate[id]; if(!lastTs) return n;
+  return Math.max(0,n-Math.floor((Date.now()-lastTs)/MS_PER_DAY/RECOVERY_DAYS));
 }
 function currentPts(id){
   const sp=SPECIES.find(s=>s.id===id);
-  const effN=getEffectiveN(id);
   const floor=Math.ceil(sp.maxPts*0.20);
-  return Math.max(floor,Math.round(sp.maxPts*Math.pow(0.90,effN)));
+  return Math.max(floor,Math.round(sp.maxPts*Math.pow(0.90,getEffectiveN(id))));
 }
-function hasRecovered(id){
-  const n=state.globalSpotCounts[id]||0;
-  return n>0 && getEffectiveN(id)<n;
-}
+function hasRecovered(id){ const n=state.globalSpotCounts[id]||0; return n>0&&getEffectiveN(id)<n; }
 function dynInfo(id){
   const sp=SPECIES.find(s=>s.id===id);
-  const n=state.globalSpotCounts[id]||0;
-  const effN=getEffectiveN(id);
-  const pts=currentPts(id);
-  const floor=Math.ceil(sp.maxPts*0.20);
-  const lastTs=state.lastSightingDate[id];
+  const n=state.globalSpotCounts[id]||0, effN=getEffectiveN(id), pts=currentPts(id);
+  const floor=Math.ceil(sp.maxPts*0.20), lastTs=state.lastSightingDate[id];
   let lines=[];
-  if(n===0){
-    lines.push(`🌟 First sighting! Full value: <strong>${pts} pts</strong>`);
-  } else {
+  if(n===0){ lines.push(`🌟 First sighting! Full value: <strong>${pts} pts</strong>`); }
+  else{
     lines.push(`📅 Spotted <strong>${n}×</strong> total`);
     if(lastTs){
       const days=Math.floor((Date.now()-lastTs)/MS_PER_DAY);
       lines.push(`⏱️ Last seen: <strong>${days===0?'today':days+' day'+(days===1?'':'s')+' ago'}</strong>`);
       if(effN<n) lines.push(`🔄 Recovered ${n-effN} step${n-effN>1?'s':''} — value rising!`);
-      else if(pts>floor){
-        const nextRecovery=RECOVERY_DAYS-(days%RECOVERY_DAYS);
-        lines.push(`🔄 Next recovery in <strong>${nextRecovery} day${nextRecovery===1?'':'s'}</strong>`);
-      }
+      else if(pts>floor){ const nr=RECOVERY_DAYS-(days%RECOVERY_DAYS); lines.push(`🔄 Next recovery in <strong>${nr} day${nr===1?'':'s'}</strong>`); }
     }
-    lines.push(`⚡ Current value: <strong>${pts} pts</strong>${pts<=floor?' ⚠️ (at minimum)':''} of ${sp.maxPts} max`);
+    lines.push(`⚡ Current: <strong>${pts} pts</strong>${pts<=floor?' ⚠️ at minimum':''} of ${sp.maxPts} max`);
   }
   return lines.join('<br>');
 }
 
-// ─── PHOTOS ───────────────────────────────────────────────────────────────────
 async function loadAllPhotos(){
   const ids=[...new Set(SPECIES.map(s=>s.inatId))];
-  const batches=[];
-  for(let i=0;i<ids.length;i+=30) batches.push(ids.slice(i,i+30));
+  const batches=[]; for(let i=0;i<ids.length;i+=30) batches.push(ids.slice(i,i+30));
   let loaded=0,failed=0;
   for(const batch of batches){
     try{
@@ -488,10 +393,8 @@ async function loadAllPhotos(){
       if(!res.ok) throw new Error();
       const data=await res.json();
       for(const taxon of(data.results||[])){
-        const matches=SPECIES.filter(s=>s.inatId===taxon.id);
-        const photo=taxon.default_photo;
-        for(const sp of matches){
-          if(photo?.medium_url){ photoCache[sp.id]={url:photo.medium_url,credit:(photo.attribution||'iNaturalist').substring(0,70)}; loaded++; }
+        for(const sp of SPECIES.filter(s=>s.inatId===taxon.id)){
+          if(taxon.default_photo?.medium_url){ photoCache[sp.id]={url:taxon.default_photo.medium_url,credit:(taxon.default_photo.attribution||'iNaturalist').substring(0,70)}; loaded++; }
           else failed++;
         }
       }
@@ -501,17 +404,11 @@ async function loadAllPhotos(){
   }
   photosLoaded=true;
   const banner=document.getElementById('photoBanner');
-  if(loaded>0){
-    banner.style.cssText='background:#1a2a1a;border:1px solid #238636;color:#56d364;border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:12px;';
-    banner.innerHTML=`✅ ${loaded} photos loaded${failed>0?` (${failed} unavailable)`:''}`;
-  } else {
-    banner.style.cssText='background:#2a1a1a;border:1px solid #f44336;color:#f85149;border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:12px;';
-    banner.innerHTML='⚠️ Could not load photos — check your connection and refresh.';
-  }
+  if(loaded>0){ banner.style.cssText='background:#1a2a1a;border:1px solid #238636;color:#56d364;border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:12px;'; banner.innerHTML=`✅ ${loaded} photos loaded${failed>0?` (${failed} unavailable)`:'`}`; }
+  else{ banner.style.cssText='background:#2a1a1a;border:1px solid #f44336;color:#f85149;border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:12px;'; banner.innerHTML='⚠️ Could not load photos — check connection and refresh.'; }
   renderSpecies();
 }
 
-// ─── CARDS ────────────────────────────────────────────────────────────────────
 function thumbHtml(sp){
   if(!photosLoaded) return`<div class="card-thumb-loading"><div class="spin"></div></div>`;
   const pc=photoCache[sp.id];
@@ -519,27 +416,16 @@ function thumbHtml(sp){
   return`<div class="card-thumb-placeholder">${sp.emoji}</div>`;
 }
 let currentFilter='all';
-function setFilter(cat,btn){
-  currentFilter=cat;
-  document.querySelectorAll('.filter-btns button').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
-  renderSpecies();
-}
+function setFilter(cat,btn){ currentFilter=cat; document.querySelectorAll('.filter-btns button').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderSpecies(); }
 function renderSpecies(){
   const q=document.getElementById('searchInput').value.toLowerCase();
   let list=SPECIES;
   if(currentFilter!=='all') list=list.filter(s=>s.cat===currentFilter);
   if(q) list=list.filter(s=>s.name.toLowerCase().includes(q)||s.sci.toLowerCase().includes(q));
   const spotted=new Set(state.sightings.map(s=>s.speciesId));
-  list=[...list].sort((a,b)=>{
-    if(spotted.has(a.id)!==spotted.has(b.id)) return spotted.has(a.id)?-1:1;
-    return RARITY_ORDER.indexOf(b.rarity)-RARITY_ORDER.indexOf(a.rarity);
-  });
+  list=[...list].sort((a,b)=>{ if(spotted.has(a.id)!==spotted.has(b.id)) return spotted.has(a.id)?-1:1; return RARITY_ORDER.indexOf(b.rarity)-RARITY_ORDER.indexOf(a.rarity); });
   document.getElementById('speciesGrid').innerHTML=list.map(sp=>{
-    const isSpotted=spotted.has(sp.id);
-    const pts=currentPts(sp.id);
-    const cnt=state.globalSpotCounts[sp.id]||0;
-    const r=sp.rarity;
-    const recovering=hasRecovered(sp.id);
+    const isSpotted=spotted.has(sp.id), pts=currentPts(sp.id), cnt=state.globalSpotCounts[sp.id]||0, r=sp.rarity;
     return`<div class="species-card ${isSpotted?'spotted':''}">
       ${isSpotted?'<div class="card-spotted-badge">✅</div>':''}
       ${thumbHtml(sp)}
@@ -547,18 +433,14 @@ function renderSpecies(){
         <div class="card-name">${sp.name}</div>
         <div class="card-sci">${sp.sci}</div>
         ${cnt>0?`<div style="font-size:9px;color:var(--text-muted)">Spotted ${cnt}× globally</div>`:''}
-        ${recovering?`<div class="card-recovery">🔄 Recovering…</div>`:''}
-        <div class="card-meta">
-          <span class="rarity-badge r-${r}">${RARITY_LABELS[r]}</span>
-          <span class="pts-badge pts-${r}">${pts}pts</span>
-        </div>
+        ${hasRecovered(sp.id)?'<div class="card-recovery">🔄 Recovering…</div>':''}
+        <div class="card-meta"><span class="rarity-badge r-${r}">${RARITY_LABELS[r]}</span><span class="pts-badge pts-${r}">${pts}pts</span></div>
         <button class="card-log-btn" onclick="openModal('${sp.id}',event)">📍 Log Sighting</button>
       </div>
     </div>`;
   }).join('');
 }
 
-// ─── LOG MODAL ────────────────────────────────────────────────────────────────
 let pendingId=null,pendingPhoto=null,pendingLat=null,pendingLng=null;
 function openModal(id,e){
   if(e){e.stopPropagation();e.preventDefault();}
@@ -567,8 +449,7 @@ function openModal(id,e){
   document.getElementById('modalTitle').textContent=sp.emoji+' '+sp.name;
   document.getElementById('modalSci').textContent=sp.sci;
   document.getElementById('modalDynInfo').innerHTML=dynInfo(id);
-  const pc=photoCache[id];
-  const ref=document.getElementById('modalRefPhoto');
+  const pc=photoCache[id], ref=document.getElementById('modalRefPhoto');
   if(pc){ref.src=pc.url;ref.style.display='block';document.getElementById('modalRefCredit').textContent='📷 '+pc.credit;}
   else{ref.style.display='none';document.getElementById('modalRefCredit').textContent='';}
   document.getElementById('userPhotoPreview').style.display='none';
@@ -584,8 +465,7 @@ function handlePhoto(e){
   reader.onload=ev=>{
     const img=new Image();
     img.onload=()=>{
-      const c=document.createElement('canvas'); const MAX=800;
-      let w=img.width,h=img.height;
+      const c=document.createElement('canvas'), MAX=800; let w=img.width,h=img.height;
       if(w>h&&w>MAX){h=h*MAX/w;w=MAX;}else if(h>MAX){w=w*MAX/h;h=MAX;}
       c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
       pendingPhoto=c.toDataURL('image/jpeg',0.75);
@@ -594,12 +474,12 @@ function handlePhoto(e){
   };reader.readAsDataURL(file);
 }
 function getGPS(){
-  if(!navigator.geolocation){showToast('❌ Geolocation not supported');return;}
+  if(!navigator.geolocation){showToast('❌ Geolocation not supported','score');return;}
   navigator.geolocation.getCurrentPosition(pos=>{
     pendingLat=pos.coords.latitude.toFixed(6); pendingLng=pos.coords.longitude.toFixed(6);
     const el=document.getElementById('gpsDisplay'); el.textContent=`📍 ${pendingLat}, ${pendingLng}`; el.style.display='block';
-    showToast('📍 Location captured!');
-  },()=>showToast('❌ Could not get location'));
+    showToast('📍 Location captured!','score',2000);
+  },()=>showToast('❌ Could not get location','score'));
 }
 function confirmLog(){
   if(!pendingId) return;
@@ -611,82 +491,64 @@ function confirmLog(){
     notes:document.getElementById('notesInput').value.trim(),ptsEarned:pts});
   state.totalScore+=pts;
   saveLocalState(); closeModal(); checkBadges(); pushScoreToFirebase(); renderAll();
-  showToast(`+${pts} pts — ${SPECIES.find(s=>s.id===pendingId).name}!`);
+  showToast(`+${pts} pts — ${SPECIES.find(s=>s.id===pendingId).name}!`,'score',2500);
 }
 
-// ─── FIREBASE SCOREBOARD ──────────────────────────────────────────────────────
 function pushScoreToFirebase(){
   if(!window._fbReady||!username) return;
-  try{
-    window._fbSet(window._fbRef(window._db,`scores/${username}`),{
-      name:username, score:state.totalScore,
-      species:new Set(state.sightings.map(s=>s.speciesId)).size,
-      deviceId:deviceId, updatedAt:Date.now()
-    });
-  }catch(e){}
+  try{ window._fbSet(window._fbRef(window._db,`scores/${username}`),{name:username,score:state.totalScore,species:new Set(state.sightings.map(s=>s.speciesId)).size,deviceId,updatedAt:Date.now()}); }catch(e){}
 }
 function initFirebaseListener(){
   if(!window._fbReady) return;
-  const statusEl=document.getElementById('fbStatus');
-  statusEl.className='fb-status connected';
-  statusEl.textContent='🔥 Live scoreboard active';
-  window._fbOnValue(window._fbRef(window._db,'scores'),(snapshot)=>{
-    renderScoreboard(snapshot.val()||{});
-  });
+  const el=document.getElementById('fbStatus');
+  el.className='fb-status connected'; el.textContent='🔥 Live scoreboard active';
+  window._fbOnValue(window._fbRef(window._db,'scores'),(snap)=>renderScoreboard(snap.val()||{}));
 }
 function renderScoreboard(data){
   const entries=Object.values(data).sort((a,b)=>b.score-a.score);
   const el=document.getElementById('scoreboardList');
-  if(!entries.length){el.innerHTML='<div class="empty-state"><div class="icon">🏆</div><p>No scores yet — be the first to log a sighting!</p></div>';return;}
+  if(!entries.length){el.innerHTML='<div class="empty-state"><div class="icon">🏆</div><p>No scores yet!</p></div>';return;}
   const medals=['🥇','🥈','🥉'];
   el.innerHTML=entries.slice(0,50).map((e,i)=>{
     const isYou=e.name===username;
     return`<div class="scoreboard-entry ${isYou?'sb-you':''}">
       <span class="sb-rank">${medals[i]||`#${i+1}`}</span>
       <div style="flex:1"><div class="sb-name">${e.name}${isYou?' 👈 you':''}</div>
-      <div class="sb-species">${e.species||0} species spotted</div></div>
+      <div class="sb-species">${e.species||0} species</div></div>
       <div class="sb-score">⭐ ${e.score||0}</div>
     </div>`;
   }).join('');
 }
 
-// ─── USERNAME ─────────────────────────────────────────────────────────────────
 function showUsernameModal(isChange=false){
-  document.getElementById('unModalTitle').textContent = isChange ? '✏️ Change your name' : '👋 What\'s your name?';
-  document.getElementById('unModalDesc').textContent = isChange
-    ? 'Enter a new display name. Your scores on the leaderboard will update immediately.'
-    : 'Choose a display name for the live scoreboard. It\'s saved to your device and Firebase so you\'ll be recognised automatically next time — even in a new tab.';
-  document.getElementById('usernameInput').value = username||'';
+  document.getElementById('unModalTitle').textContent=isChange?'✏️ Change your name':'👋 What's your name?';
+  document.getElementById('unModalDesc').textContent=isChange
+    ?'Enter a new display name. Your leaderboard score will update immediately.'
+    :'Choose a display name for the live scoreboard. Saved to Firebase so you're recognised on any device.';
+  document.getElementById('usernameInput').value=username||'';
   document.getElementById('usernameOverlay').classList.add('open');
   setTimeout(()=>document.getElementById('usernameInput').focus(),200);
 }
 function saveUsername(){
   const val=document.getElementById('usernameInput').value.trim();
-  if(!val||val.length<2){showToast('Please enter at least 2 characters');return;}
-  username=val;
-  saveLocalState();
-  saveIdentityToFirebase(); // save deviceId → username mapping
+  if(!val||val.length<2){showToast('Please enter at least 2 characters','score');return;}
+  username=val; saveLocalState(); saveIdentityToFirebase();
   document.getElementById('usernameOverlay').classList.remove('open');
-  updateUsernameDisplay();
-  initFirebaseListener();
-  pushScoreToFirebase();
+  updateUsernameDisplay(); initFirebaseListener(); pushScoreToFirebase();
 }
 function changeUsername(){ showUsernameModal(true); }
 function updateUsernameDisplay(){
   document.getElementById('sbUsernameDisplay').textContent=username||'—';
-  document.getElementById('headerUsername').textContent=username?`👤 ${username}`:'54 species · Tap to log';
+  document.getElementById('headerUsername').textContent=username?`👤 ${username}`:'54 species · tap to log';
 }
 
-// ─── JOURNAL ──────────────────────────────────────────────────────────────────
 function renderJournal(){
   const el=document.getElementById('journalList');
   if(!state.sightings.length){el.innerHTML='<div class="empty-state"><div class="icon">📓</div><p>No sightings yet.<br>Head outside and tap <strong>Log Sighting</strong>!</p></div>';return;}
   el.innerHTML=state.sightings.map(s=>{
     const sp=SPECIES.find(x=>x.id===s.speciesId); if(!sp) return'';
-    const r=sp.rarity; const pc=photoCache[sp.id];
-    const date=new Date(s.ts).toLocaleString('en-AU',{dateStyle:'medium',timeStyle:'short'});
-    const thumb=s.photo?`<img src="${s.photo}" class="j-thumb" alt="photo">`:
-      pc?`<img src="${pc.url}" class="j-thumb" alt="${sp.name}" onerror="this.outerHTML='<div class=j-emoji>${sp.emoji}</div>'">`:`<div class="j-emoji">${sp.emoji}</div>`;
+    const r=sp.rarity, pc=photoCache[sp.id], date=new Date(s.ts).toLocaleString('en-AU',{dateStyle:'medium',timeStyle:'short'});
+    const thumb=s.photo?`<img src="${s.photo}" class="j-thumb" alt="photo">`:pc?`<img src="${pc.url}" class="j-thumb" alt="${sp.name}" onerror="this.outerHTML='<div class=j-emoji>${sp.emoji}</div>'">`:`<div class="j-emoji">${sp.emoji}</div>`;
     return`<div class="journal-entry">${thumb}<div style="flex:1">
       <div class="j-name">${sp.emoji} ${sp.name}</div><div class="j-time">${date}</div>
       ${s.lat?`<div class="j-coords" onclick="jumpToMap(${s.lat},${s.lng})">📍 ${s.lat}, ${s.lng}</div>`:''}
@@ -696,7 +558,6 @@ function renderJournal(){
   }).join('');
 }
 
-// ─── STATS ────────────────────────────────────────────────────────────────────
 function renderStats(){
   document.getElementById('statScore').textContent=state.totalScore;
   const u=new Set(state.sightings.map(s=>s.speciesId));
@@ -706,48 +567,32 @@ function renderStats(){
   u.forEach(id=>{const sp=SPECIES.find(s=>s.id===id);if(!rarest||RARITY_ORDER.indexOf(sp.rarity)>RARITY_ORDER.indexOf(rarest))rarest=sp.rarity;});
   document.getElementById('statRarest').textContent=rarest?RARITY_LABELS[rarest]:'—';
   document.getElementById('tierProgress').innerHTML=RARITY_ORDER.map(r=>{
-    const total=SPECIES.filter(s=>s.rarity===r).length;
-    const found=SPECIES.filter(s=>s.rarity===r&&u.has(s.id)).length;
-    const pct=total>0?(found/total*100).toFixed(0):0;
-    return`<div class="tier-row"><div class="label" style="color:${RARITY_COLORS[r]}">${RARITY_LABELS[r]}</div>
-      <div class="tier-bar-bg"><div class="tier-bar r-${r}" style="width:${pct}%"></div></div>
-      <div class="count">${found}/${total}</div></div>`;
+    const total=SPECIES.filter(s=>s.rarity===r).length, found=SPECIES.filter(s=>s.rarity===r&&u.has(s.id)).length, pct=total>0?(found/total*100).toFixed(0):0;
+    return`<div class="tier-row"><div class="label" style="color:${RARITY_COLORS[r]}">${RARITY_LABELS[r]}</div><div class="tier-bar-bg"><div class="tier-bar r-${r}" style="width:${pct}%"></div></div><div class="count">${found}/${total}</div></div>`;
   }).join('');
   document.getElementById('headerScore').textContent=`⭐ ${state.totalScore} pts`;
 }
 
-// ─── MAP ──────────────────────────────────────────────────────────────────────
 let leafletMap=null,mapMarkers=[];
 function renderMap(){
-  if(!leafletMap){
-    leafletMap=L.map('map').setView([-34.9285,138.6007],7);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors',maxZoom:18}).addTo(leafletMap);
-  }
+  if(!leafletMap){ leafletMap=L.map('map').setView([-34.9285,138.6007],7); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors',maxZoom:18}).addTo(leafletMap); }
   mapMarkers.forEach(m=>m.remove()); mapMarkers=[];
-  const withGPS=state.sightings.filter(s=>s.lat&&s.lng);
-  const noGPS=state.sightings.filter(s=>!s.lat&&!s.lng);
-  withGPS.forEach(s=>{
+  state.sightings.filter(s=>s.lat&&s.lng).forEach(s=>{
     const sp=SPECIES.find(x=>x.id===s.speciesId); if(!sp) return;
     const color=RARITY_COLORS[sp.rarity];
     const icon=L.divIcon({className:'',html:`<div style="width:28px;height:28px;border-radius:50%;background:${color};border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,.5)">${sp.emoji}</div>`,iconSize:[28,28],iconAnchor:[14,14]});
     const date=new Date(s.ts).toLocaleString('en-AU',{dateStyle:'short',timeStyle:'short'});
     const pc=photoCache[sp.id];
-    const photoHtml=s.photo?`<img src="${s.photo}" style="width:100%;border-radius:6px;margin-top:6px">`:
-      pc?`<img src="${pc.url}" style="width:100%;border-radius:6px;margin-top:6px" onerror="this.remove()">` :'';
-    mapMarkers.push(L.marker([parseFloat(s.lat),parseFloat(s.lng)],{icon}).addTo(leafletMap)
-      .bindPopup(`<div style="min-width:160px"><strong>${sp.emoji} ${sp.name}</strong><br><small>${date}</small><br><span style="color:${color};font-weight:700">+${s.ptsEarned} pts</span>${photoHtml}${s.notes?`<p style="margin-top:6px;font-style:italic;font-size:12px">${s.notes}</p>`:''}</div>`));
+    const photoHtml=s.photo?`<img src="${s.photo}" style="width:100%;border-radius:6px;margin-top:6px">`:pc?`<img src="${pc.url}" style="width:100%;border-radius:6px;margin-top:6px" onerror="this.remove()">` :'';
+    mapMarkers.push(L.marker([parseFloat(s.lat),parseFloat(s.lng)],{icon}).addTo(leafletMap).bindPopup(`<div style="min-width:160px"><strong>${sp.emoji} ${sp.name}</strong><br><small>${date}</small><br><span style="color:${color};font-weight:700">+${s.ptsEarned} pts</span>${photoHtml}${s.notes?`<p style="margin-top:6px;font-style:italic;font-size:12px">${s.notes}</p>`:''}</div>`));
   });
   if(mapMarkers.length>0) leafletMap.fitBounds(L.featureGroup(mapMarkers).getBounds().pad(0.2));
-  document.getElementById('noGpsList').innerHTML=noGPS.length>0
-    ?`<p class="section-title">Sightings without GPS (${noGPS.length})</p>`+
-      noGPS.map(s=>{const sp=SPECIES.find(x=>x.id===s.speciesId);if(!sp)return'';
-        return`<div class="no-gps-item"><span>${sp.emoji} ${sp.name}</span><span style="color:var(--text-muted)">${new Date(s.ts).toLocaleString('en-AU',{dateStyle:'short',timeStyle:'short'})} · +${s.ptsEarned}pts</span></div>`;
-      }).join(''):'';
+  const noGPS=state.sightings.filter(s=>!s.lat&&!s.lng);
+  document.getElementById('noGpsList').innerHTML=noGPS.length>0?`<p class="section-title">Sightings without GPS (${noGPS.length})</p>`+noGPS.map(s=>{const sp=SPECIES.find(x=>x.id===s.speciesId);if(!sp)return'';return`<div class="no-gps-item"><span>${sp.emoji} ${sp.name}</span><span style="color:var(--text-muted)">${new Date(s.ts).toLocaleString('en-AU',{dateStyle:'short',timeStyle:'short'})} · +${s.ptsEarned}pts</span></div>`;}).join(''):'';
   setTimeout(()=>leafletMap.invalidateSize(),100);
 }
 function jumpToMap(lat,lng){showTab('map');setTimeout(()=>leafletMap.setView([lat,lng],14),200);}
 
-// ─── BADGES ───────────────────────────────────────────────────────────────────
 const BADGES=[
   {id:'first_blood',icon:'🌱',name:'First Steps',desc:'Log your first sighting'},
   {id:'five_species',icon:'🐾',name:'Tracker',desc:'Spot 5 different species'},
@@ -771,21 +616,16 @@ const BADGES=[
   {id:'ten_sightings',icon:'📓',name:'Dedicated',desc:'Log 10 total sightings'},
 ];
 function checkBadges(){
-  const newB=[];
-  const u=new Set(state.sightings.map(s=>s.speciesId));
+  const newB=[], u=new Set(state.sightings.map(s=>s.speciesId));
   const chk=(id,c)=>{if(c&&!unlockedBadges.has(id)){unlockedBadges.add(id);newB.push(id);}};
   chk('first_blood',state.sightings.length>=1);
-  chk('five_species',u.size>=5); chk('fifteen_species',u.size>=15);
-  chk('thirty_species',u.size>=30); chk('all_species',u.size>=SPECIES.length);
-  chk('score_100',state.totalScore>=100); chk('score_500',state.totalScore>=500);
-  chk('score_1000',state.totalScore>=1000); chk('score_5000',state.totalScore>=5000);
+  chk('five_species',u.size>=5);chk('fifteen_species',u.size>=15);chk('thirty_species',u.size>=30);chk('all_species',u.size>=SPECIES.length);
+  chk('score_100',state.totalScore>=100);chk('score_500',state.totalScore>=500);chk('score_1000',state.totalScore>=1000);chk('score_5000',state.totalScore>=5000);
   ['common','uncommon','rare','very-rare','legendary'].forEach(r=>chk('all_'+r.replace('-','_'),SPECIES.filter(s=>s.rarity===r).every(s=>u.has(s.id))));
   ['bird','mammal','marine'].forEach(c=>chk('all_'+c+'s',SPECIES.filter(s=>s.cat===c).every(s=>u.has(s.id))));
-  chk('photographer',state.sightings.some(s=>s.photo));
-  chk('cartographer',state.sightings.some(s=>s.lat));
-  chk('ten_sightings',state.sightings.length>=10);
+  chk('photographer',state.sightings.some(s=>s.photo));chk('cartographer',state.sightings.some(s=>s.lat));chk('ten_sightings',state.sightings.length>=10);
   localStorage.setItem('ws_badges_v13',JSON.stringify([...unlockedBadges]));
-  newB.forEach((id,i)=>{const b=BADGES.find(x=>x.id===id);setTimeout(()=>showToast(`🏅 Badge unlocked: ${b.name}!`,'badge',5000),i*1200);});
+  newB.forEach((id,i)=>{const b=BADGES.find(x=>x.id===id);setTimeout(()=>showToast(`🏅 Badge: ${b.name}!`,'badge',5000),i*1500);});
   renderBadges();
 }
 function renderBadges(){
@@ -795,96 +635,56 @@ function renderBadges(){
   }).join('');
 }
 
-// ─── NAVIGATION ───────────────────────────────────────────────────────────────
-const TAB_ORDER=['spot','journal','map','stats','scoreboard','badges'];
-function showTab(name){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
-  document.querySelectorAll('.bottom-nav button')[TAB_ORDER.indexOf(name)].classList.add('active');
-  if(name==='map')renderMap(); if(name==='stats')renderStats();
-  if(name==='journal')renderJournal(); if(name==='badges')renderBadges();
-}
-function renderAll(){
-  renderSpecies(); renderJournal(); renderStats(); renderBadges();
-  document.getElementById('headerScore').textContent=`⭐ ${state.totalScore} pts`;
-}
-function showToast(msg, type='score', duration=3000){
+function showToast(msg,type='score',duration=3000){
   const container=document.getElementById('toastContainer');
   const item=document.createElement('div');
   item.className=`toast-item ${type}`;
   item.innerHTML=`<span>${msg}</span><span class="toast-close">✕</span>`;
   item.onclick=()=>dismissToast(item);
   container.appendChild(item);
-  // Trigger animation
   requestAnimationFrame(()=>requestAnimationFrame(()=>item.classList.add('show')));
-  // Auto-dismiss
-  const timer=setTimeout(()=>dismissToast(item), duration);
-  item._timer=timer;
+  item._timer=setTimeout(()=>dismissToast(item),duration);
 }
-function dismissToast(item){
-  clearTimeout(item._timer);
-  item.classList.remove('show');
-  setTimeout(()=>item.remove(), 350);
+function dismissToast(item){ clearTimeout(item._timer); item.classList.remove('show'); setTimeout(()=>item.remove(),350); }
+
+const TAB_ORDER=['spot','journal','map','stats','scoreboard','badges'];
+function showTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.querySelectorAll('.bottom-nav button')[TAB_ORDER.indexOf(name)].classList.add('active');
+  if(name==='map')renderMap();if(name==='stats')renderStats();if(name==='journal')renderJournal();if(name==='badges')renderBadges();
 }
+function renderAll(){ renderSpecies();renderJournal();renderStats();renderBadges();document.getElementById('headerScore').textContent=`⭐ ${state.totalScore} pts`; }
 function confirmReset(){
   if(confirm('Reset ALL sighting data? This cannot be undone.')){
     state={sightings:[],globalSpotCounts:{},lastSightingDate:{},totalScore:0};
-    localStorage.removeItem('ws_v13'); localStorage.removeItem('ws_badges_v13');
-    unlockedBadges=new Set(); renderAll(); pushScoreToFirebase();
-    showToast('🗑️ Data reset');
+    localStorage.removeItem('ws_v13');localStorage.removeItem('ws_badges_v13');
+    unlockedBadges=new Set();renderAll();pushScoreToFirebase();showToast('🗑️ Data reset','score');
   }
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
-// Wait for Firebase module to finish loading (it's async/module)
-// Polls up to 5s then proceeds without it
-function waitForFirebase(callback, timeout=5000){
-  if(window._fbReady){ callback(); return; }
+function waitForFirebase(callback,timeout=5000){
+  if(window._fbReady){callback();return;}
+  window._fbReadyCallback=()=>{window._fbReadyCallback=null;callback();};
   const start=Date.now();
-  // Register callback for when Firebase signals ready
-  window._fbReadyCallback=()=>{ window._fbReadyCallback=null; callback(); };
-  // Also poll as fallback
   const poll=setInterval(()=>{
-    if(window._fbReady){ clearInterval(poll); window._fbReadyCallback=null; callback(); }
-    else if(Date.now()-start>timeout){ clearInterval(poll); window._fbReadyCallback=null; callback(); }
-  }, 100);
+    if(window._fbReady){clearInterval(poll);window._fbReadyCallback=null;callback();}
+    else if(Date.now()-start>timeout){clearInterval(poll);window._fbReadyCallback=null;callback();}
+  },100);
 }
-
 async function onFirebaseReady(){
-  // Try to restore identity if localStorage was cleared
   if(!username){
     const restored=await restoreIdentityFromFirebase();
-    if(restored){
-      showToast(`👋 Welcome back, ${username}!`,'score');
-      updateUsernameDisplay();
-      saveIdentityToFirebase();
-      initFirebaseListener();
-      pushScoreToFirebase();
-      return;
-    }
-    // Truly new user
-    setTimeout(showUsernameModal, 300);
-  } else {
-    // Known user — connect scoreboard
-    saveIdentityToFirebase();
-    initFirebaseListener();
-    pushScoreToFirebase();
-  }
+    if(restored){ showToast(`👋 Welcome back, ${username}!`,'score'); updateUsernameDisplay(); saveIdentityToFirebase(); initFirebaseListener(); pushScoreToFirebase(); return; }
+    setTimeout(showUsernameModal,300);
+  } else { saveIdentityToFirebase(); initFirebaseListener(); pushScoreToFirebase(); }
 }
-
 async function init(){
-  loadLocalState();
-  renderAll();
-  updateUsernameDisplay();
-
-  // Show username prompt immediately if no local username,
-  // but also wait for Firebase to try identity restore first
+  loadLocalState(); renderAll(); updateUsernameDisplay();
   waitForFirebase(onFirebaseReady);
-
   loadAllPhotos();
 }
-
 init();
 </script>
 </body>
