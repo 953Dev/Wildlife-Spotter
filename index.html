@@ -404,7 +404,7 @@ async function loadAllPhotos(){
   }
   photosLoaded=true;
   const banner=document.getElementById('photoBanner');
-  if(loaded>0){ banner.style.cssText='background:#1a2a1a;border:1px solid #238636;color:#56d364;border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:12px;'; banner.innerHTML=`✅ ${loaded} photos loaded${failed>0?` (${failed} unavailable)`:'`}`; }
+  if(loaded>0){ banner.style.cssText='background:#1a2a1a;border:1px solid #238636;color:#56d364;border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:12px;'; banner.innerHTML=`✅ ${loaded} photos loaded${failed>0?' ('+failed+' unavailable)':''}`; }
   else{ banner.style.cssText='background:#2a1a1a;border:1px solid #f44336;color:#f85149;border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:12px;'; banner.innerHTML='⚠️ Could not load photos — check connection and refresh.'; }
   renderSpecies();
 }
