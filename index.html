@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Wildlife SA">
+<meta name="theme-color" content="#1a3a2a">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+CiAgPHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMDAiIGZpbGw9IiMxYTNhMmEiLz4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEwMCIgZmlsbD0idXJsKCNnKSIvPgogIDxkZWZzPgogICAgPHJhZGlhbEdyYWRpZW50IGlkPSJnIiBjeD0iNDAlIiBjeT0iMzUlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzIzODYzNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwZDIwMTgiLz4KICAgIDwvcmFkaWFsR3JhZGllbnQ+CiAgPC9kZWZzPgogIDx0ZXh0IHg9IjI1NiIgeT0iMzQwIiBmb250LXNpemU9IjMwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFwcGxlIENvbG9yIEVtb2ppLFNlZ29lIFVJIEVtb2ppLHNhbnMtc2VyaWYiPvCfppg8L3RleHQ+Cjwvc3ZnPg==">
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiV2lsZGxpZmUgU3BvdHRlciBTQSIsInNob3J0X25hbWUiOiJXaWxkbGlmZSBTQSIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjMGQxMTE3IiwidGhlbWVfY29sb3IiOiIjMWEzYTJhIn0=">
 <title>Wildlife Spotter — South Australia</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -31,6 +37,8 @@
     window._fbOnValue = onValue;
     window._fbReady = true;
     console.log('Firebase connected ✅');
+    // Notify any waiting callbacks
+    if(window._fbReadyCallback) window._fbReadyCallback();
   } catch(e) {
     window._fbReady = false;
     console.warn('Firebase init failed:', e.message);
@@ -152,8 +160,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .badge-desc{font-size:10px;color:var(--text-muted);}
 .badge-card.unlocked .badge-name{color:#ffd700;}
 /* MISC */
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(80px);background:#ffd700;color:#000;padding:11px 22px;border-radius:24px;font-weight:700;font-size:13px;z-index:999;transition:transform .4s;box-shadow:0 4px 20px rgba(0,0,0,.4);}
-.toast.show{transform:translateX(-50%) translateY(0);}
+/* TOAST — top of screen, tap to dismiss, never blocks nav */
+.toast-container{position:fixed;top:70px;left:0;right:0;z-index:999;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;padding:0 16px;}
+.toast-item{background:rgba(30,30,30,.95);color:#e6edf3;padding:10px 18px 10px 14px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.5);border:1px solid var(--border);display:flex;align-items:center;gap:10px;pointer-events:all;cursor:pointer;transition:opacity .3s,transform .3s;transform:translateY(-8px);opacity:0;max-width:340px;width:100%;}
+.toast-item.show{transform:translateY(0);opacity:1;}
+.toast-item.score{border-color:var(--accent);background:rgba(35,134,54,.15);}
+.toast-item.badge{border-color:#ffd700;background:rgba(255,215,0,.1);}
+.toast-item .toast-close{margin-left:auto;font-size:16px;opacity:.6;flex-shrink:0;}
+.toast-item:hover .toast-close{opacity:1;}
 .danger-btn{background:#3a1515;border:1px solid var(--legendary);color:#f85149;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;}
 .section-title{font-size:13px;color:var(--text-muted);margin-bottom:8px;font-weight:600;}
 </style>
@@ -275,7 +289,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast-container" id="toastContainer"></div>
 
 <script>
 // ═══════════════════════════════════════════════════════════════
@@ -771,7 +785,7 @@ function checkBadges(){
   chk('cartographer',state.sightings.some(s=>s.lat));
   chk('ten_sightings',state.sightings.length>=10);
   localStorage.setItem('ws_badges_v13',JSON.stringify([...unlockedBadges]));
-  newB.forEach((id,i)=>{const b=BADGES.find(x=>x.id===id);setTimeout(()=>showToast(`🏅 Badge: ${b.name}!`),i*2200);});
+  newB.forEach((id,i)=>{const b=BADGES.find(x=>x.id===id);setTimeout(()=>showToast(`🏅 Badge unlocked: ${b.name}!`,'badge',5000),i*1200);});
   renderBadges();
 }
 function renderBadges(){
@@ -795,9 +809,23 @@ function renderAll(){
   renderSpecies(); renderJournal(); renderStats(); renderBadges();
   document.getElementById('headerScore').textContent=`⭐ ${state.totalScore} pts`;
 }
-function showToast(msg){
-  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3200);
+function showToast(msg, type='score', duration=3000){
+  const container=document.getElementById('toastContainer');
+  const item=document.createElement('div');
+  item.className=`toast-item ${type}`;
+  item.innerHTML=`<span>${msg}</span><span class="toast-close">✕</span>`;
+  item.onclick=()=>dismissToast(item);
+  container.appendChild(item);
+  // Trigger animation
+  requestAnimationFrame(()=>requestAnimationFrame(()=>item.classList.add('show')));
+  // Auto-dismiss
+  const timer=setTimeout(()=>dismissToast(item), duration);
+  item._timer=timer;
+}
+function dismissToast(item){
+  clearTimeout(item._timer);
+  item.classList.remove('show');
+  setTimeout(()=>item.remove(), 350);
 }
 function confirmReset(){
   if(confirm('Reset ALL sighting data? This cannot be undone.')){
@@ -809,29 +837,50 @@ function confirmReset(){
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
-async function init(){
-  loadLocalState();
-  renderAll();
+// Wait for Firebase module to finish loading (it's async/module)
+// Polls up to 5s then proceeds without it
+function waitForFirebase(callback, timeout=5000){
+  if(window._fbReady){ callback(); return; }
+  const start=Date.now();
+  // Register callback for when Firebase signals ready
+  window._fbReadyCallback=()=>{ window._fbReadyCallback=null; callback(); };
+  // Also poll as fallback
+  const poll=setInterval(()=>{
+    if(window._fbReady){ clearInterval(poll); window._fbReadyCallback=null; callback(); }
+    else if(Date.now()-start>timeout){ clearInterval(poll); window._fbReadyCallback=null; callback(); }
+  }, 100);
+}
 
-  // Try to restore identity from Firebase first (handles cleared localStorage)
-  if(!username && window._fbReady){
-    const restored = await restoreIdentityFromFirebase();
-    if(restored){
-      showToast(`👋 Welcome back, ${username}!`);
-    }
-  }
-
-  updateUsernameDisplay();
-
+async function onFirebaseReady(){
+  // Try to restore identity if localStorage was cleared
   if(!username){
-    // Brand new user — ask for name
-    setTimeout(showUsernameModal, 600);
+    const restored=await restoreIdentityFromFirebase();
+    if(restored){
+      showToast(`👋 Welcome back, ${username}!`,'score');
+      updateUsernameDisplay();
+      saveIdentityToFirebase();
+      initFirebaseListener();
+      pushScoreToFirebase();
+      return;
+    }
+    // Truly new user
+    setTimeout(showUsernameModal, 300);
   } else {
-    // Known user — connect scoreboard silently
+    // Known user — connect scoreboard
     saveIdentityToFirebase();
     initFirebaseListener();
     pushScoreToFirebase();
   }
+}
+
+async function init(){
+  loadLocalState();
+  renderAll();
+  updateUsernameDisplay();
+
+  // Show username prompt immediately if no local username,
+  // but also wait for Firebase to try identity restore first
+  waitForFirebase(onFirebaseReady);
 
   loadAllPhotos();
 }
