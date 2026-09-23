@@ -8,42 +8,39 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-  import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+  import { getDatabase, ref, set, get, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
   const firebaseConfig = {
+    apiKey: "AIzaSyD9CKeiFBLMx0SPM5WrKBv7-Zc8DDBsUQk",
+    authDomain: "wildlife-spotter-361c0.firebaseapp.com",
+    databaseURL: "https://wildlife-spotter-361c0-default-rtdb.firebaseio.com",
+    projectId: "wildlife-spotter-361c0",
+    storageBucket: "wildlife-spotter-361c0.firebasestorage.app",
+    messagingSenderId: "1057332031030",
+    appId: "1:1057332031030:web:d6c483107111893cbe3297",
+    measurementId: "G-TVE64X18Q2"
+  };
 
-  apiKey: "AIzaSyD9CKeiFBLMx0SPM5WrKBv7-Zc8DDBsUQk",
-
-  authDomain: "wildlife-spotter-361c0.firebaseapp.com",
-
-  databaseURL: "https://wildlife-spotter-361c0-default-rtdb.firebaseio.com",
-
-  projectId: "wildlife-spotter-361c0",
-
-  storageBucket: "wildlife-spotter-361c0.firebasestorage.app",
-
-  messagingSenderId: "1057332031030",
-
-  appId: "1:1057332031030:web:d6c483107111893cbe3297",
-
-  measurementId: "G-TVE64X18Q2"
-
-};
-  const hasFirebase = firebaseConfig.apiKey !== undefined;
-  window._fbReady = false;
-  if (hasFirebase) {
-    try {
-      const app = initializeApp(firebaseConfig);
-      const db = getDatabase(app);
-      window._db = db; window._fbRef = ref; window._fbSet = set;
-      window._fbOnValue = onValue; window._fbReady = true;
-    } catch(e) { console.warn('Firebase init failed:', e.message); }
+  try {
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    window._db = db;
+    window._fbRef = ref;
+    window._fbSet = set;
+    window._fbGet = get;
+    window._fbOnValue = onValue;
+    window._fbReady = true;
+    console.log('Firebase connected ✅');
+  } catch(e) {
+    window._fbReady = false;
+    console.warn('Firebase init failed:', e.message);
   }
 </script>
 <style>
 :root{--common:#4caf50;--uncommon:#2196f3;--rare:#9c27b0;--very-rare:#ff9800;--legendary:#f44336;--bg:#0d1117;--surface:#161b22;--surface2:#21262d;--border:#30363d;--text:#e6edf3;--text-muted:#8b949e;--accent:#238636;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:70px;}
-.app-header{background:linear-gradient(135deg,#1a3a2a 0%,#0d2018 100%);padding:12px 16px 10px;text-align:center;position:sticky;top:0;z-index:99;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.app-header{background:linear-gradient(135deg,#1a3a2a 0%,#0d2018 100%);padding:12px 16px 10px;position:sticky;top:0;z-index:99;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .app-header h1{font-size:17px;font-weight:700;white-space:nowrap;}
 .app-header p{color:var(--text-muted);font-size:11px;}
 .score-pill{background:var(--accent);color:#fff;padding:6px 14px;border-radius:20px;font-size:15px;font-weight:700;white-space:nowrap;flex-shrink:0;}
@@ -101,10 +98,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .btn{padding:10px 18px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;}
 .btn-primary{background:var(--accent);color:#fff;flex:1;}.btn-primary:hover{background:#2ea043;}
 .btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
+/* USERNAME MODAL */
 .username-modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;width:100%;max-width:360px;}
 .username-modal h2{font-size:18px;margin-bottom:8px;}
-.username-modal p{font-size:13px;color:var(--text-muted);margin-bottom:16px;}
+.username-modal p{font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6;}
 .username-modal input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-size:15px;margin-bottom:12px;}
+.restoring-banner{background:#1a2a1a;border:1px solid #238636;border-radius:10px;padding:16px;text-align:center;color:#56d364;font-size:14px;}
+.restoring-banner .spin{display:inline-block;width:16px;height:16px;border:2px solid #238636;border-top-color:#56d364;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:8px;}
+/* JOURNAL */
 .journal-entry{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;display:flex;gap:10px;}
 .j-thumb{width:60px;height:60px;object-fit:cover;border-radius:8px;flex-shrink:0;}
 .j-emoji{width:60px;height:60px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
@@ -114,6 +115,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .j-pts{font-size:12px;font-weight:700;margin-top:3px;}
 .empty-state{text-align:center;padding:48px 16px;color:var(--text-muted);}
 .empty-state .icon{font-size:48px;margin-bottom:12px;}
+/* STATS */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;}
 .stat-card h3{font-size:13px;color:var(--text-muted);margin-bottom:3px;}
@@ -123,23 +125,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tier-bar-bg{flex:1;background:var(--surface2);border-radius:4px;height:9px;overflow:hidden;}
 .tier-bar{height:100%;border-radius:4px;transition:width .6s;}
 .tier-row .count{width:38px;text-align:right;font-size:11px;color:var(--text-muted);}
+/* SCOREBOARD */
 .scoreboard-entry{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
 .sb-rank{font-size:22px;font-weight:800;min-width:36px;}
 .sb-name{font-weight:600;font-size:15px;flex:1;}
 .sb-score{font-size:16px;font-weight:700;color:var(--accent);}
 .sb-species{font-size:12px;color:var(--text-muted);}
 .sb-you{border-color:var(--accent);background:#1a2f1a;}
-.fb-setup{background:#1a2a3a;border:1px solid #1f6feb;border-radius:10px;padding:16px;margin-bottom:16px;font-size:13px;color:#79c0ff;line-height:1.8;}
-.fb-setup code{background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:12px;}
-.fb-setup a{color:#58a6ff;}
 .fb-status{font-size:12px;padding:8px 14px;border-radius:8px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
 .fb-status.connected{background:#1a2f1a;border:1px solid #238636;color:#56d364;}
 .fb-status.offline{background:#2a1a1a;border:1px solid #6e3535;color:#f85149;}
+.fb-status.loading{background:#1a2a3a;border:1px solid #1f6feb;color:#79c0ff;}
+/* MAP */
 #map{width:100%;height:450px;border-radius:10px;border:1px solid var(--border);}
 .map-legend{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:10px;}
 .legend-row{display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:3px;}
 .legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
 .no-gps-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 12px;margin-bottom:5px;font-size:12px;display:flex;justify-content:space-between;align-items:center;}
+/* BADGES */
 .badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:9px;}
 .badge-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;}
 .badge-card.unlocked{border-color:#ffd700;background:#1a1500;}
@@ -148,6 +151,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .badge-name{font-size:12px;font-weight:600;margin-bottom:3px;}
 .badge-desc{font-size:10px;color:var(--text-muted);}
 .badge-card.unlocked .badge-name{color:#ffd700;}
+/* MISC */
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(80px);background:#ffd700;color:#000;padding:11px 22px;border-radius:24px;font-weight:700;font-size:13px;z-index:999;transition:transform .4s;box-shadow:0 4px 20px rgba(0,0,0,.4);}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .danger-btn{background:#3a1515;border:1px solid var(--legendary);color:#f85149;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;}
@@ -159,7 +163,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="app-header">
   <div>
     <h1>🦘 Wildlife Spotter SA</h1>
-    <p>54 species · Dynamic scoring with recovery</p>
+    <p id="headerUsername">Loading…</p>
   </div>
   <div class="score-pill" id="headerScore">⭐ 0 pts</div>
 </div>
@@ -210,30 +214,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <h3>⚡ Dynamic Scoring with Recovery</h3>
     <p style="font-size:12px;color:var(--text-muted);margin-top:8px;line-height:1.7;">
       Each sighting reduces a species' value by <strong>10%</strong> (floor: 20% of max).<br>
-      But if you haven't spotted it for <strong>30 days</strong>, the value recovers by one step.<br>
-      After <strong>90 days</strong> it recovers three steps. Eventually it returns to full value!<br>
-      <span style="color:#ff9800">🔄</span> Cards showing a recovery indicator means the value has risen since your last sighting.
+      If you haven't spotted it for <strong>30 days</strong>, the value recovers one step.<br>
+      Eventually it returns to full value — so it's always worth going back out! 🔄
     </p>
   </div>
   <div style="margin-top:14px;"><button class="danger-btn" onclick="confirmReset()">🗑️ Reset All Data</button></div>
 </div>
 
 <div id="tab-scoreboard" class="tab">
-  <div id="fbStatus" class="fb-status offline">⚠️ Firebase not configured — scoreboard offline</div>
+  <div id="fbStatus" class="fb-status loading"><span class="spin" style="width:12px;height:12px;border:2px solid #1f6feb;border-top-color:#79c0ff;border-radius:50%;animation:spin .8s linear infinite;display:inline-block;margin-right:6px;"></span>Connecting to scoreboard…</div>
   <div id="sbUsernameRow" style="margin-bottom:12px;display:flex;gap:8px;align-items:center;">
     <span style="font-size:13px;color:var(--text-muted)">Playing as:</span>
     <strong id="sbUsernameDisplay" style="font-size:14px;color:#ffd700">—</strong>
-    <button onclick="changeUsername()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:12px;">Change</button>
+    <button onclick="changeUsername()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:12px;">Change name</button>
   </div>
-  <div id="scoreboardList"><div class="empty-state"><div class="icon">🏆</div><p>Connect Firebase to see the live scoreboard!</p></div></div>
-  <div class="fb-setup" id="fbSetupGuide">
-    <strong>🔥 How to enable the live scoreboard:</strong><br>
-    1. Go to <a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a><br>
-    2. Create a new project → Build → Realtime Database → Create database (test mode)<br>
-    3. Click the ⚙️ gear icon → Project settings → scroll to "Your apps" → click &lt;/&gt; Web → Register app → copy the <code>firebaseConfig</code> block<br>
-    4. Open this HTML file in Notepad, find <code>PASTE YOUR FIREBASE CONFIG HERE</code> and replace the firebaseConfig lines<br>
-    5. Save &amp; reload — scores sync live across all players! 🦘
-  </div>
+  <div id="scoreboardList"><div class="empty-state"><div class="icon">🏆</div><p>Loading scores…</p></div></div>
 </div>
 
 <div id="tab-badges" class="tab"><div class="badges-grid" id="badgesGrid"></div></div>
@@ -247,6 +242,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <button onclick="showTab('badges')"><span class="nav-icon">🏅</span>Badges</button>
 </nav>
 
+<!-- LOG MODAL -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <h2 id="modalTitle"></h2>
@@ -269,10 +265,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
+<!-- USERNAME MODAL -->
 <div class="modal-overlay" id="usernameOverlay">
   <div class="username-modal">
-    <h2>👋 What's your name?</h2>
-    <p>This shows on the live scoreboard so others can see your score.</p>
+    <h2 id="unModalTitle">👋 What's your name?</h2>
+    <p id="unModalDesc">Choose a display name for the live scoreboard. This is saved to your device and Firebase so you'll be recognised automatically next time — even if you open the app in a new tab.</p>
     <input type="text" id="usernameInput" placeholder="e.g. Sam T." maxlength="24">
     <button class="btn btn-primary" style="width:100%" onclick="saveUsername()">Start Spotting! 🦘</button>
   </div>
@@ -282,138 +279,181 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// SPECIES — 54 SA species, all iNaturalist taxon IDs verified
-// v9 fixes: cuttlefish, weedy seadragon, dolphin, king brown,
-//           osprey, central netted dragon, brushtail possum
+// SPECIES — 54 verified SA species (v10)
 // ═══════════════════════════════════════════════════════════════
 const SPECIES = [
   // BIRDS
-  {id:'kookaburra',    name:'Laughing Kookaburra',         sci:'Dacelo novaeguineae',         cat:'bird',     emoji:'🐦', rarity:'common',    maxPts:5,   inatId:2413},
-  {id:'galah',         name:'Galah',                        sci:'Eolophus roseicapilla',        cat:'bird',     emoji:'🦜', rarity:'common',    maxPts:5,   inatId:144560},
-  {id:'magpie',        name:'Australian Magpie',            sci:'Gymnorhina tibicen',           cat:'bird',     emoji:'🐦', rarity:'common',    maxPts:5,   inatId:8575},
-  {id:'wagtail',       name:'Willie Wagtail',               sci:'Rhipidura leucophrys',         cat:'bird',     emoji:'🐦', rarity:'common',    maxPts:5,   inatId:8143},
-  {id:'lorikeet',      name:'Rainbow Lorikeet',             sci:'Trichoglossus moluccanus',     cat:'bird',     emoji:'🦜', rarity:'common',    maxPts:5,   inatId:980095},
-  {id:'corella',       name:'Little Corella',               sci:'Cacatua sanguinea',            cat:'bird',     emoji:'🦅', rarity:'common',    maxPts:5,   inatId:116838},
-  {id:'raven',         name:'Australian Raven',             sci:'Corvus coronoides',            cat:'bird',     emoji:'🐦', rarity:'common',    maxPts:5,   inatId:8040},
-  {id:'ibis',          name:'Australian White Ibis',        sci:'Threskiornis molucca',         cat:'bird',     emoji:'🦢', rarity:'common',    maxPts:5,   inatId:3740},
-  {id:'pelican',       name:'Australian Pelican',           sci:'Pelecanus conspicillatus',     cat:'bird',     emoji:'🦢', rarity:'common',    maxPts:5,   inatId:4326},
-  {id:'emu',           name:'Emu',                          sci:'Dromaius novaehollandiae',     cat:'bird',     emoji:'🦤', rarity:'common',    maxPts:5,   inatId:20504},
-  {id:'fairy_wren',    name:'Superb Fairy-wren',            sci:'Malurus cyaneus',              cat:'bird',     emoji:'🐦', rarity:'uncommon',  maxPts:15,  inatId:12065},
-  {id:'rosella',       name:'Adelaide Rosella',             sci:'Platycercus elegans',          cat:'bird',     emoji:'🦜', rarity:'uncommon',  maxPts:15,  inatId:18921},
-  {id:'emu_wren',      name:'Southern Emu-wren',            sci:'Stipiturus malachurus',        cat:'bird',     emoji:'🐦', rarity:'uncommon',  maxPts:15,  inatId:12133},
-  {id:'osprey',        name:'Osprey',                       sci:'Pandion haliaetus',            cat:'bird',     emoji:'🦅', rarity:'uncommon',  maxPts:15,  inatId:116999},
-  {id:'wedge_eagle',   name:'Wedge-tailed Eagle',           sci:'Aquila audax',                 cat:'bird',     emoji:'🦅', rarity:'uncommon',  maxPts:15,  inatId:5080},
-  {id:'malleefowl',    name:'Malleefowl',                   sci:'Leipoa ocellata',              cat:'bird',     emoji:'🐔', rarity:'uncommon',  maxPts:15,  inatId:2040},
-  {id:'reg_parrot',    name:'Regent Parrot',                sci:'Polytelis anthopeplus',        cat:'bird',     emoji:'🦜', rarity:'rare',      maxPts:40,  inatId:19251},
-  {id:'hooded_plover', name:'Hooded Plover',                sci:'Thinornis cucullatus',         cat:'bird',     emoji:'🐦', rarity:'rare',      maxPts:40,  inatId:144487},
-  {id:'brolga',        name:'Brolga',                       sci:'Antigone rubicunda',           cat:'bird',     emoji:'🦢', rarity:'very-rare', maxPts:80,  inatId:3774},
+  {id:'kookaburra',    name:'Laughing Kookaburra',           sci:'Dacelo novaeguineae',         cat:'bird',     emoji:'🐦', rarity:'common',    maxPts:5,   inatId:2413},
+  {id:'galah',         name:'Galah',                          sci:'Eolophus roseicapilla',        cat:'bird',     emoji:'🦜', rarity:'common',    maxPts:5,   inatId:144560},
+  {id:'magpie',        name:'Australian Magpie',              sci:'Gymnorhina tibicen',           cat:'bird',     emoji:'🐦', rarity:'common',    maxPts:5,   inatId:8575},
+  {id:'wagtail',       name:'Willie Wagtail',                 sci:'Rhipidura leucophrys',         cat:'bird',     emoji:'🐦', rarity:'common',    maxPts:5,   inatId:8143},
+  {id:'lorikeet',      name:'Rainbow Lorikeet',               sci:'Trichoglossus moluccanus',     cat:'bird',     emoji:'🦜', rarity:'common',    maxPts:5,   inatId:980095},
+  {id:'corella',       name:'Little Corella',                 sci:'Cacatua sanguinea',            cat:'bird',     emoji:'🦅', rarity:'common',    maxPts:5,   inatId:116838},
+  {id:'raven',         name:'Australian Raven',               sci:'Corvus coronoides',            cat:'bird',     emoji:'🐦', rarity:'common',    maxPts:5,   inatId:8040},
+  {id:'ibis',          name:'Australian White Ibis',          sci:'Threskiornis molucca',         cat:'bird',     emoji:'🦢', rarity:'common',    maxPts:5,   inatId:3740},
+  {id:'pelican',       name:'Australian Pelican',             sci:'Pelecanus conspicillatus',     cat:'bird',     emoji:'🦢', rarity:'common',    maxPts:5,   inatId:4326},
+  {id:'emu',           name:'Emu',                            sci:'Dromaius novaehollandiae',     cat:'bird',     emoji:'🦤', rarity:'common',    maxPts:5,   inatId:20504},
+  {id:'fairy_wren',    name:'Superb Fairy-wren',              sci:'Malurus cyaneus',              cat:'bird',     emoji:'🐦', rarity:'uncommon',  maxPts:15,  inatId:12065},
+  {id:'rosella',       name:'Adelaide Rosella',               sci:'Platycercus elegans',          cat:'bird',     emoji:'🦜', rarity:'uncommon',  maxPts:15,  inatId:18921},
+  {id:'emu_wren',      name:'Southern Emu-wren',              sci:'Stipiturus malachurus',        cat:'bird',     emoji:'🐦', rarity:'uncommon',  maxPts:15,  inatId:12133},
+  {id:'osprey',        name:'Osprey',                         sci:'Pandion haliaetus',            cat:'bird',     emoji:'🦅', rarity:'uncommon',  maxPts:15,  inatId:116999},
+  {id:'wedge_eagle',   name:'Wedge-tailed Eagle',             sci:'Aquila audax',                 cat:'bird',     emoji:'🦅', rarity:'uncommon',  maxPts:15,  inatId:5080},
+  {id:'malleefowl',    name:'Malleefowl',                     sci:'Leipoa ocellata',              cat:'bird',     emoji:'🐔', rarity:'uncommon',  maxPts:15,  inatId:2040},
+  {id:'reg_parrot',    name:'Regent Parrot',                  sci:'Polytelis anthopeplus',        cat:'bird',     emoji:'🦜', rarity:'rare',      maxPts:40,  inatId:19251},
+  {id:'hooded_plover', name:'Hooded Plover',                  sci:'Thinornis cucullatus',         cat:'bird',     emoji:'🐦', rarity:'rare',      maxPts:40,  inatId:144487},
+  {id:'brolga',        name:'Brolga',                         sci:'Antigone rubicunda',           cat:'bird',     emoji:'🦢', rarity:'very-rare', maxPts:80,  inatId:3774},
   // MAMMALS
-  {id:'wg_kanga',      name:'Western Grey Kangaroo',        sci:'Macropus fuliginosus',         cat:'mammal',   emoji:'🦘', rarity:'common',    maxPts:5,   inatId:42881},
-  {id:'eg_kanga',      name:'Eastern Grey Kangaroo',        sci:'Macropus giganteus',           cat:'mammal',   emoji:'🦘', rarity:'common',    maxPts:5,   inatId:42888},
-  {id:'red_kanga',     name:'Red Kangaroo',                 sci:'Osphranter rufus',             cat:'mammal',   emoji:'🦘', rarity:'common',    maxPts:5,   inatId:1453439},
-  {id:'euro',          name:'Euro / Wallaroo',              sci:'Osphranter robustus',          cat:'mammal',   emoji:'🦘', rarity:'common',    maxPts:5,   inatId:1453438},
-  {id:'possum',        name:'Common Brushtail Possum',      sci:'Trichosurus vulpecula',        cat:'mammal',   emoji:'🐾', rarity:'common',    maxPts:5,   inatId:42808},
-  {id:'ringtail',      name:'Common Ringtail Possum',       sci:'Pseudocheirus peregrinus',     cat:'mammal',   emoji:'🐾', rarity:'common',    maxPts:5,   inatId:42775},
-  {id:'wombat',        name:'Southern Hairy-nosed Wombat',  sci:'Lasiorhinus latifrons',        cat:'mammal',   emoji:'🐻', rarity:'common',    maxPts:5,   inatId:43007},
-  {id:'koala',         name:'Koala',                        sci:'Phascolarctos cinereus',       cat:'mammal',   emoji:'🐨', rarity:'uncommon',  maxPts:15,  inatId:42983},
-  {id:'echidna',       name:'Short-beaked Echidna',         sci:'Tachyglossus aculeatus',       cat:'mammal',   emoji:'🦔', rarity:'uncommon',  maxPts:15,  inatId:43239},
-  {id:'sugar_glider',  name:'Sugar Glider',                 sci:'Petaurus breviceps',           cat:'mammal',   emoji:'🐿️', rarity:'uncommon',  maxPts:15,  inatId:40276},
-  {id:'flying_fox',    name:'Grey-headed Flying Fox',       sci:'Pteropus poliocephalus',       cat:'mammal',   emoji:'🦇', rarity:'uncommon',  maxPts:15,  inatId:40905},
-  {id:'yf_wallaby',    name:'Yellow-footed Rock-wallaby',   sci:'Petrogale xanthopus',          cat:'mammal',   emoji:'🦘', rarity:'rare',      maxPts:40,  inatId:42931},
-  {id:'dunnart',       name:'Fat-tailed Dunnart',           sci:'Sminthopsis crassicaudata',    cat:'mammal',   emoji:'🐭', rarity:'rare',      maxPts:40,  inatId:40205},
-  {id:'bandicoot',     name:'Southern Brown Bandicoot',     sci:'Isoodon obesulus',             cat:'mammal',   emoji:'🐾', rarity:'rare',      maxPts:40,  inatId:43294},
-  {id:'platypus',      name:'Platypus',                     sci:'Ornithorhynchus anatinus',     cat:'mammal',   emoji:'🦆', rarity:'very-rare', maxPts:80,  inatId:43236},
-  {id:'numbat',        name:'Numbat',                       sci:'Myrmecobius fasciatus',        cat:'mammal',   emoji:'🐾', rarity:'very-rare', maxPts:80,  inatId:40262},
+  {id:'wg_kanga',      name:'Western Grey Kangaroo',          sci:'Macropus fuliginosus',         cat:'mammal',   emoji:'🦘', rarity:'common',    maxPts:5,   inatId:42881},
+  {id:'eg_kanga',      name:'Eastern Grey Kangaroo',          sci:'Macropus giganteus',           cat:'mammal',   emoji:'🦘', rarity:'common',    maxPts:5,   inatId:42888},
+  {id:'red_kanga',     name:'Red Kangaroo',                   sci:'Osphranter rufus',             cat:'mammal',   emoji:'🦘', rarity:'common',    maxPts:5,   inatId:1453439},
+  {id:'euro',          name:'Euro / Wallaroo',                sci:'Osphranter robustus',          cat:'mammal',   emoji:'🦘', rarity:'common',    maxPts:5,   inatId:1453438},
+  {id:'possum',        name:'Common Brushtail Possum',        sci:'Trichosurus vulpecula',        cat:'mammal',   emoji:'🐾', rarity:'common',    maxPts:5,   inatId:42808},
+  {id:'ringtail',      name:'Common Ringtail Possum',         sci:'Pseudocheirus peregrinus',     cat:'mammal',   emoji:'🐾', rarity:'common',    maxPts:5,   inatId:42775},
+  {id:'wombat',        name:'Southern Hairy-nosed Wombat',    sci:'Lasiorhinus latifrons',        cat:'mammal',   emoji:'🐻', rarity:'common',    maxPts:5,   inatId:43007},
+  {id:'koala',         name:'Koala',                          sci:'Phascolarctos cinereus',       cat:'mammal',   emoji:'🐨', rarity:'uncommon',  maxPts:15,  inatId:42983},
+  {id:'echidna',       name:'Short-beaked Echidna',           sci:'Tachyglossus aculeatus',       cat:'mammal',   emoji:'🦔', rarity:'uncommon',  maxPts:15,  inatId:43239},
+  {id:'sugar_glider',  name:'Sugar Glider',                   sci:'Petaurus breviceps',           cat:'mammal',   emoji:'🐿️', rarity:'uncommon',  maxPts:15,  inatId:40276},
+  {id:'flying_fox',    name:'Grey-headed Flying Fox',         sci:'Pteropus poliocephalus',       cat:'mammal',   emoji:'🦇', rarity:'uncommon',  maxPts:15,  inatId:40905},
+  {id:'yf_wallaby',    name:'Yellow-footed Rock-wallaby',     sci:'Petrogale xanthopus',          cat:'mammal',   emoji:'🦘', rarity:'rare',      maxPts:40,  inatId:42931},
+  {id:'dunnart',       name:'Fat-tailed Dunnart',             sci:'Sminthopsis crassicaudata',    cat:'mammal',   emoji:'🐭', rarity:'rare',      maxPts:40,  inatId:40205},
+  {id:'bandicoot',     name:'Southern Brown Bandicoot',       sci:'Isoodon obesulus',             cat:'mammal',   emoji:'🐾', rarity:'rare',      maxPts:40,  inatId:43294},
+  {id:'platypus',      name:'Platypus',                       sci:'Ornithorhynchus anatinus',     cat:'mammal',   emoji:'🦆', rarity:'very-rare', maxPts:80,  inatId:43236},
+  {id:'numbat',        name:'Numbat',                         sci:'Myrmecobius fasciatus',        cat:'mammal',   emoji:'🐾', rarity:'very-rare', maxPts:80,  inatId:40262},
   // MARINE
-  {id:'little_penguin',name:'Little Penguin',               sci:'Eudyptula minor',              cat:'marine',   emoji:'🐧', rarity:'uncommon',  maxPts:15,  inatId:3817},
-  {id:'dolphin',       name:'Indo-Pacific Bottlenose Dolphin',sci:'Tursiops aduncus',           cat:'marine',   emoji:'🐬', rarity:'uncommon',  maxPts:15,  inatId:41481},
-  {id:'aus_sealion',   name:'Australian Sea Lion',          sci:'Neophoca cinerea',             cat:'marine',   emoji:'🦭', rarity:'rare',      maxPts:40,  inatId:41759},
-  {id:'weedy_sd',      name:'Weedy Seadragon',              sci:'Phyllopteryx taeniolatus',     cat:'marine',   emoji:'🐉', rarity:'rare',      maxPts:40,  inatId:54536},
-  {id:'cuttlefish',    name:'Giant Cuttlefish',             sci:'Ascarosepion apama',           cat:'marine',   emoji:'🦑', rarity:'rare',      maxPts:40,  inatId:1500730},
-  {id:'great_white',   name:'Great White Shark',            sci:'Carcharodon carcharias',       cat:'marine',   emoji:'🦈', rarity:'very-rare', maxPts:80,  inatId:50873},
-  {id:'leafy_sd',      name:'Leafy Seadragon',              sci:'Phycodurus eques',             cat:'marine',   emoji:'🐉', rarity:'very-rare', maxPts:80,  inatId:49105},
-  {id:'sr_whale',      name:'Southern Right Whale',         sci:'Eubalaena australis',          cat:'marine',   emoji:'🐋', rarity:'legendary', maxPts:200, inatId:41571},
+  {id:'little_penguin',name:'Little Penguin',                 sci:'Eudyptula minor',              cat:'marine',   emoji:'🐧', rarity:'uncommon',  maxPts:15,  inatId:3817},
+  {id:'dolphin',       name:'Indo-Pacific Bottlenose Dolphin',sci:'Tursiops aduncus',             cat:'marine',   emoji:'🐬', rarity:'uncommon',  maxPts:15,  inatId:41481},
+  {id:'aus_sealion',   name:'Australian Sea Lion',            sci:'Neophoca cinerea',             cat:'marine',   emoji:'🦭', rarity:'rare',      maxPts:40,  inatId:41759},
+  {id:'weedy_sd',      name:'Weedy Seadragon',                sci:'Phyllopteryx taeniolatus',     cat:'marine',   emoji:'🐉', rarity:'rare',      maxPts:40,  inatId:54536},
+  {id:'cuttlefish',    name:'Giant Cuttlefish',               sci:'Ascarosepion apama',           cat:'marine',   emoji:'🦑', rarity:'rare',      maxPts:40,  inatId:1500730},
+  {id:'great_white',   name:'Great White Shark',              sci:'Carcharodon carcharias',       cat:'marine',   emoji:'🦈', rarity:'very-rare', maxPts:80,  inatId:50873},
+  {id:'leafy_sd',      name:'Leafy Seadragon',                sci:'Phycodurus eques',             cat:'marine',   emoji:'🐉', rarity:'very-rare', maxPts:80,  inatId:49105},
+  {id:'sr_whale',      name:'Southern Right Whale',           sci:'Eubalaena australis',          cat:'marine',   emoji:'🐋', rarity:'legendary', maxPts:200, inatId:41571},
   // REPTILES
-  {id:'bluetongue',    name:'Eastern Blue-tongue',          sci:'Tiliqua scincoides',           cat:'reptile',  emoji:'🦎', rarity:'common',    maxPts:5,   inatId:37456},
-  {id:'shingleback',   name:'Shingleback Lizard',           sci:'Tiliqua rugosa',               cat:'reptile',  emoji:'🦎', rarity:'common',    maxPts:5,   inatId:37460},
-  {id:'net_dragon',    name:'Central Netted Dragon',        sci:'Ctenophorus nuchalis',         cat:'reptile',  emoji:'🦎', rarity:'uncommon',  maxPts:15,  inatId:31230},
-  {id:'sand_goanna',   name:'Sand Goanna',                  sci:'Varanus gouldii',              cat:'reptile',  emoji:'🦎', rarity:'uncommon',  maxPts:15,  inatId:39414},
-  {id:'tiger_snake',   name:'Tiger Snake',                  sci:'Notechis scutatus',            cat:'reptile',  emoji:'🐍', rarity:'uncommon',  maxPts:15,  inatId:35178},
-  {id:'king_brown',    name:'King Brown Snake',             sci:'Pseudechis australis',         cat:'reptile',  emoji:'🐍', rarity:'rare',      maxPts:40,  inatId:35161},
-  {id:'w_bluetongue',  name:'Western Blue-tongue',          sci:'Tiliqua occipitalis',          cat:'reptile',  emoji:'🦎', rarity:'rare',      maxPts:40,  inatId:37459},
-  {id:'ros_goanna',    name:"Rosenberg's Goanna",           sci:'Varanus rosenbergi',           cat:'reptile',  emoji:'🦎', rarity:'rare',      maxPts:40,  inatId:39416},
+  {id:'bluetongue',    name:'Eastern Blue-tongue',            sci:'Tiliqua scincoides',           cat:'reptile',  emoji:'🦎', rarity:'common',    maxPts:5,   inatId:37456},
+  {id:'shingleback',   name:'Shingleback Lizard',             sci:'Tiliqua rugosa',               cat:'reptile',  emoji:'🦎', rarity:'common',    maxPts:5,   inatId:37460},
+  {id:'net_dragon',    name:'Central Netted Dragon',          sci:'Ctenophorus nuchalis',         cat:'reptile',  emoji:'🦎', rarity:'uncommon',  maxPts:15,  inatId:31230},
+  {id:'sand_goanna',   name:'Sand Goanna',                    sci:'Varanus gouldii',              cat:'reptile',  emoji:'🦎', rarity:'uncommon',  maxPts:15,  inatId:39414},
+  {id:'tiger_snake',   name:'Tiger Snake',                    sci:'Notechis scutatus',            cat:'reptile',  emoji:'🐍', rarity:'uncommon',  maxPts:15,  inatId:35178},
+  {id:'king_brown',    name:'King Brown Snake',               sci:'Pseudechis australis',         cat:'reptile',  emoji:'🐍', rarity:'rare',      maxPts:40,  inatId:35161},
+  {id:'w_bluetongue',  name:'Western Blue-tongue',            sci:'Tiliqua occipitalis',          cat:'reptile',  emoji:'🦎', rarity:'rare',      maxPts:40,  inatId:37459},
+  {id:'ros_goanna',    name:"Rosenberg's Goanna",             sci:'Varanus rosenbergi',           cat:'reptile',  emoji:'🦎', rarity:'rare',      maxPts:40,  inatId:39416},
   // INSECTS
-  {id:'emp_moth',      name:'Emperor Gum Moth',             sci:'Opodiphthera eucalypti',       cat:'insect',   emoji:'🦋', rarity:'uncommon',  maxPts:15,  inatId:68135},
-  {id:'bogong',        name:'Bogong Moth',                  sci:'Agrotis infusa',               cat:'insect',   emoji:'🦋', rarity:'uncommon',  maxPts:15,  inatId:200008},
+  {id:'emp_moth',      name:'Emperor Gum Moth',               sci:'Opodiphthera eucalypti',       cat:'insect',   emoji:'🦋', rarity:'uncommon',  maxPts:15,  inatId:68135},
+  {id:'bogong',        name:'Bogong Moth',                    sci:'Agrotis infusa',               cat:'insect',   emoji:'🦋', rarity:'uncommon',  maxPts:15,  inatId:200008},
   // AMPHIBIANS
-  {id:'pobblebonk',    name:'Pobblebonk Frog',              sci:'Limnodynastes dumerilii',      cat:'amphibian',emoji:'🐸', rarity:'common',    maxPts:5,   inatId:22038},
+  {id:'pobblebonk',    name:'Pobblebonk Frog',               sci:'Limnodynastes dumerilii',      cat:'amphibian',emoji:'🐸', rarity:'common',    maxPts:5,   inatId:22038},
 ];
 
 const RARITY_ORDER=['common','uncommon','rare','very-rare','legendary'];
 const RARITY_LABELS={common:'Common',uncommon:'Uncommon',rare:'Rare','very-rare':'Very Rare',legendary:'Legendary'};
 const RARITY_COLORS={common:'#4caf50',uncommon:'#2196f3',rare:'#9c27b0','very-rare':'#ff9800',legendary:'#f44336'};
-const MS_PER_DAY = 86400000;
-const RECOVERY_DAYS = 30; // days per recovery step
+const MS_PER_DAY=86400000;
+const RECOVERY_DAYS=30;
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
-const photoCache = {};
-let photosLoaded = false;
-let state = {sightings:[],globalSpotCounts:{},lastSightingDate:{},totalScore:0};
-let username = '';
-let unlockedBadges = new Set();
+const photoCache={};
+let photosLoaded=false;
+let state={sightings:[],globalSpotCounts:{},lastSightingDate:{},totalScore:0};
+let username='';
+let deviceId='';
+let unlockedBadges=new Set();
 
-function loadState(){
-  const s=localStorage.getItem('ws_v12'); if(s) state=JSON.parse(s);
-  username=localStorage.getItem('ws_username_v12')||'';
-  const b=localStorage.getItem('ws_badges_v12'); if(b) unlockedBadges=new Set(JSON.parse(b));
-}
-function saveState(){ localStorage.setItem('ws_v12',JSON.stringify(state)); localStorage.setItem('ws_username_v12',username); }
-
-// ─── DYNAMIC SCORING WITH RECOVERY ───────────────────────────────────────────
+// ─── DEVICE ID + PERSISTENT IDENTITY ─────────────────────────────────────────
 // How it works:
-//   - n = number of times spotted (reduces value 10% each time)
-//   - If 30+ days since last sighting, recover 1 step per 30-day period
-//   - effectiveN = n minus recovery steps (min 0)
-//   - Value = max(floor, round(maxPts * 0.9^effectiveN))
-function getEffectiveN(id) {
-  const n = state.globalSpotCounts[id] || 0;
-  if (n === 0) return 0;
-  const lastTs = state.lastSightingDate[id];
-  if (!lastTs) return n;
-  const daysSince = (Date.now() - lastTs) / MS_PER_DAY;
-  const recoverySteps = Math.floor(daysSince / RECOVERY_DAYS);
-  return Math.max(0, n - recoverySteps);
+//   1. On first ever open: generate a unique deviceId, save to localStorage
+//   2. Push deviceId → username mapping to Firebase
+//   3. On every open: read deviceId from localStorage
+//   4. Look up deviceId in Firebase → restore username automatically
+//   5. Even if localStorage is cleared by Safari ITP, user just re-enters name once
+//      and the mapping is re-saved for next time
+
+function generateDeviceId(){
+  return 'dev_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8);
 }
-function currentPts(id) {
-  const sp = SPECIES.find(s=>s.id===id);
-  const effN = getEffectiveN(id);
-  const floor = Math.ceil(sp.maxPts * 0.20);
-  return Math.max(floor, Math.round(sp.maxPts * Math.pow(0.90, effN)));
+
+function loadLocalState(){
+  deviceId = localStorage.getItem('ws_deviceId');
+  if(!deviceId){
+    deviceId = generateDeviceId();
+    localStorage.setItem('ws_deviceId', deviceId);
+  }
+  const s=localStorage.getItem('ws_v13'); if(s) state=JSON.parse(s);
+  username=localStorage.getItem('ws_username_v13')||'';
+  const b=localStorage.getItem('ws_badges_v13'); if(b) unlockedBadges=new Set(JSON.parse(b));
 }
-function hasRecovered(id) {
-  const n = state.globalSpotCounts[id] || 0;
-  if (n === 0) return false;
-  return getEffectiveN(id) < n;
+
+function saveLocalState(){
+  localStorage.setItem('ws_v13',JSON.stringify(state));
+  localStorage.setItem('ws_username_v13',username);
+  localStorage.setItem('ws_deviceId',deviceId);
 }
-function dynInfo(id) {
-  const sp = SPECIES.find(s=>s.id===id);
-  const n = state.globalSpotCounts[id] || 0;
-  const effN = getEffectiveN(id);
-  const pts = currentPts(id);
-  const floor = Math.ceil(sp.maxPts * 0.20);
-  const lastTs = state.lastSightingDate[id];
-  let lines = [];
-  if (n === 0) {
+
+// Try to restore username from Firebase using deviceId
+async function restoreIdentityFromFirebase(){
+  if(!window._fbReady) return false;
+  try{
+    const snap = await window._fbGet(window._fbRef(window._db, `devices/${deviceId}`));
+    if(snap.exists()){
+      const data = snap.val();
+      if(data.username){
+        username = data.username;
+        saveLocalState();
+        return true;
+      }
+    }
+  }catch(e){ console.warn('Identity restore failed:', e); }
+  return false;
+}
+
+// Save deviceId → username mapping to Firebase
+function saveIdentityToFirebase(){
+  if(!window._fbReady || !username || !deviceId) return;
+  try{
+    window._fbSet(window._fbRef(window._db, `devices/${deviceId}`), {
+      username: username,
+      updatedAt: Date.now()
+    });
+  }catch(e){}
+}
+
+// ─── SCORING ──────────────────────────────────────────────────────────────────
+function getEffectiveN(id){
+  const n=state.globalSpotCounts[id]||0;
+  if(n===0) return 0;
+  const lastTs=state.lastSightingDate[id];
+  if(!lastTs) return n;
+  const daysSince=(Date.now()-lastTs)/MS_PER_DAY;
+  const recoverySteps=Math.floor(daysSince/RECOVERY_DAYS);
+  return Math.max(0,n-recoverySteps);
+}
+function currentPts(id){
+  const sp=SPECIES.find(s=>s.id===id);
+  const effN=getEffectiveN(id);
+  const floor=Math.ceil(sp.maxPts*0.20);
+  return Math.max(floor,Math.round(sp.maxPts*Math.pow(0.90,effN)));
+}
+function hasRecovered(id){
+  const n=state.globalSpotCounts[id]||0;
+  return n>0 && getEffectiveN(id)<n;
+}
+function dynInfo(id){
+  const sp=SPECIES.find(s=>s.id===id);
+  const n=state.globalSpotCounts[id]||0;
+  const effN=getEffectiveN(id);
+  const pts=currentPts(id);
+  const floor=Math.ceil(sp.maxPts*0.20);
+  const lastTs=state.lastSightingDate[id];
+  let lines=[];
+  if(n===0){
     lines.push(`🌟 First sighting! Full value: <strong>${pts} pts</strong>`);
   } else {
     lines.push(`📅 Spotted <strong>${n}×</strong> total`);
-    if (lastTs) {
-      const days = Math.floor((Date.now()-lastTs)/MS_PER_DAY);
-      lines.push(`⏱️ Last seen: <strong>${days === 0 ? 'today' : days + ' day' + (days===1?'':'s') + ' ago'}</strong>`);
-      const nextRecovery = RECOVERY_DAYS - (days % RECOVERY_DAYS);
-      if (effN < n) {
-        lines.push(`🔄 Recovered ${n-effN} step${n-effN>1?'s':''} — value rising!`);
-      } else if (pts > floor) {
+    if(lastTs){
+      const days=Math.floor((Date.now()-lastTs)/MS_PER_DAY);
+      lines.push(`⏱️ Last seen: <strong>${days===0?'today':days+' day'+(days===1?'':'s')+' ago'}</strong>`);
+      if(effN<n) lines.push(`🔄 Recovered ${n-effN} step${n-effN>1?'s':''} — value rising!`);
+      else if(pts>floor){
+        const nextRecovery=RECOVERY_DAYS-(days%RECOVERY_DAYS);
         lines.push(`🔄 Next recovery in <strong>${nextRecovery} day${nextRecovery===1?'':'s'}</strong>`);
       }
     }
@@ -427,7 +467,7 @@ async function loadAllPhotos(){
   const ids=[...new Set(SPECIES.map(s=>s.inatId))];
   const batches=[];
   for(let i=0;i<ids.length;i+=30) batches.push(ids.slice(i,i+30));
-  let loaded=0, failed=0;
+  let loaded=0,failed=0;
   for(const batch of batches){
     try{
       const res=await fetch(`https://api.inaturalist.org/v1/taxa/${batch.join(',')}`);
@@ -441,7 +481,7 @@ async function loadAllPhotos(){
           else failed++;
         }
       }
-    } catch(e){ failed+=batch.length; }
+    }catch(e){ failed+=batch.length; }
     document.getElementById('bannerText').textContent=`Loading photos… ${loaded} loaded`;
     await new Promise(r=>setTimeout(r,300));
   }
@@ -464,7 +504,6 @@ function thumbHtml(sp){
   if(pc) return`<img class="card-thumb" src="${pc.url}" alt="${sp.name}" loading="lazy" onerror="this.outerHTML='<div class=card-thumb-placeholder>${sp.emoji}</div>'">`;
   return`<div class="card-thumb-placeholder">${sp.emoji}</div>`;
 }
-
 let currentFilter='all';
 function setFilter(cat,btn){
   currentFilter=cat;
@@ -493,7 +532,7 @@ function renderSpecies(){
       <div class="card-body">
         <div class="card-name">${sp.name}</div>
         <div class="card-sci">${sp.sci}</div>
-        ${cnt>0?`<div class="card-spot-count" style="font-size:9px;color:var(--text-muted)">Spotted ${cnt}× globally</div>`:''}
+        ${cnt>0?`<div style="font-size:9px;color:var(--text-muted)">Spotted ${cnt}× globally</div>`:''}
         ${recovering?`<div class="card-recovery">🔄 Recovering…</div>`:''}
         <div class="card-meta">
           <span class="rarity-badge r-${r}">${RARITY_LABELS[r]}</span>
@@ -526,7 +565,7 @@ function openModal(id,e){
 }
 function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); pendingId=null; }
 function handlePhoto(e){
-  const file=e.target.files[0]; if(!file)return;
+  const file=e.target.files[0]; if(!file) return;
   const reader=new FileReader();
   reader.onload=ev=>{
     const img=new Image();
@@ -549,7 +588,7 @@ function getGPS(){
   },()=>showToast('❌ Could not get location'));
 }
 function confirmLog(){
-  if(!pendingId)return;
+  if(!pendingId) return;
   const pts=currentPts(pendingId);
   state.globalSpotCounts[pendingId]=(state.globalSpotCounts[pendingId]||0)+1;
   state.lastSightingDate[pendingId]=Date.now();
@@ -557,26 +596,26 @@ function confirmLog(){
     photo:pendingPhoto,lat:pendingLat,lng:pendingLng,
     notes:document.getElementById('notesInput').value.trim(),ptsEarned:pts});
   state.totalScore+=pts;
-  saveState(); closeModal(); checkBadges(); pushScoreToFirebase(); renderAll();
+  saveLocalState(); closeModal(); checkBadges(); pushScoreToFirebase(); renderAll();
   showToast(`+${pts} pts — ${SPECIES.find(s=>s.id===pendingId).name}!`);
 }
 
-// ─── FIREBASE ─────────────────────────────────────────────────────────────────
+// ─── FIREBASE SCOREBOARD ──────────────────────────────────────────────────────
 function pushScoreToFirebase(){
-  if(!window._fbReady||!username)return;
+  if(!window._fbReady||!username) return;
   try{
     window._fbSet(window._fbRef(window._db,`scores/${username}`),{
       name:username, score:state.totalScore,
       species:new Set(state.sightings.map(s=>s.speciesId)).size,
-      updatedAt:Date.now()
+      deviceId:deviceId, updatedAt:Date.now()
     });
   }catch(e){}
 }
 function initFirebaseListener(){
-  if(!window._fbReady)return;
-  document.getElementById('fbStatus').className='fb-status connected';
-  document.getElementById('fbStatus').textContent='🔥 Firebase connected — live scoreboard active';
-  document.getElementById('fbSetupGuide').style.display='none';
+  if(!window._fbReady) return;
+  const statusEl=document.getElementById('fbStatus');
+  statusEl.className='fb-status connected';
+  statusEl.textContent='🔥 Live scoreboard active';
   window._fbOnValue(window._fbRef(window._db,'scores'),(snapshot)=>{
     renderScoreboard(snapshot.val()||{});
   });
@@ -584,7 +623,7 @@ function initFirebaseListener(){
 function renderScoreboard(data){
   const entries=Object.values(data).sort((a,b)=>b.score-a.score);
   const el=document.getElementById('scoreboardList');
-  if(!entries.length){el.innerHTML='<div class="empty-state"><div class="icon">🏆</div><p>No scores yet — be the first!</p></div>';return;}
+  if(!entries.length){el.innerHTML='<div class="empty-state"><div class="icon">🏆</div><p>No scores yet — be the first to log a sighting!</p></div>';return;}
   const medals=['🥇','🥈','🥉'];
   el.innerHTML=entries.slice(0,50).map((e,i)=>{
     const isYou=e.name===username;
@@ -598,23 +637,38 @@ function renderScoreboard(data){
 }
 
 // ─── USERNAME ─────────────────────────────────────────────────────────────────
-function showUsernameModal(){ document.getElementById('usernameOverlay').classList.add('open'); setTimeout(()=>document.getElementById('usernameInput').focus(),200); }
+function showUsernameModal(isChange=false){
+  document.getElementById('unModalTitle').textContent = isChange ? '✏️ Change your name' : '👋 What\'s your name?';
+  document.getElementById('unModalDesc').textContent = isChange
+    ? 'Enter a new display name. Your scores on the leaderboard will update immediately.'
+    : 'Choose a display name for the live scoreboard. It\'s saved to your device and Firebase so you\'ll be recognised automatically next time — even in a new tab.';
+  document.getElementById('usernameInput').value = username||'';
+  document.getElementById('usernameOverlay').classList.add('open');
+  setTimeout(()=>document.getElementById('usernameInput').focus(),200);
+}
 function saveUsername(){
   const val=document.getElementById('usernameInput').value.trim();
   if(!val||val.length<2){showToast('Please enter at least 2 characters');return;}
-  username=val; saveState();
+  username=val;
+  saveLocalState();
+  saveIdentityToFirebase(); // save deviceId → username mapping
   document.getElementById('usernameOverlay').classList.remove('open');
-  document.getElementById('sbUsernameDisplay').textContent=username;
-  initFirebaseListener(); pushScoreToFirebase();
+  updateUsernameDisplay();
+  initFirebaseListener();
+  pushScoreToFirebase();
 }
-function changeUsername(){ document.getElementById('usernameInput').value=username; showUsernameModal(); }
+function changeUsername(){ showUsernameModal(true); }
+function updateUsernameDisplay(){
+  document.getElementById('sbUsernameDisplay').textContent=username||'—';
+  document.getElementById('headerUsername').textContent=username?`👤 ${username}`:'54 species · Tap to log';
+}
 
 // ─── JOURNAL ──────────────────────────────────────────────────────────────────
 function renderJournal(){
   const el=document.getElementById('journalList');
   if(!state.sightings.length){el.innerHTML='<div class="empty-state"><div class="icon">📓</div><p>No sightings yet.<br>Head outside and tap <strong>Log Sighting</strong>!</p></div>';return;}
   el.innerHTML=state.sightings.map(s=>{
-    const sp=SPECIES.find(x=>x.id===s.speciesId); if(!sp)return'';
+    const sp=SPECIES.find(x=>x.id===s.speciesId); if(!sp) return'';
     const r=sp.rarity; const pc=photoCache[sp.id];
     const date=new Date(s.ts).toLocaleString('en-AU',{dateStyle:'medium',timeStyle:'short'});
     const thumb=s.photo?`<img src="${s.photo}" class="j-thumb" alt="photo">`:
@@ -659,7 +713,7 @@ function renderMap(){
   const withGPS=state.sightings.filter(s=>s.lat&&s.lng);
   const noGPS=state.sightings.filter(s=>!s.lat&&!s.lng);
   withGPS.forEach(s=>{
-    const sp=SPECIES.find(x=>x.id===s.speciesId); if(!sp)return;
+    const sp=SPECIES.find(x=>x.id===s.speciesId); if(!sp) return;
     const color=RARITY_COLORS[sp.rarity];
     const icon=L.divIcon({className:'',html:`<div style="width:28px;height:28px;border-radius:50%;background:${color};border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,.5)">${sp.emoji}</div>`,iconSize:[28,28],iconAnchor:[14,14]});
     const date=new Date(s.ts).toLocaleString('en-AU',{dateStyle:'short',timeStyle:'short'});
@@ -716,7 +770,7 @@ function checkBadges(){
   chk('photographer',state.sightings.some(s=>s.photo));
   chk('cartographer',state.sightings.some(s=>s.lat));
   chk('ten_sightings',state.sightings.length>=10);
-  localStorage.setItem('ws_badges_v12',JSON.stringify([...unlockedBadges]));
+  localStorage.setItem('ws_badges_v13',JSON.stringify([...unlockedBadges]));
   newB.forEach((id,i)=>{const b=BADGES.find(x=>x.id===id);setTimeout(()=>showToast(`🏅 Badge: ${b.name}!`),i*2200);});
   renderBadges();
 }
@@ -748,17 +802,41 @@ function showToast(msg){
 function confirmReset(){
   if(confirm('Reset ALL sighting data? This cannot be undone.')){
     state={sightings:[],globalSpotCounts:{},lastSightingDate:{},totalScore:0};
-    localStorage.removeItem('ws_v12'); localStorage.removeItem('ws_badges_v12');
-    unlockedBadges=new Set(); renderAll(); showToast('🗑️ Data reset');
+    localStorage.removeItem('ws_v13'); localStorage.removeItem('ws_badges_v13');
+    unlockedBadges=new Set(); renderAll(); pushScoreToFirebase();
+    showToast('🗑️ Data reset');
   }
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
-loadState(); renderAll();
-document.getElementById('sbUsernameDisplay').textContent=username||'—';
-if(!username){ setTimeout(showUsernameModal,600); }
-else{ setTimeout(()=>{ if(window._fbReady) initFirebaseListener(); },1000); }
-loadAllPhotos();
+async function init(){
+  loadLocalState();
+  renderAll();
+
+  // Try to restore identity from Firebase first (handles cleared localStorage)
+  if(!username && window._fbReady){
+    const restored = await restoreIdentityFromFirebase();
+    if(restored){
+      showToast(`👋 Welcome back, ${username}!`);
+    }
+  }
+
+  updateUsernameDisplay();
+
+  if(!username){
+    // Brand new user — ask for name
+    setTimeout(showUsernameModal, 600);
+  } else {
+    // Known user — connect scoreboard silently
+    saveIdentityToFirebase();
+    initFirebaseListener();
+    pushScoreToFirebase();
+  }
+
+  loadAllPhotos();
+}
+
+init();
 </script>
 </body>
 </html>
