@@ -143,18 +143,16 @@ body.light .challenge-label { color:#ffd700; }
 .species-card.spotted { border-color:var(--accent); }
 body.light .species-card.spotted { border-color:#2d7a3a; }
 
-/* Shimmer on unspotted */
+/* Gyroscope gloss on unspotted cards — moves with phone tilt */
 .species-card.unspotted::after {
   content:''; position:absolute; inset:0;
-  background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.06) 50%,transparent 60%);
-  background-size:200% 100%; animation:shimmer 3s infinite;
+  background:radial-gradient(ellipse 60% 40% at var(--gx,50%) var(--gy,30%), rgba(255,255,255,.13) 0%, transparent 70%);
   pointer-events:none; border-radius:12px;
+  transition:background .05s;
 }
 body.light .species-card.unspotted::after {
-  background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.3) 50%,transparent 60%);
-  background-size:200% 100%;
+  background:radial-gradient(ellipse 60% 40% at var(--gx,50%) var(--gy,30%), rgba(255,255,255,.45) 0%, transparent 70%);
 }
-@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
 .card-thumb { width:100%; height:110px; object-fit:cover; object-position:center; display:block; background:var(--surface2); }
 .card-thumb-placeholder { width:100%; height:110px; display:flex; align-items:center; justify-content:center; background:var(--surface2); font-size:40px; }
@@ -1013,6 +1011,59 @@ async function onFirebaseReady() {
 }
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
+// ── GYROSCOPE GLOSS ───────────────────────────────────────────────────────────
+// On devices with a gyroscope, the gloss highlight on unspotted cards moves
+// as you tilt your phone — like a holographic card effect.
+// On desktop, it follows the mouse instead as a fallback.
+function initGyroGloss() {
+  const root = document.documentElement;
+
+  function applyGloss(xPct, yPct) {
+    // Clamp to 10-90% so the highlight never disappears off-edge
+    const gx = Math.min(90, Math.max(10, xPct)).toFixed(1) + '%';
+    const gy = Math.min(90, Math.max(10, yPct)).toFixed(1) + '%';
+    root.style.setProperty('--gx', gx);
+    root.style.setProperty('--gy', gy);
+  }
+
+  // Gyroscope (mobile)
+  if (window.DeviceOrientationEvent) {
+    // iOS 13+ requires permission
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+      // Add a one-time tap listener to request permission
+      document.addEventListener('click', function askPerm() {
+        DeviceOrientationEvent.requestPermission().then(state => {
+          if (state === 'granted') {
+            window.addEventListener('deviceorientation', handleOrientation);
+          }
+        }).catch(() => {});
+        document.removeEventListener('click', askPerm);
+      }, { once: true });
+    } else {
+      window.addEventListener('deviceorientation', handleOrientation);
+    }
+  }
+
+  function handleOrientation(e) {
+    // gamma = left/right tilt (-90 to 90), beta = front/back tilt (-180 to 180)
+    const gamma = Math.min(45, Math.max(-45, e.gamma || 0)); // left/right
+    const beta  = Math.min(45, Math.max(-45, (e.beta || 0) - 20)); // fwd/back, offset for natural hold angle
+    // Map tilt range to 15-85% position
+    const xPct = 50 + (gamma / 45) * 35;
+    const yPct = 50 + (beta  / 45) * 35;
+    applyGloss(xPct, yPct);
+  }
+
+  // Mouse fallback for desktop
+  document.addEventListener('mousemove', e => {
+    if (!window.DeviceOrientationEvent || window.innerWidth > 768) {
+      const xPct = (e.clientX / window.innerWidth)  * 100;
+      const yPct = (e.clientY / window.innerHeight) * 100;
+      applyGloss(xPct, yPct);
+    }
+  }, { passive: true });
+}
+
 async function init() {
   loadLocalState();
   document.body.classList.toggle('light', !isDark);
@@ -1022,6 +1073,7 @@ async function init() {
   updateUsernameDisplay();
   waitForFirebase(onFirebaseReady);
   loadAllPhotos();
+  initGyroGloss();
 }
 init();
 </script>
