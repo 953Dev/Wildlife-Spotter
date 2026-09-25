@@ -21,31 +21,30 @@
     projectId: "wildlife-spotter-361c0",
     storageBucket: "wildlife-spotter-361c0.firebasestorage.app",
     messagingSenderId: "1057332031030",
-    appId: "1:1057332031030:web:d6c483107111893cbe3297",
-    measurementId: "G-TVE64X18Q2"
+    appId: "1:1057332031030:web:d6c483107111893cbe3297"
   };
   try {
     const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+    const db  = getDatabase(app);
     window._db=db; window._fbRef=ref; window._fbSet=set;
     window._fbGet=get; window._fbOnValue=onValue; window._fbReady=true;
     if(window._fbReadyCallback) window._fbReadyCallback();
   } catch(e) { window._fbReady=false; }
 </script>
 <style>
-:root {
-  --bg:#1a0f07; --surface:#2a1a0e; --surface2:#3a2515; --border:#5a3d28;
-  --text:#f0e6d3; --text-muted:#a08060; --accent:#c8820a;
+:root{
+  --bg:#1a0f07;--surface:#2a1a0e;--surface2:#3a2515;--border:#5a3d28;
+  --text:#f0e6d3;--text-muted:#a08060;--accent:#c8820a;
   --header-bg:linear-gradient(135deg,#2d1a0e 0%,#1a0f07 100%);
-  --common:#4caf50; --uncommon:#2196f3; --rare:#9c27b0;
-  --very-rare:#ff9800; --legendary:#f44336;
-  --card-bg:#2a1a0e; --score-bg:#c8820a;
+  --common:#4caf50;--uncommon:#2196f3;--rare:#9c27b0;
+  --very-rare:#ff9800;--legendary:#f44336;
+  --card-bg:#2a1a0e;--score-bg:#c8820a;
 }
-body.light {
-  --bg:#f5ede0; --surface:#fff8f0; --surface2:#ede0cc; --border:#c8a882;
-  --text:#2d1a0e; --text-muted:#7a5a3a; --accent:#2d7a3a;
+body.light{
+  --bg:#f5ede0;--surface:#fff8f0;--surface2:#ede0cc;--border:#c8a882;
+  --text:#2d1a0e;--text-muted:#7a5a3a;--accent:#2d7a3a;
   --header-bg:linear-gradient(135deg,#2d7a3a 0%,#1a5a28 100%);
-  --card-bg:#fff8f0; --score-bg:#2d7a3a;
+  --card-bg:#fff8f0;--score-bg:#2d7a3a;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:70px;transition:background .3s,color .3s;}
@@ -120,6 +119,11 @@ body.light .species-card.unspotted::after{background:radial-gradient(ellipse 60%
 .burst-container{position:fixed;pointer-events:none;z-index:500;}
 .burst-particle{position:absolute;border-radius:50%;width:10px;height:10px;animation:burstOut .7s ease-out forwards;}
 @keyframes burstOut{0%{transform:translate(0,0) scale(1);opacity:1;}100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0;}}
+/* ── SHARE BUTTON ─────────────────────────────────────────── */
+.share-btn{background:none;border:1px solid var(--border);color:var(--text-muted);font-size:11px;padding:5px 10px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .2s;margin-top:5px;}
+.share-btn:hover{border-color:var(--accent);color:var(--accent);}
+.share-btn svg{width:13px;height:13px;fill:currentColor;flex-shrink:0;}
+.share-btn.generating{opacity:.6;pointer-events:none;}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;padding:16px;}
 .modal-overlay.open{display:flex;}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;width:100%;max-width:420px;max-height:92vh;overflow-y:auto;}
@@ -148,6 +152,7 @@ body.light .species-card.unspotted::after{background:radial-gradient(ellipse 60%
 .j-name{font-weight:600;font-size:14px;}.j-time{font-size:11px;color:var(--text-muted);}
 .j-coords{font-size:11px;color:#58a6ff;cursor:pointer;}
 .j-notes{font-size:11px;color:var(--text-muted);margin-top:3px;font-style:italic;}
+.j-actions{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;}
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;}
 .stat-card h3{font-size:13px;color:var(--text-muted);margin-bottom:3px;}
@@ -288,7 +293,7 @@ body.light .species-card.unspotted::after{background:radial-gradient(ellipse 60%
 <div class="modal-overlay" id="usernameOverlay">
   <div class="username-modal">
     <h2 id="unModalTitle">What is your name?</h2>
-    <p id="unModalDesc">Choose a display name for the live scoreboard. Saved to Firebase so you are recognised on any device.</p>
+    <p id="unModalDesc">Choose a display name for the live scoreboard.</p>
     <input type="text" id="usernameInput" placeholder="e.g. Sam T." maxlength="24">
     <button class="btn btn-primary" style="width:100%" onclick="saveUsername()">Start Spotting! &#x1F998;</button>
   </div>
@@ -377,149 +382,74 @@ function renderChallengeHero(){
     '</div><div class="challenge-badge">'+(done?'&#x2705; Done':'&#x2B50; 2x pts')+'</div></div>';
   if(!done){const btn=document.getElementById('challengeLogBtn');if(btn)btn.onclick=()=>openModal(sp.id,null,true);}
 }
-
 function playLogSound(rarity){
   if(!soundEnabled)return;
   try{
     const ctx=new(window.AudioContext||window.webkitAudioContext)();
     const counts={common:2,uncommon:3,rare:4,'very-rare':5,legendary:6};
-    const freqs=[523,659,784,1047,1319,1568];
-    const n=counts[rarity]||2;
-    for(let i=0;i<n;i++){
-      const osc=ctx.createOscillator(),gain=ctx.createGain();
-      osc.connect(gain);gain.connect(ctx.destination);
-      osc.frequency.value=freqs[i];osc.type='sine';
-      const t=ctx.currentTime+i*0.12;
-      gain.gain.setValueAtTime(0,t);gain.gain.linearRampToValueAtTime(0.18,t+0.02);gain.gain.exponentialRampToValueAtTime(0.001,t+0.35);
-      osc.start(t);osc.stop(t+0.35);
-    }
+    const freqs=[523,659,784,1047,1319,1568];const n=counts[rarity]||2;
+    for(let i=0;i<n;i++){const osc=ctx.createOscillator(),gain=ctx.createGain();osc.connect(gain);gain.connect(ctx.destination);osc.frequency.value=freqs[i];osc.type='sine';const t=ctx.currentTime+i*0.12;gain.gain.setValueAtTime(0,t);gain.gain.linearRampToValueAtTime(0.18,t+0.02);gain.gain.exponentialRampToValueAtTime(0.001,t+0.35);osc.start(t);osc.stop(t+0.35);}
   }catch(e){}
 }
-function haptic(pattern){try{if(navigator.vibrate)navigator.vibrate(pattern);}catch(e){}}
-
-function toggleSound(){
-  soundEnabled=!soundEnabled;
-  const btn=document.getElementById('soundBtn');
-  btn.classList.toggle('sound-on',soundEnabled);
-  btn.classList.toggle('sound-off',!soundEnabled);
-  localStorage.setItem('ws_sound',soundEnabled?'1':'0');
-}
-function toggleTheme(){
-  isDark=!isDark;
-  document.body.classList.toggle('light',!isDark);
-  const btn=document.getElementById('themeBtn');
-  btn.classList.toggle('theme-dark',isDark);
-  btn.classList.toggle('theme-light',!isDark);
-  localStorage.setItem('ws_theme',isDark?'dark':'light');
-}
-function applyThemeClasses(){
-  document.body.classList.toggle('light',!isDark);
-  const s=document.getElementById('soundBtn');
-  s.classList.toggle('sound-on',soundEnabled);s.classList.toggle('sound-off',!soundEnabled);
-  const t=document.getElementById('themeBtn');
-  t.classList.toggle('theme-dark',isDark);t.classList.toggle('theme-light',!isDark);
-}
-
-function triggerBurst(x,y,rarity){
-  const color=RARITY_COLORS[rarity]||'#4caf50';
-  const container=document.createElement('div');container.className='burst-container';document.body.appendChild(container);
-  for(let i=0;i<12;i++){
-    const p=document.createElement('div');p.className='burst-particle';
-    const angle=(i/12)*Math.PI*2,dist=50+Math.random()*40;
-    p.style.cssText='background:'+color+';left:'+x+'px;top:'+y+'px;--tx:'+(Math.cos(angle)*dist)+'px;--ty:'+(Math.sin(angle)*dist)+'px;';
-    container.appendChild(p);
-  }
-  setTimeout(()=>container.remove(),800);
-}
-function animateScore(from,to){
-  const el=document.getElementById('headerScore');
-  el.classList.add('bump');setTimeout(()=>el.classList.remove('bump'),300);
-  const steps=20,inc=(to-from)/steps;let cur=from,step=0;
-  const iv=setInterval(()=>{step++;cur+=inc;el.textContent='⭐ '+Math.round(step<steps?cur:to)+' pts';if(step>=steps)clearInterval(iv);},600/steps);
-}
+function haptic(p){try{if(navigator.vibrate)navigator.vibrate(p);}catch(e){}}
+function toggleSound(){soundEnabled=!soundEnabled;const b=document.getElementById('soundBtn');b.classList.toggle('sound-on',soundEnabled);b.classList.toggle('sound-off',!soundEnabled);localStorage.setItem('ws_sound',soundEnabled?'1':'0');}
+function toggleTheme(){isDark=!isDark;document.body.classList.toggle('light',!isDark);const b=document.getElementById('themeBtn');b.classList.toggle('theme-dark',isDark);b.classList.toggle('theme-light',!isDark);localStorage.setItem('ws_theme',isDark?'dark':'light');}
+function applyThemeClasses(){document.body.classList.toggle('light',!isDark);const s=document.getElementById('soundBtn');s.classList.toggle('sound-on',soundEnabled);s.classList.toggle('sound-off',!soundEnabled);const t=document.getElementById('themeBtn');t.classList.toggle('theme-dark',isDark);t.classList.toggle('theme-light',!isDark);}
+function triggerBurst(x,y,rarity){const color=RARITY_COLORS[rarity]||'#4caf50';const c=document.createElement('div');c.className='burst-container';document.body.appendChild(c);for(let i=0;i<12;i++){const p=document.createElement('div');p.className='burst-particle';const a=(i/12)*Math.PI*2,d=50+Math.random()*40;p.style.cssText='background:'+color+';left:'+x+'px;top:'+y+'px;--tx:'+(Math.cos(a)*d)+'px;--ty:'+(Math.sin(a)*d)+'px;';c.appendChild(p);}setTimeout(()=>c.remove(),800);}
+function animateScore(from,to){const el=document.getElementById('headerScore');el.classList.add('bump');setTimeout(()=>el.classList.remove('bump'),300);const steps=20,inc=(to-from)/steps;let cur=from,step=0;const iv=setInterval(()=>{step++;cur+=inc;el.textContent='⭐ '+Math.round(step<steps?cur:to)+' pts';if(step>=steps)clearInterval(iv);},600/steps);}
 function initGyroGloss(){
   const root=document.documentElement;
   function applyGloss(x,y){root.style.setProperty('--gx',Math.min(90,Math.max(10,x)).toFixed(1)+'%');root.style.setProperty('--gy',Math.min(90,Math.max(10,y)).toFixed(1)+'%');}
   function handleOri(e){const g=Math.min(45,Math.max(-45,e.gamma||0)),b=Math.min(45,Math.max(-45,(e.beta||0)-20));applyGloss(50+(g/45)*35,50+(b/45)*35);}
-  if(window.DeviceOrientationEvent){
-    if(typeof DeviceOrientationEvent.requestPermission==='function'){
-      document.addEventListener('click',function ask(){DeviceOrientationEvent.requestPermission().then(s=>{if(s==='granted')window.addEventListener('deviceorientation',handleOri);}).catch(()=>{});document.removeEventListener('click',ask);},{once:true});
-    }else{window.addEventListener('deviceorientation',handleOri);}
-  }
+  if(window.DeviceOrientationEvent){if(typeof DeviceOrientationEvent.requestPermission==='function'){document.addEventListener('click',function ask(){DeviceOrientationEvent.requestPermission().then(s=>{if(s==='granted')window.addEventListener('deviceorientation',handleOri);}).catch(()=>{});document.removeEventListener('click',ask);},{once:true});}else{window.addEventListener('deviceorientation',handleOri);}}
   document.addEventListener('mousemove',e=>{if(!window.DeviceOrientationEvent||window.innerWidth>768)applyGloss((e.clientX/window.innerWidth)*100,(e.clientY/window.innerHeight)*100);},{passive:true});
 }
-
 function generateDeviceId(){return 'dev_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8);}
 function loadLocalState(){
-  deviceId=localStorage.getItem('ws_deviceId')||'';
-  if(!deviceId){deviceId=generateDeviceId();localStorage.setItem('ws_deviceId',deviceId);}
+  deviceId=localStorage.getItem('ws_deviceId')||'';if(!deviceId){deviceId=generateDeviceId();localStorage.setItem('ws_deviceId',deviceId);}
   const s=localStorage.getItem('ws_v15');if(s)state=JSON.parse(s);
   if(!state.sightings.length){const old=localStorage.getItem('ws_v14');if(old)state=JSON.parse(old);}
   username=localStorage.getItem('ws_username_v15')||localStorage.getItem('ws_username_v14')||'';
   const b=localStorage.getItem('ws_badges_v15')||localStorage.getItem('ws_badges_v14');if(b)unlockedBadges=new Set(JSON.parse(b));
-  soundEnabled=localStorage.getItem('ws_sound')!=='0';
-  isDark=localStorage.getItem('ws_theme')!=='light';
+  soundEnabled=localStorage.getItem('ws_sound')!=='0';isDark=localStorage.getItem('ws_theme')!=='light';
 }
 function saveLocalState(){localStorage.setItem('ws_v15',JSON.stringify(state));localStorage.setItem('ws_username_v15',username);localStorage.setItem('ws_deviceId',deviceId);}
-async function restoreIdentityFromFirebase(){
-  if(!window._fbReady)return false;
-  try{const snap=await window._fbGet(window._fbRef(window._db,'devices/'+deviceId));if(snap.exists()&&snap.val().username){username=snap.val().username;saveLocalState();return true;}}catch(e){}
-  return false;
-}
+async function restoreIdentityFromFirebase(){if(!window._fbReady)return false;try{const snap=await window._fbGet(window._fbRef(window._db,'devices/'+deviceId));if(snap.exists()&&snap.val().username){username=snap.val().username;saveLocalState();return true;}}catch(e){}return false;}
 function saveIdentityToFirebase(){if(!window._fbReady||!username||!deviceId)return;try{window._fbSet(window._fbRef(window._db,'devices/'+deviceId),{username,updatedAt:Date.now()});}catch(e){}}
-
 function getEffectiveN(id){const n=state.globalSpotCounts[id]||0;if(!n)return 0;const lastTs=state.lastSightingDate[id];if(!lastTs)return n;return Math.max(0,n-Math.floor((Date.now()-lastTs)/MS_PER_DAY/RECOVERY_DAYS));}
 function currentPts(id,isChallenge){const sp=SPECIES.find(s=>s.id===id);const pts=Math.max(Math.ceil(sp.maxPts*.2),Math.round(sp.maxPts*Math.pow(.9,getEffectiveN(id))));return isChallenge?pts*2:pts;}
 function hasRecovered(id){const n=state.globalSpotCounts[id]||0;return n>0&&getEffectiveN(id)<n;}
 function dynInfo(id,isChallenge){
-  const sp=SPECIES.find(s=>s.id===id);
-  const n=state.globalSpotCounts[id]||0,effN=getEffectiveN(id),pts=currentPts(id,isChallenge);
-  const floor=Math.ceil(sp.maxPts*.2),lastTs=state.lastSightingDate[id];
-  let lines=[];
+  const sp=SPECIES.find(s=>s.id===id),n=state.globalSpotCounts[id]||0,effN=getEffectiveN(id),pts=currentPts(id,isChallenge);
+  const floor=Math.ceil(sp.maxPts*.2),lastTs=state.lastSightingDate[id];let lines=[];
   if(isChallenge)lines.push('Daily Challenge! 2x points today');
   if(!n)lines.push('First sighting! Value: <strong>'+pts+' pts</strong>');
-  else{
-    lines.push('Spotted <strong>'+n+'x</strong> total');
-    if(lastTs){const days=Math.floor((Date.now()-lastTs)/MS_PER_DAY);lines.push('Last seen: <strong>'+(days===0?'today':days+' day'+(days===1?'':'s')+' ago')+'</strong>');if(effN<n)lines.push('Recovered '+(n-effN)+' step'+(n-effN>1?'s':'')+' — value rising!');else if(pts>floor){const nr=RECOVERY_DAYS-(days%RECOVERY_DAYS);lines.push('Next recovery in <strong>'+nr+' day'+(nr===1?'':'s')+'</strong>');}}
-    lines.push('Current: <strong>'+pts+' pts</strong>'+(pts<=floor?' (at minimum)':'')+' of '+sp.maxPts+(isChallenge?' (2x)':''));
-  }
+  else{lines.push('Spotted <strong>'+n+'x</strong> total');if(lastTs){const days=Math.floor((Date.now()-lastTs)/MS_PER_DAY);lines.push('Last seen: <strong>'+(days===0?'today':days+' day'+(days===1?'':'s')+' ago')+'</strong>');if(effN<n)lines.push('Recovered '+(n-effN)+' step'+(n-effN>1?'s':'')+' — value rising!');else if(pts>floor){const nr=RECOVERY_DAYS-(days%RECOVERY_DAYS);lines.push('Next recovery in <strong>'+nr+' day'+(nr===1?'':'s')+'</strong>');}}lines.push('Current: <strong>'+pts+' pts</strong>'+(pts<=floor?' (at minimum)':'')+' of '+sp.maxPts+(isChallenge?' (2x)':''));}
   return lines.join('<br>');
 }
-
 async function loadAllPhotos(){
-  const ids=[...new Set(SPECIES.map(s=>s.inatId))];
-  const batches=[];for(let i=0;i<ids.length;i+=30)batches.push(ids.slice(i,i+30));
+  const ids=[...new Set(SPECIES.map(s=>s.inatId))];const batches=[];for(let i=0;i<ids.length;i+=30)batches.push(ids.slice(i,i+30));
   let loaded=0,failed=0;
-  for(const batch of batches){
-    try{const res=await fetch('https://api.inaturalist.org/v1/taxa/'+batch.join(','));if(!res.ok)throw new Error();const data=await res.json();for(const taxon of(data.results||[])){for(const sp of SPECIES.filter(s=>s.inatId===taxon.id)){if(taxon.default_photo&&taxon.default_photo.medium_url){photoCache[sp.id]={url:taxon.default_photo.medium_url,credit:(taxon.default_photo.attribution||'iNaturalist').substring(0,70)};loaded++;}else failed++;}}}catch(e){failed+=batch.length;}
-    document.getElementById('bannerText').textContent='Loading photos... '+loaded+' loaded';
-    await new Promise(r=>setTimeout(r,300));
-  }
-  photosLoaded=true;
-  const banner=document.getElementById('photoBanner');
+  for(const batch of batches){try{const res=await fetch('https://api.inaturalist.org/v1/taxa/'+batch.join(','));if(!res.ok)throw new Error();const data=await res.json();for(const taxon of(data.results||[])){for(const sp of SPECIES.filter(s=>s.inatId===taxon.id)){if(taxon.default_photo&&taxon.default_photo.medium_url){photoCache[sp.id]={url:taxon.default_photo.medium_url,credit:(taxon.default_photo.attribution||'iNaturalist').substring(0,70)};loaded++;}else failed++;}}}catch(e){failed+=batch.length;}document.getElementById('bannerText').textContent='Loading photos... '+loaded+' loaded';await new Promise(r=>setTimeout(r,300));}
+  photosLoaded=true;const banner=document.getElementById('photoBanner');
   if(loaded>0){banner.style.cssText='background:var(--surface2);border:1px solid #238636;color:#56d364;border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:12px;';banner.innerHTML='&#x2705; '+loaded+' photos loaded'+(failed>0?' ('+failed+' unavailable)':'');}
   else{banner.style.cssText='background:var(--surface2);border:1px solid #f44336;color:#f85149;border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:12px;';banner.innerHTML='&#x26A0;&#xFE0F; Could not load photos — check connection and refresh.';}
   renderSpecies();renderChallengeHero();
 }
-
 function thumbHtml(sp){if(!photosLoaded)return '<div class="card-thumb-loading"><div class="spin"></div></div>';const pc=photoCache[sp.id];if(pc)return '<img class="card-thumb" src="'+pc.url+'" alt="'+sp.name+'" loading="lazy">';return '<div class="card-thumb-placeholder">'+sp.emoji+'</div>';}
 function logFromCard(btn){openModal(btn.dataset.id,null,btn.dataset.ch==='true');}
 let currentFilter='all';
 function setFilter(cat,btn){currentFilter=cat;document.querySelectorAll('.filter-btns button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderSpecies();}
 function renderSpecies(){
-  const q=document.getElementById('searchInput').value.toLowerCase();
-  const challengeId=getTodayChallenge().id;
-  let list=SPECIES;
-  if(currentFilter!=='all')list=list.filter(s=>s.cat===currentFilter);
-  if(q)list=list.filter(s=>s.name.toLowerCase().includes(q)||s.sci.toLowerCase().includes(q));
+  const q=document.getElementById('searchInput').value.toLowerCase(),challengeId=getTodayChallenge().id;
+  let list=SPECIES;if(currentFilter!=='all')list=list.filter(s=>s.cat===currentFilter);if(q)list=list.filter(s=>s.name.toLowerCase().includes(q)||s.sci.toLowerCase().includes(q));
   const spotted=new Set(state.sightings.map(s=>s.speciesId));
   list=[...list].sort((a,b)=>RARITY_ORDER.indexOf(b.rarity)-RARITY_ORDER.indexOf(a.rarity));
   document.getElementById('speciesGrid').innerHTML=list.map(sp=>{
     const isSpotted=spotted.has(sp.id),isChallenge=sp.id===challengeId,pts=currentPts(sp.id,isChallenge),cnt=state.globalSpotCounts[sp.id]||0,r=sp.rarity;
     return '<div class="species-card glow-'+r+(isSpotted?' spotted':' unspotted')+'">'+
       (isSpotted?'<div class="card-spotted-badge">&#x2705;</div>':'')+thumbHtml(sp)+
-      '<div class="card-body"><div class="card-name">'+sp.name+(isChallenge?' &#x1F4C5;':'')+'</div>'+
-      '<div class="card-sci">'+sp.sci+'</div>'+
+      '<div class="card-body"><div class="card-name">'+sp.name+(isChallenge?' &#x1F4C5;':'')+'</div><div class="card-sci">'+sp.sci+'</div>'+
       (cnt>0?'<div style="font-size:9px;color:var(--text-muted)">Spotted '+cnt+'x globally</div>':'')+
       (hasRecovered(sp.id)?'<div class="card-recovery">&#x1F504; Recovering...</div>':'')+
       '<div class="card-meta"><span class="rarity-badge r-'+r+'">'+RARITY_LABELS[r]+'</span><span class="pts-badge pts-'+r+'">'+pts+'pts'+(isChallenge?' &#x2B50;':'')+'</span></div>'+
@@ -527,146 +457,339 @@ function renderSpecies(){
       '</div></div>';
   }).join('');
 }
-
 let pendingId=null,pendingPhoto=null,pendingLat=null,pendingLng=null,pendingChallenge=false;
-function openModal(id,e,isChallenge){
-  if(e){e.stopPropagation();e.preventDefault();}
-  const sp=SPECIES.find(s=>s.id===id);
-  pendingId=id;pendingPhoto=pendingLat=pendingLng=null;pendingChallenge=!!isChallenge;
-  document.getElementById('modalTitle').textContent=sp.emoji+' '+sp.name+(isChallenge?' 📅':'');
-  document.getElementById('modalSci').textContent=sp.sci;
-  document.getElementById('modalDynInfo').innerHTML=dynInfo(id,isChallenge);
-  const pc=photoCache[id],ref=document.getElementById('modalRefPhoto');
-  if(pc){ref.src=pc.url;ref.style.display='block';document.getElementById('modalRefCredit').textContent='Photo: '+pc.credit;}else{ref.style.display='none';document.getElementById('modalRefCredit').textContent='';}
-  document.getElementById('userPhotoPreview').style.display='none';
-  document.getElementById('photoInput').value='';
-  document.getElementById('notesInput').value='';
-  document.getElementById('gpsDisplay').style.display='none';
-  document.getElementById('modalOverlay').classList.add('open');
-}
+function openModal(id,e,isChallenge){if(e){e.stopPropagation();e.preventDefault();}const sp=SPECIES.find(s=>s.id===id);pendingId=id;pendingPhoto=pendingLat=pendingLng=null;pendingChallenge=!!isChallenge;document.getElementById('modalTitle').textContent=sp.emoji+' '+sp.name+(isChallenge?' &#55357;&#56517;':'');document.getElementById('modalSci').textContent=sp.sci;document.getElementById('modalDynInfo').innerHTML=dynInfo(id,isChallenge);const pc=photoCache[id],ref=document.getElementById('modalRefPhoto');if(pc){ref.src=pc.url;ref.style.display='block';document.getElementById('modalRefCredit').textContent='Photo: '+pc.credit;}else{ref.style.display='none';document.getElementById('modalRefCredit').textContent='';}document.getElementById('userPhotoPreview').style.display='none';document.getElementById('photoInput').value='';document.getElementById('notesInput').value='';document.getElementById('gpsDisplay').style.display='none';document.getElementById('modalOverlay').classList.add('open');}
 function closeModal(){document.getElementById('modalOverlay').classList.remove('open');pendingId=null;}
-function handlePhoto(e){
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=ev=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas'),MAX=800;let w=img.width,h=img.height;if(w>h&&w>MAX){h=h*MAX/w;w=MAX;}else if(h>MAX){w=w*MAX/h;h=MAX;}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);pendingPhoto=c.toDataURL('image/jpeg',.75);const pv=document.getElementById('userPhotoPreview');pv.src=pendingPhoto;pv.style.display='block';}; img.src=ev.target.result;};reader.readAsDataURL(file);
-}
-function getGPS(){
-  if(!navigator.geolocation){showToast('Geolocation not supported','score');return;}
-  navigator.geolocation.getCurrentPosition(pos=>{pendingLat=pos.coords.latitude.toFixed(6);pendingLng=pos.coords.longitude.toFixed(6);const el=document.getElementById('gpsDisplay');el.textContent='Location: '+pendingLat+', '+pendingLng;el.style.display='block';showToast('Location captured!','score',2000);},()=>showToast('Could not get location','score'));
-}
+function handlePhoto(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas'),MAX=800;let w=img.width,h=img.height;if(w>h&&w>MAX){h=h*MAX/w;w=MAX;}else if(h>MAX){w=w*MAX/h;h=MAX;}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);pendingPhoto=c.toDataURL('image/jpeg',.75);const pv=document.getElementById('userPhotoPreview');pv.src=pendingPhoto;pv.style.display='block';};img.src=ev.target.result;};reader.readAsDataURL(file);}
+function getGPS(){if(!navigator.geolocation){showToast('Geolocation not supported','score');return;}navigator.geolocation.getCurrentPosition(pos=>{pendingLat=pos.coords.latitude.toFixed(6);pendingLng=pos.coords.longitude.toFixed(6);const el=document.getElementById('gpsDisplay');el.textContent='Location: '+pendingLat+', '+pendingLng;el.style.display='block';showToast('Location captured!','score',2000);},()=>showToast('Could not get location','score'));}
 function confirmLog(){
   if(!pendingId)return;
   const sp=SPECIES.find(s=>s.id===pendingId);
   const oldScore=state.totalScore,pts=currentPts(pendingId,pendingChallenge);
   state.globalSpotCounts[pendingId]=(state.globalSpotCounts[pendingId]||0)+1;
   state.lastSightingDate[pendingId]=Date.now();
-  state.sightings.unshift({id:Date.now(),speciesId:pendingId,ts:new Date().toISOString(),photo:pendingPhoto,lat:pendingLat,lng:pendingLng,notes:document.getElementById('notesInput').value.trim(),ptsEarned:pts,isChallenge:pendingChallenge});
-  state.totalScore+=pts;saveLocalState();
+  const newSighting={id:Date.now(),speciesId:pendingId,ts:new Date().toISOString(),photo:pendingPhoto,lat:pendingLat,lng:pendingLng,notes:document.getElementById('notesInput').value.trim(),ptsEarned:pts,isChallenge:pendingChallenge};
+  state.sightings.unshift(newSighting);state.totalScore+=pts;saveLocalState();
   const hapticPatterns={common:[30],uncommon:[30,20,30],rare:[50,20,50,20,50],'very-rare':[80,20,80,20,80,20,80],legendary:[100,30,100,30,100,30,100,30,100]};
   haptic(hapticPatterns[sp.rarity]||[30]);playLogSound(sp.rarity);
-  const btn=document.querySelector('#modalOverlay .btn-primary');
-  if(btn){const r=btn.getBoundingClientRect();triggerBurst(r.left+r.width/2,r.top+r.height/2,sp.rarity);}
+  const btn=document.querySelector('#modalOverlay .btn-primary');if(btn){const r=btn.getBoundingClientRect();triggerBurst(r.left+r.width/2,r.top+r.height/2,sp.rarity);}
   closeModal();checkBadges();pushScoreToFirebase();animateScore(oldScore,state.totalScore);
   renderSpecies();renderChallengeHero();renderJournal();renderBadges();
-  showToast((pendingChallenge?'Challenge! ':'')+'+'+pts+' pts — '+sp.name+'!','score',2500);
+  // Show toast with share button
+  showSightingToast(newSighting, sp, pts);
+}
+
+// ── SIGHTING TOAST WITH SHARE BUTTON ────────────────────────
+function showSightingToast(sighting, sp, pts) {
+  const container = document.getElementById('toastContainer');
+  const item = document.createElement('div');
+  item.className = 'toast-item score show';
+  item.style.flexDirection = 'column';
+  item.style.alignItems = 'flex-start';
+  item.style.gap = '6px';
+  item.innerHTML =
+    '<div style="display:flex;align-items:center;gap:8px;width:100%">' +
+      '<span style="flex:1">'+(sighting.isChallenge?'&#x1F31F; Challenge! ':'')+'+'+pts+' pts — '+sp.name+'!</span>' +
+      '<span class="toast-close" onclick="dismissToastEl(this)">&#x2715;</span>' +
+    '</div>' +
+    '<button class="share-btn" onclick="handleShareBtn(this,'+sighting.id+')">' +
+      '<svg viewBox="0 0 24 24"><path d="M18 16c-.8 0-1.5.3-2 .8l-7.1-4.2c0-.2.1-.4.1-.6s0-.4-.1-.6L16 7.2c.5.5 1.2.8 2 .8 1.7 0 3-1.3 3-3s-1.3-3-3-3-3 1.3-3 3c0 .2 0 .4.1.6L8 9.8C7.5 9.3 6.8 9 6 9c-1.7 0-3 1.3-3 3s1.3 3 3 3c.8 0 1.5-.3 2-.8l7.1 4.2c0 .2-.1.4-.1.5 0 1.6 1.3 2.9 2.9 2.9s2.9-1.3 2.9-2.9S19.6 16 18 16z"/></svg>' +
+      'Share Sighting' +
+    '</button>';
+  container.appendChild(item);
+  setTimeout(() => { if(item.parentNode) item.remove(); }, 8000);
+}
+function handleShareBtn(btn, sightingId) {
+  const sighting = state.sightings.find(s => s.id === sightingId);
+  if (!sighting) return;
+  btn.classList.add('generating');
+  btn.textContent = 'Generating…';
+  shareCard(sighting).finally(() => {
+    btn.classList.remove('generating');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:currentColor"><path d="M18 16c-.8 0-1.5.3-2 .8l-7.1-4.2c0-.2.1-.4.1-.6s0-.4-.1-.6L16 7.2c.5.5 1.2.8 2 .8 1.7 0 3-1.3 3-3s-1.3-3-3-3-3 1.3-3 3c0 .2 0 .4.1.6L8 9.8C7.5 9.3 6.8 9 6 9c-1.7 0-3 1.3-3 3s1.3 3 3 3c.8 0 1.5-.3 2-.8l7.1 4.2c0 .2-.1.4-.1.5 0 1.6 1.3 2.9 2.9 2.9s2.9-1.3 2.9-2.9S19.6 16 18 16z"/></svg> Share Sighting';
+  });
 }
 
 function pushScoreToFirebase(){if(!window._fbReady||!username)return;try{window._fbSet(window._fbRef(window._db,'scores/'+username),{name:username,score:state.totalScore,species:new Set(state.sightings.map(s=>s.speciesId)).size,deviceId,updatedAt:Date.now()});}catch(e){}}
 function initFirebaseListener(){if(!window._fbReady)return;const el=document.getElementById('fbStatus');el.className='fb-status connected';el.textContent='Live scoreboard active';window._fbOnValue(window._fbRef(window._db,'scores'),snap=>renderScoreboard(snap.val()||{}));}
-function renderScoreboard(data){
-  const entries=Object.values(data).sort((a,b)=>b.score-a.score);
-  const el=document.getElementById('scoreboardList');
-  if(!entries.length){el.innerHTML='<div class="empty-state"><div class="icon">&#x1F3C6;</div><p>No scores yet!</p></div>';return;}
-  const medals=['&#x1F947;','&#x1F948;','&#x1F949;'];
-  el.innerHTML=entries.slice(0,50).map((e,i)=>{const isYou=e.name===username;return '<div class="scoreboard-entry'+(isYou?' sb-you':'')+'"><span class="sb-rank">'+(medals[i]||'#'+(i+1))+'</span><div style="flex:1"><div class="sb-name">'+e.name+(isYou?' &#x1F448; you':'')+'</div><div class="sb-species">'+(e.species||0)+' species</div></div><div class="sb-score">&#x2B50; '+(e.score||0)+'</div></div>';}).join('');
-}
-function showUsernameModal(isChange){
-  document.getElementById('unModalTitle').textContent=isChange?'Change your name':'What is your name?';
-  document.getElementById('unModalDesc').textContent=isChange?'Enter a new display name. Your leaderboard score updates immediately.':'Choose a display name for the live scoreboard. Saved to Firebase so you are recognised on any device.';
-  document.getElementById('usernameInput').value=username||'';
-  document.getElementById('usernameOverlay').classList.add('open');
-  setTimeout(()=>document.getElementById('usernameInput').focus(),200);
-}
+function renderScoreboard(data){const entries=Object.values(data).sort((a,b)=>b.score-a.score);const el=document.getElementById('scoreboardList');if(!entries.length){el.innerHTML='<div class="empty-state"><div class="icon">&#x1F3C6;</div><p>No scores yet!</p></div>';return;}const medals=['&#x1F947;','&#x1F948;','&#x1F949;'];el.innerHTML=entries.slice(0,50).map((e,i)=>{const isYou=e.name===username;return '<div class="scoreboard-entry'+(isYou?' sb-you':'')+'"><span class="sb-rank">'+(medals[i]||'#'+(i+1))+'</span><div style="flex:1"><div class="sb-name">'+e.name+(isYou?' &#x1F448; you':'')+'</div><div class="sb-species">'+(e.species||0)+' species</div></div><div class="sb-score">&#x2B50; '+(e.score||0)+'</div></div>';}).join('');}
+function showUsernameModal(isChange){document.getElementById('unModalTitle').textContent=isChange?'Change your name':'What is your name?';document.getElementById('unModalDesc').textContent=isChange?'Enter a new display name.':'Choose a display name for the live scoreboard.';document.getElementById('usernameInput').value=username||'';document.getElementById('usernameOverlay').classList.add('open');setTimeout(()=>document.getElementById('usernameInput').focus(),200);}
 function saveUsername(){const val=document.getElementById('usernameInput').value.trim();if(!val||val.length<2){showToast('Please enter at least 2 characters','score');return;}username=val;saveLocalState();saveIdentityToFirebase();document.getElementById('usernameOverlay').classList.remove('open');updateUsernameDisplay();initFirebaseListener();pushScoreToFirebase();}
 function changeUsername(){showUsernameModal(true);}
 function updateUsernameDisplay(){document.getElementById('sbUsernameDisplay').textContent=username||'—';document.getElementById('headerUsername').textContent=username?'Playing as '+username:'54 species · tap to log';}
-
 function renderJournal(){
   const el=document.getElementById('journalList');
   if(!state.sightings.length){el.innerHTML='<div class="empty-state"><div class="icon">&#x1F4D3;</div><p>No sightings yet.<br>Head outside and tap Log Sighting!</p></div>';return;}
-  el.innerHTML=state.sightings.map(s=>{const sp=SPECIES.find(x=>x.id===s.speciesId);if(!sp)return'';const r=sp.rarity,pc=photoCache[sp.id],date=new Date(s.ts).toLocaleString('en-AU',{dateStyle:'medium',timeStyle:'short'});const thumb=s.photo?'<img src="'+s.photo+'" class="j-thumb" alt="photo">':pc?'<img src="'+pc.url+'" class="j-thumb" alt="'+sp.name+'">'  :'<div class="j-emoji">'+sp.emoji+'</div>';return '<div class="journal-entry">'+thumb+'<div style="flex:1"><div class="j-name">'+sp.emoji+' '+sp.name+(s.isChallenge?' &#x1F4C5;':'')+'</div><div class="j-time">'+date+'</div>'+(s.lat?'<div class="j-coords" onclick="jumpToMap('+s.lat+','+s.lng+')">'+s.lat+', '+s.lng+'</div>':'')+'<div class="j-pts pts-'+r+'">+'+s.ptsEarned+' pts &middot; <span class="rarity-badge r-'+r+'">'+RARITY_LABELS[r]+'</span></div>'+(s.notes?'<div class="j-notes">"'+s.notes+'"</div>':'')+'</div></div>';}).join('');
+  el.innerHTML=state.sightings.map(s=>{
+    const sp=SPECIES.find(x=>x.id===s.speciesId);if(!sp)return'';
+    const r=sp.rarity,pc=photoCache[sp.id],date=new Date(s.ts).toLocaleString('en-AU',{dateStyle:'medium',timeStyle:'short'});
+    const thumb=s.photo?'<img src="'+s.photo+'" class="j-thumb" alt="photo">':pc?'<img src="'+pc.url+'" class="j-thumb" alt="'+sp.name+'">':'<div class="j-emoji">'+sp.emoji+'</div>';
+    return '<div class="journal-entry">'+thumb+'<div style="flex:1">'+
+      '<div class="j-name">'+sp.emoji+' '+sp.name+(s.isChallenge?' &#x1F4C5;':'')+'</div>'+
+      '<div class="j-time">'+date+'</div>'+
+      (s.lat?'<div class="j-coords" onclick="jumpToMap('+s.lat+','+s.lng+')">'+s.lat+', '+s.lng+'</div>':'')+
+      '<div class="j-pts pts-'+r+'">+'+s.ptsEarned+' pts &middot; <span class="rarity-badge r-'+r+'">'+RARITY_LABELS[r]+'</span></div>'+
+      (s.notes?'<div class="j-notes">"'+s.notes+'"</div>':'')+
+      '<div class="j-actions">'+
+        '<button class="share-btn" data-sid="'+s.id+'" onclick="handleJournalShare(this)">'+
+          '<svg viewBox="0 0 24 24"><path d="M18 16c-.8 0-1.5.3-2 .8l-7.1-4.2c0-.2.1-.4.1-.6s0-.4-.1-.6L16 7.2c.5.5 1.2.8 2 .8 1.7 0 3-1.3 3-3s-1.3-3-3-3-3 1.3-3 3c0 .2 0 .4.1.6L8 9.8C7.5 9.3 6.8 9 6 9c-1.7 0-3 1.3-3 3s1.3 3 3 3c.8 0 1.5-.3 2-.8l7.1 4.2c0 .2-.1.4-.1.5 0 1.6 1.3 2.9 2.9 2.9s2.9-1.3 2.9-2.9S19.6 16 18 16z"/></svg>'+
+          ' Share'+
+        '</button>'+
+      '</div>'+
+      '</div></div>';
+  }).join('');
 }
-function renderStats(){
-  document.getElementById('statScore').textContent=state.totalScore;
-  const u=new Set(state.sightings.map(s=>s.speciesId));
-  document.getElementById('statCount').textContent=u.size;document.getElementById('statSightings').textContent=state.sightings.length;
-  let rarest=null;u.forEach(id=>{const sp=SPECIES.find(s=>s.id===id);if(!rarest||RARITY_ORDER.indexOf(sp.rarity)>RARITY_ORDER.indexOf(rarest))rarest=sp.rarity;});
-  document.getElementById('statRarest').textContent=rarest?RARITY_LABELS[rarest]:'—';
-  document.getElementById('tierProgress').innerHTML=RARITY_ORDER.map(r=>{const total=SPECIES.filter(s=>s.rarity===r).length,found=SPECIES.filter(s=>s.rarity===r&&u.has(s.id)).length,pct=total>0?(found/total*100).toFixed(0):0;return '<div class="tier-row"><div class="label" style="color:'+RARITY_COLORS[r]+'">'+RARITY_LABELS[r]+'</div><div class="tier-bar-bg"><div class="tier-bar r-'+r+'" style="width:'+pct+'%"></div></div><div class="count">'+found+'/'+total+'</div></div>';}).join('');
-  document.getElementById('headerScore').textContent='⭐ '+state.totalScore+' pts';
+function handleJournalShare(btn){
+  const sid=parseInt(btn.dataset.sid);
+  const sighting=state.sightings.find(s=>s.id===sid);if(!sighting)return;
+  btn.classList.add('generating');btn.textContent='Generating…';
+  shareCard(sighting).finally(()=>{btn.classList.remove('generating');btn.innerHTML='<svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:currentColor"><path d="M18 16c-.8 0-1.5.3-2 .8l-7.1-4.2c0-.2.1-.4.1-.6s0-.4-.1-.6L16 7.2c.5.5 1.2.8 2 .8 1.7 0 3-1.3 3-3s-1.3-3-3-3-3 1.3-3 3c0 .2 0 .4.1.6L8 9.8C7.5 9.3 6.8 9 6 9c-1.7 0-3 1.3-3 3s1.3 3 3 3c.8 0 1.5-.3 2-.8l7.1 4.2c0 .2-.1.4-.1.5 0 1.6 1.3 2.9 2.9 2.9s2.9-1.3 2.9-2.9S19.6 16 18 16z"/></svg> Share';});
 }
+function renderStats(){document.getElementById('statScore').textContent=state.totalScore;const u=new Set(state.sightings.map(s=>s.speciesId));document.getElementById('statCount').textContent=u.size;document.getElementById('statSightings').textContent=state.sightings.length;let rarest=null;u.forEach(id=>{const sp=SPECIES.find(s=>s.id===id);if(!rarest||RARITY_ORDER.indexOf(sp.rarity)>RARITY_ORDER.indexOf(rarest))rarest=sp.rarity;});document.getElementById('statRarest').textContent=rarest?RARITY_LABELS[rarest]:'—';document.getElementById('tierProgress').innerHTML=RARITY_ORDER.map(r=>{const total=SPECIES.filter(s=>s.rarity===r).length,found=SPECIES.filter(s=>s.rarity===r&&u.has(s.id)).length,pct=total>0?(found/total*100).toFixed(0):0;return '<div class="tier-row"><div class="label" style="color:'+RARITY_COLORS[r]+'">'+RARITY_LABELS[r]+'</div><div class="tier-bar-bg"><div class="tier-bar r-'+r+'" style="width:'+pct+'%"></div></div><div class="count">'+found+'/'+total+'</div></div>';}).join('');document.getElementById('headerScore').textContent='⭐ '+state.totalScore+' pts';}
 let leafletMap=null,mapMarkers=[];
-function renderMap(){
-  if(!leafletMap){leafletMap=L.map('map').setView([-34.9285,138.6007],7);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors',maxZoom:18}).addTo(leafletMap);}
-  mapMarkers.forEach(m=>m.remove());mapMarkers=[];
-  state.sightings.filter(s=>s.lat&&s.lng).forEach(s=>{const sp=SPECIES.find(x=>x.id===s.speciesId);if(!sp)return;const color=RARITY_COLORS[sp.rarity];const icon=L.divIcon({className:'',html:'<div style="width:28px;height:28px;border-radius:50%;background:'+color+';border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,.5)">'+sp.emoji+'</div>',iconSize:[28,28],iconAnchor:[14,14]});const date=new Date(s.ts).toLocaleString('en-AU',{dateStyle:'short',timeStyle:'short'});const pc=photoCache[sp.id];const photoHtml=s.photo?'<img src="'+s.photo+'" style="width:100%;border-radius:6px;margin-top:6px">':pc?'<img src="'+pc.url+'" style="width:100%;border-radius:6px;margin-top:6px">':'';mapMarkers.push(L.marker([parseFloat(s.lat),parseFloat(s.lng)],{icon}).addTo(leafletMap).bindPopup('<div style="min-width:160px"><strong>'+sp.emoji+' '+sp.name+'</strong><br><small>'+date+'</small><br><span style="color:'+color+';font-weight:700">+'+s.ptsEarned+' pts</span>'+photoHtml+(s.notes?'<p style="margin-top:6px;font-style:italic;font-size:12px">'+s.notes+'</p>':'')+'</div>'));});
-  if(mapMarkers.length>0)leafletMap.fitBounds(L.featureGroup(mapMarkers).getBounds().pad(.2));
-  const noGPS=state.sightings.filter(s=>!s.lat&&!s.lng);
-  document.getElementById('noGpsList').innerHTML=noGPS.length>0?'<p class="section-title">Sightings without GPS ('+noGPS.length+')</p>'+noGPS.map(s=>{const sp=SPECIES.find(x=>x.id===s.speciesId);if(!sp)return'';return'<div class="no-gps-item"><span>'+sp.emoji+' '+sp.name+'</span><span style="color:var(--text-muted)">'+new Date(s.ts).toLocaleString('en-AU',{dateStyle:'short',timeStyle:'short'})+' · +'+s.ptsEarned+'pts</span></div>';}).join(''):'';
-  setTimeout(()=>leafletMap.invalidateSize(),100);
-}
+function renderMap(){if(!leafletMap){leafletMap=L.map('map').setView([-34.9285,138.6007],7);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors',maxZoom:18}).addTo(leafletMap);}mapMarkers.forEach(m=>m.remove());mapMarkers=[];state.sightings.filter(s=>s.lat&&s.lng).forEach(s=>{const sp=SPECIES.find(x=>x.id===s.speciesId);if(!sp)return;const color=RARITY_COLORS[sp.rarity];const icon=L.divIcon({className:'',html:'<div style="width:28px;height:28px;border-radius:50%;background:'+color+';border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,.5)">'+sp.emoji+'</div>',iconSize:[28,28],iconAnchor:[14,14]});const date=new Date(s.ts).toLocaleString('en-AU',{dateStyle:'short',timeStyle:'short'});const pc=photoCache[sp.id];const photoHtml=s.photo?'<img src="'+s.photo+'" style="width:100%;border-radius:6px;margin-top:6px">':pc?'<img src="'+pc.url+'" style="width:100%;border-radius:6px;margin-top:6px">':'';mapMarkers.push(L.marker([parseFloat(s.lat),parseFloat(s.lng)],{icon}).addTo(leafletMap).bindPopup('<div style="min-width:160px"><strong>'+sp.emoji+' '+sp.name+'</strong><br><small>'+date+'</small><br><span style="color:'+color+';font-weight:700">+'+s.ptsEarned+' pts</span>'+photoHtml+(s.notes?'<p style="margin-top:6px;font-style:italic;font-size:12px">'+s.notes+'</p>':'')+'</div>'));});if(mapMarkers.length>0)leafletMap.fitBounds(L.featureGroup(mapMarkers).getBounds().pad(.2));const noGPS=state.sightings.filter(s=>!s.lat&&!s.lng);document.getElementById('noGpsList').innerHTML=noGPS.length>0?'<p class="section-title">Sightings without GPS ('+noGPS.length+')</p>'+noGPS.map(s=>{const sp=SPECIES.find(x=>x.id===s.speciesId);if(!sp)return'';return'<div class="no-gps-item"><span>'+sp.emoji+' '+sp.name+'</span><span style="color:var(--text-muted)">'+new Date(s.ts).toLocaleString('en-AU',{dateStyle:'short',timeStyle:'short'})+' · +'+s.ptsEarned+'pts</span></div>';}).join(''):'';setTimeout(()=>leafletMap.invalidateSize(),100);}
 function jumpToMap(lat,lng){showTab('map');setTimeout(()=>leafletMap.setView([lat,lng],14),200);}
-
-const BADGES=[
-  {id:'first_blood',icon:'🌱',name:'First Steps',desc:'Log your first sighting'},
-  {id:'five_species',icon:'🐾',name:'Tracker',desc:'Spot 5 different species'},
-  {id:'fifteen_species',icon:'🔭',name:'Field Observer',desc:'Spot 15 different species'},
-  {id:'thirty_species',icon:'🏕️',name:'Naturalist',desc:'Spot 30 different species'},
-  {id:'all_species',icon:'🌏',name:'SA Master',desc:'Spot every species'},
-  {id:'score_100',icon:'⭐',name:'Century',desc:'Reach 100 points'},
-  {id:'score_500',icon:'🌟',name:'High Scorer',desc:'Reach 500 points'},
-  {id:'score_1000',icon:'💫',name:'Elite Spotter',desc:'Reach 1,000 points'},
-  {id:'score_5000',icon:'🏆',name:'Legend',desc:'Reach 5,000 points'},
-  {id:'all_common',icon:'🌿',name:'Common Ground',desc:'Spot all Common species'},
-  {id:'all_uncommon',icon:'🔵',name:'Sharp Eyes',desc:'Spot all Uncommon species'},
-  {id:'all_rare',icon:'💜',name:'Rare Finder',desc:'Spot all Rare species'},
-  {id:'all_very_rare',icon:'🟠',name:'Very Rare Collector',desc:'Spot all Very Rare species'},
-  {id:'all_legendary',icon:'🔴',name:'Legendary Hunter',desc:'Spot all Legendary species'},
-  {id:'all_birds',icon:'🦅',name:'Birdwatcher',desc:'Spot all Bird species'},
-  {id:'all_mammals',icon:'🦘',name:'Mammal Tracker',desc:'Spot all Mammal species'},
-  {id:'all_marine',icon:'🐋',name:'Marine Biologist',desc:'Spot all Marine species'},
-  {id:'photographer',icon:'📸',name:'Wildlife Photographer',desc:'Log a sighting with a photo'},
-  {id:'cartographer',icon:'🗺️',name:'Field Cartographer',desc:'Log a sighting with GPS'},
-  {id:'ten_sightings',icon:'📓',name:'Dedicated',desc:'Log 10 total sightings'},
-  {id:'challenge_1',icon:'📅',name:'Daily Challenger',desc:'Complete your first daily challenge'},
-  {id:'challenge_7',icon:'🗓️',name:'Week Warrior',desc:'Complete 7 daily challenges'},
-];
-function checkBadges(){
-  const newB=[],u=new Set(state.sightings.map(s=>s.speciesId));
-  const challenges=state.sightings.filter(s=>s.isChallenge).length;
-  const chk=(id,c)=>{if(c&&!unlockedBadges.has(id)){unlockedBadges.add(id);newB.push(id);}};
-  chk('first_blood',state.sightings.length>=1);chk('five_species',u.size>=5);chk('fifteen_species',u.size>=15);chk('thirty_species',u.size>=30);chk('all_species',u.size>=SPECIES.length);
-  chk('score_100',state.totalScore>=100);chk('score_500',state.totalScore>=500);chk('score_1000',state.totalScore>=1000);chk('score_5000',state.totalScore>=5000);
-  ['common','uncommon','rare','very-rare','legendary'].forEach(r=>chk('all_'+r.replace('-','_'),SPECIES.filter(s=>s.rarity===r).every(s=>u.has(s.id))));
-  ['bird','mammal','marine'].forEach(c=>chk('all_'+c+'s',SPECIES.filter(s=>s.cat===c).every(s=>u.has(s.id))));
-  chk('photographer',state.sightings.some(s=>s.photo));chk('cartographer',state.sightings.some(s=>s.lat));chk('ten_sightings',state.sightings.length>=10);
-  chk('challenge_1',challenges>=1);chk('challenge_7',challenges>=7);
-  localStorage.setItem('ws_badges_v15',JSON.stringify([...unlockedBadges]));
-  newB.forEach((id,i)=>{const b=BADGES.find(x=>x.id===id);setTimeout(()=>showToast('Badge: '+b.name+'!','badge',5000),i*1500);});
-  renderBadges();
-}
+const BADGES=[{id:'first_blood',icon:'🌱',name:'First Steps',desc:'Log your first sighting'},{id:'five_species',icon:'🐾',name:'Tracker',desc:'Spot 5 different species'},{id:'fifteen_species',icon:'🔭',name:'Field Observer',desc:'Spot 15 different species'},{id:'thirty_species',icon:'🏕️',name:'Naturalist',desc:'Spot 30 different species'},{id:'all_species',icon:'🌏',name:'SA Master',desc:'Spot every species'},{id:'score_100',icon:'⭐',name:'Century',desc:'Reach 100 points'},{id:'score_500',icon:'🌟',name:'High Scorer',desc:'Reach 500 points'},{id:'score_1000',icon:'💫',name:'Elite Spotter',desc:'Reach 1,000 points'},{id:'score_5000',icon:'🏆',name:'Legend',desc:'Reach 5,000 points'},{id:'all_common',icon:'🌿',name:'Common Ground',desc:'Spot all Common species'},{id:'all_uncommon',icon:'🔵',name:'Sharp Eyes',desc:'Spot all Uncommon species'},{id:'all_rare',icon:'💜',name:'Rare Finder',desc:'Spot all Rare species'},{id:'all_very_rare',icon:'🟠',name:'Very Rare Collector',desc:'Spot all Very Rare species'},{id:'all_legendary',icon:'🔴',name:'Legendary Hunter',desc:'Spot all Legendary species'},{id:'all_birds',icon:'🦅',name:'Birdwatcher',desc:'Spot all Bird species'},{id:'all_mammals',icon:'🦘',name:'Mammal Tracker',desc:'Spot all Mammal species'},{id:'all_marine',icon:'🐋',name:'Marine Biologist',desc:'Spot all Marine species'},{id:'photographer',icon:'📸',name:'Wildlife Photographer',desc:'Log a sighting with a photo'},{id:'cartographer',icon:'🗺️',name:'Field Cartographer',desc:'Log a sighting with GPS'},{id:'ten_sightings',icon:'📓',name:'Dedicated',desc:'Log 10 total sightings'},{id:'challenge_1',icon:'📅',name:'Daily Challenger',desc:'Complete your first daily challenge'},{id:'challenge_7',icon:'🗓️',name:'Week Warrior',desc:'Complete 7 daily challenges'}];
+function checkBadges(){const newB=[],u=new Set(state.sightings.map(s=>s.speciesId));const challenges=state.sightings.filter(s=>s.isChallenge).length;const chk=(id,c)=>{if(c&&!unlockedBadges.has(id)){unlockedBadges.add(id);newB.push(id);}};chk('first_blood',state.sightings.length>=1);chk('five_species',u.size>=5);chk('fifteen_species',u.size>=15);chk('thirty_species',u.size>=30);chk('all_species',u.size>=SPECIES.length);chk('score_100',state.totalScore>=100);chk('score_500',state.totalScore>=500);chk('score_1000',state.totalScore>=1000);chk('score_5000',state.totalScore>=5000);['common','uncommon','rare','very-rare','legendary'].forEach(r=>chk('all_'+r.replace('-','_'),SPECIES.filter(s=>s.rarity===r).every(s=>u.has(s.id))));['bird','mammal','marine'].forEach(c=>chk('all_'+c+'s',SPECIES.filter(s=>s.cat===c).every(s=>u.has(s.id))));chk('photographer',state.sightings.some(s=>s.photo));chk('cartographer',state.sightings.some(s=>s.lat));chk('ten_sightings',state.sightings.length>=10);chk('challenge_1',challenges>=1);chk('challenge_7',challenges>=7);localStorage.setItem('ws_badges_v15',JSON.stringify([...unlockedBadges]));newB.forEach((id,i)=>{const b=BADGES.find(x=>x.id===id);setTimeout(()=>showToast('Badge: '+b.name+'!','badge',5000),i*1500);});renderBadges();}
 function renderBadges(){document.getElementById('badgesGrid').innerHTML=BADGES.map(b=>{const u=unlockedBadges.has(b.id);return '<div class="badge-card'+(u?' unlocked':'')+'"><div class="badge-icon">'+b.icon+'</div><div class="badge-name">'+b.name+'</div><div class="badge-desc">'+b.desc+'</div></div>';}).join('');}
-
-function showToast(msg,type,duration){type=type||'score';duration=duration||3000;const c=document.getElementById('toastContainer');const item=document.createElement('div');item.className='toast-item '+type;item.innerHTML='<span>'+msg+'</span><span class="toast-close">&#x2715;</span>';item.onclick=()=>dismissToast(item);c.appendChild(item);requestAnimationFrame(()=>requestAnimationFrame(()=>item.classList.add('show')));item._timer=setTimeout(()=>dismissToast(item),duration);}
+function dismissToastEl(el){const item=el.closest('.toast-item');if(item)dismissToast(item);}
+function showToast(msg,type,duration){type=type||'score';duration=duration||3000;const c=document.getElementById('toastContainer');const item=document.createElement('div');item.className='toast-item '+type;item.innerHTML='<span>'+msg+'</span><span class="toast-close" onclick="dismissToastEl(this)">&#x2715;</span>';c.appendChild(item);requestAnimationFrame(()=>requestAnimationFrame(()=>item.classList.add('show')));item._timer=setTimeout(()=>dismissToast(item),duration);}
 function dismissToast(item){clearTimeout(item._timer);item.classList.remove('show');setTimeout(()=>item.remove(),350);}
-
 const TAB_ORDER=['spot','journal','map','stats','scoreboard','badges'];
 function showTab(name){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.remove('active'));document.getElementById('tab-'+name).classList.add('active');document.querySelectorAll('.bottom-nav button')[TAB_ORDER.indexOf(name)].classList.add('active');if(name==='map')renderMap();if(name==='stats')renderStats();if(name==='journal')renderJournal();if(name==='badges')renderBadges();}
 function renderAll(){renderSpecies();renderJournal();renderStats();renderBadges();renderChallengeHero();document.getElementById('headerScore').textContent='⭐ '+state.totalScore+' pts';}
 function confirmReset(){if(confirm('Reset ALL sighting data? This cannot be undone.')){state={sightings:[],globalSpotCounts:{},lastSightingDate:{},totalScore:0};localStorage.removeItem('ws_v15');localStorage.removeItem('ws_badges_v15');unlockedBadges=new Set();renderAll();pushScoreToFirebase();showToast('Data reset','score');}}
-
-function waitForFirebase(callback,timeout){timeout=timeout||5000;if(window._fbReady){callback();return;}window._fbReadyCallback=()=>{window._fbReadyCallback=null;callback();};const start=Date.now();const poll=setInterval(()=>{if(window._fbReady){clearInterval(poll);window._fbReadyCallback=null;callback();}else if(Date.now()-start>timeout){clearInterval(poll);window._fbReadyCallback=null;callback();}},100);}
+function waitForFirebase(cb,t){t=t||5000;if(window._fbReady){cb();return;}window._fbReadyCallback=()=>{window._fbReadyCallback=null;cb();};const start=Date.now();const poll=setInterval(()=>{if(window._fbReady){clearInterval(poll);window._fbReadyCallback=null;cb();}else if(Date.now()-start>t){clearInterval(poll);window._fbReadyCallback=null;cb();}},100);}
 async function onFirebaseReady(){if(!username){const restored=await restoreIdentityFromFirebase();if(restored){showToast('Welcome back, '+username+'!','score');updateUsernameDisplay();saveIdentityToFirebase();initFirebaseListener();pushScoreToFirebase();return;}setTimeout(()=>showUsernameModal(false),300);}else{saveIdentityToFirebase();initFirebaseListener();pushScoreToFirebase();}}
+
+// ── SHARE CARD ───────────────────────────────────────────────
+// ── SHARE CARD GENERATOR ─────────────────────────────────────────────────────
+// Draws a shareable image card onto a canvas and triggers native share/download
+
+async function shareCard(sighting) {
+  const sp = SPECIES.find(s => s.id === sighting.speciesId);
+  if (!sp) return;
+
+  const W = 1080, H = 1080;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const RARITY_COLORS_HEX = {
+    common:'#4caf50', uncommon:'#2196f3', rare:'#9c27b0',
+    'very-rare':'#ff9800', legendary:'#f44336'
+  };
+  const RARITY_LABELS_MAP = {
+    common:'Common', uncommon:'Uncommon', rare:'Rare',
+    'very-rare':'Very Rare', legendary:'Legendary'
+  };
+
+  const bgDark   = '#1a0f07';
+  const bgCard   = '#2a1a0e';
+  const accent   = '#c8820a';
+  const rarColor = RARITY_COLORS_HEX[sp.rarity] || accent;
+
+  // ── BACKGROUND ──────────────────────────────────────────────
+  ctx.fillStyle = bgDark;
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle radial glow in rarity colour
+  const grd = ctx.createRadialGradient(W/2, H*0.38, 60, W/2, H*0.38, 520);
+  grd.addColorStop(0, rarColor + '33');
+  grd.addColorStop(1, 'transparent');
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 0, W, H);
+
+  // ── CARD PANEL ──────────────────────────────────────────────
+  const pad = 54;
+  roundRect(ctx, pad, pad, W - pad*2, H - pad*2, 48, bgCard);
+
+  // ── PHOTO ───────────────────────────────────────────────────
+  const photoSrc = sighting.photo || (photoCache[sp.id] && photoCache[sp.id].url);
+  const photoH = 520;
+  const photoY = pad;
+
+  if (photoSrc) {
+    try {
+      const img = await loadImage(photoSrc);
+      // Clip to rounded top of card
+      ctx.save();
+      ctx.beginPath();
+      roundedTopRect(ctx, pad, photoY, W - pad*2, photoH, 48);
+      ctx.clip();
+      // Cover-fit the image
+      const iAR = img.width / img.height;
+      const cAR = (W - pad*2) / photoH;
+      let sx=0,sy=0,sw=img.width,sh=img.height;
+      if (iAR > cAR) { sw = img.height*cAR; sx = (img.width-sw)/2; }
+      else { sh = img.width/cAR; sy = (img.height-sh)/2; }
+      ctx.drawImage(img, sx, sy, sw, sh, pad, photoY, W-pad*2, photoH);
+      // Dark gradient overlay on bottom of photo
+      const photoGrd = ctx.createLinearGradient(0, photoY+photoH*0.5, 0, photoY+photoH);
+      photoGrd.addColorStop(0, 'transparent');
+      photoGrd.addColorStop(1, bgCard + 'EE');
+      ctx.fillStyle = photoGrd;
+      ctx.fillRect(pad, photoY, W-pad*2, photoH);
+      ctx.restore();
+    } catch(e) {
+      // Photo failed — draw emoji placeholder
+      ctx.fillStyle = '#3a2515';
+      roundedTopRect(ctx, pad, photoY, W-pad*2, photoH, 48);
+      ctx.fill();
+      ctx.font = '160px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(sp.emoji, W/2, photoY + photoH/2 + 56);
+    }
+  } else {
+    ctx.fillStyle = '#3a2515';
+    ctx.beginPath();
+    roundedTopRect(ctx, pad, photoY, W-pad*2, photoH, 48);
+    ctx.fill();
+    ctx.font = '160px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(sp.emoji, W/2, photoY + photoH/2 + 56);
+  }
+
+  // ── RARITY PILL (overlaid on photo bottom-left) ─────────────
+  const pillX = pad + 36, pillY = photoY + photoH - 70;
+  const pillW = 220, pillH = 52, pillR = 26;
+  ctx.fillStyle = rarColor;
+  roundRect(ctx, pillX, pillY, pillW, pillH, pillR, rarColor);
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 26px -apple-system, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(RARITY_LABELS_MAP[sp.rarity].toUpperCase(), pillX + pillW/2, pillY + 35);
+
+  // ── POINTS PILL (photo bottom-right) ────────────────────────
+  const ptsTxt = '+' + sighting.ptsEarned + ' pts';
+  ctx.font = 'bold 28px -apple-system, sans-serif';
+  const ptsW = ctx.measureText(ptsTxt).width + 48;
+  const ptsX = W - pad - 36 - ptsW;
+  roundRect(ctx, ptsX, pillY, ptsW, pillH, pillR, '#c8820a');
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'center';
+  ctx.fillText(ptsTxt, ptsX + ptsW/2, pillY + 35);
+
+  // ── TEXT SECTION ─────────────────────────────────────────────
+  const textY = pad + photoH + 32;
+  ctx.textAlign = 'left';
+
+  // Species name
+  ctx.fillStyle = '#f0e6d3';
+  ctx.font = 'bold 62px -apple-system, sans-serif';
+  fitText(ctx, sp.name, pad + 48, textY, W - pad*2 - 96, 62);
+
+  // Scientific name
+  ctx.fillStyle = '#a08060';
+  ctx.font = 'italic 34px -apple-system, sans-serif';
+  ctx.fillText(sp.sci, pad + 48, textY + 78);
+
+  // Date & location line
+  const date = new Date(sighting.ts).toLocaleDateString('en-AU', {day:'numeric',month:'long',year:'numeric'});
+  const locTxt = sighting.lat ? ' · ' + parseFloat(sighting.lat).toFixed(3) + ', ' + parseFloat(sighting.lng).toFixed(3) : '';
+  ctx.fillStyle = '#7a5a3a';
+  ctx.font = '30px -apple-system, sans-serif';
+  ctx.fillText(date + locTxt, pad + 48, textY + 130);
+
+  // Notes (if any, max 1 line)
+  if (sighting.notes) {
+    ctx.fillStyle = '#a08060';
+    ctx.font = 'italic 28px -apple-system, sans-serif';
+    const notesTxt = '"' + sighting.notes + '"';
+    ctx.fillText(notesTxt.length > 62 ? notesTxt.slice(0,60)+'…"' : notesTxt, pad + 48, textY + 178);
+  }
+
+  // ── FOOTER BRANDING ──────────────────────────────────────────
+  const footerY = H - pad - 40;
+  // Divider line
+  ctx.strokeStyle = '#5a3d28';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(pad + 48, footerY - 30);
+  ctx.lineTo(W - pad - 48, footerY - 30);
+  ctx.stroke();
+
+  // App name
+  ctx.fillStyle = '#c8820a';
+  ctx.font = 'bold 30px -apple-system, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('\U0001F52D Wildlife Spotter SA', pad + 48, footerY + 4);
+
+  // Hashtag
+  ctx.fillStyle = '#5a3d28';
+  ctx.font = '26px -apple-system, sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('#WildlifeSA #WildlifeSpotter', W - pad - 48, footerY + 4);
+
+  // ── SHARE ────────────────────────────────────────────────────
+  canvas.toBlob(async (blob) => {
+    const filename = sp.name.replace(/\s+/g,'_') + '_sighting.png';
+    if (navigator.share && navigator.canShare && navigator.canShare({files:[new File([blob],filename,{type:'image/png'})]})) {
+      try {
+        await navigator.share({
+          files: [new File([blob], filename, {type:'image/png'})],
+          title: 'I spotted a ' + sp.name + '!',
+          text: 'I spotted a ' + RARITY_LABELS_MAP[sp.rarity] + ' ' + sp.name + ' and earned ' + sighting.ptsEarned + ' points in Wildlife Spotter SA! \U0001F998'
+        });
+      } catch(e) {
+        if (e.name !== 'AbortError') downloadBlob(blob, filename);
+      }
+    } else {
+      // Fallback: download
+      downloadBlob(blob, filename);
+      showToast('Image saved — share it from your photos!', 'score', 4000);
+    }
+  }, 'image/png');
+}
+
+function downloadBlob(blob, filename) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+function roundRect(ctx, x, y, w, h, r, fill) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y); ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w, y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r, y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x, y+r); ctx.arcTo(x,y,x+r,y,r);
+  ctx.closePath();
+  if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+}
+
+function roundedTopRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y); ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w, y+h);
+  ctx.lineTo(x, y+h);
+  ctx.lineTo(x, y+r); ctx.arcTo(x,y,x+r,y,r);
+  ctx.closePath();
+}
+
+function fitText(ctx, text, x, y, maxW, size) {
+  ctx.font = 'bold ' + size + 'px -apple-system, sans-serif';
+  while (ctx.measureText(text).width > maxW && size > 32) {
+    size -= 4;
+    ctx.font = 'bold ' + size + 'px -apple-system, sans-serif';
+  }
+  ctx.fillText(text, x, y);
+}
+
 
 async function init(){
   loadLocalState();applyThemeClasses();renderAll();updateUsernameDisplay();
