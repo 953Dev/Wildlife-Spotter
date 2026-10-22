@@ -33,10 +33,21 @@ try {
 } catch (e) { window._fbReady = false; }
 </script>
 <style>
-:root{--bg:#1a0f07;--surface:#2a1a0e;--surface2:#3a2515;--border:#5a3d28;--text:#f0e6d3;--text-muted:#a08060;--accent:#c8820a;--header-bg:linear-gradient(135deg,#2d1a0e 0%,#1a0f07 100%);--card-bg:#2a1a0e;}
-body.light{--bg:#f5ede0;--surface:#fff8f0;--surface2:#ede0cc;--border:#c8a882;--text:#2d1a0e;--text-muted:#7a5a3a;--accent:#2d7a3a;--header-bg:linear-gradient(135deg,#2d7a3a 0%,#1a5a28 100%);--card-bg:#fff8f0;}
+:root{--bg:#1a0f07;--surface:#2a1a0e;--surface2:#3a2515;--border:#5a3d28;--text:#f0e6d3;--text-muted:#a08060;--accent:#c8820a;--header-bg:linear-gradient(135deg,#2d1a0e 0%,#1a0f07 100%);
+  --panel:rgba(42,26,14,.82);--panel2:rgba(58,37,21,.86);--dock-bg:rgba(22,12,28,.80);
+  --wp-scrim:linear-gradient(180deg,rgba(12,6,22,.50) 0%,rgba(12,6,22,.26) 42%,rgba(12,6,22,.30) 70%,rgba(12,6,22,.60) 100%);
+  --hdr-h:64px;}
+body.light{--bg:#f5ede0;--surface:#fff8f0;--surface2:#ede0cc;--border:#c8a882;--text:#2d1a0e;--text-muted:#7a5a3a;--accent:#2d7a3a;--header-bg:linear-gradient(135deg,#2d7a3a 0%,#1a5a28 100%);
+  --panel:rgba(255,248,240,.86);--panel2:rgba(237,224,204,.90);--dock-bg:rgba(247,239,227,.86);
+  --wp-scrim:linear-gradient(180deg,rgba(248,240,228,.66) 0%,rgba(248,240,228,.50) 50%,rgba(248,240,228,.68) 100%);}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:76px;transition:background .3s,color .3s;}
+
+/* ═════════ WALLPAPER (the opening scene, as a still background) ═════════ */
+#wallpaper{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;background:linear-gradient(180deg,#12123a 0%,#46285c 26%,#b0524a 54%,#ef893b 76%,#f8c45c 100%);}
+.wp-sun{position:absolute;left:50%;bottom:20%;width:100vmin;height:100vmin;transform:translate(-50%,28%);background:radial-gradient(circle,#fff3c9 0%,#ffd27a 22%,rgba(255,172,82,.5) 46%,transparent 70%);}
+.wp-land{position:absolute;left:0;bottom:0;width:100%;height:42%;}
+.wp-scrim{position:absolute;inset:0;background:var(--wp-scrim);transition:background .3s;}
 
 /* ═════════ SPLASH ═════════ */
 #splash{position:fixed;inset:0;z-index:10000;overflow:hidden;background:linear-gradient(180deg,#12123a 0%,#46285c 26%,#b0524a 54%,#ef893b 76%,#f8c45c 100%);transition:opacity .9s ease;cursor:pointer;}
@@ -84,7 +95,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 @keyframes flicker{0%{transform:scale(1,1) rotate(-3deg);}25%{transform:scale(1.06,1.14) rotate(2deg);}50%{transform:scale(.97,1.05) rotate(-2deg);}75%{transform:scale(1.08,1.18) rotate(3deg);}100%{transform:scale(1,1.08) rotate(-1deg);}}
 
 /* ═════════ NAV / TABS ═════════ */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--surface);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:5px 0 calc(8px + env(safe-area-inset-bottom));}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--dock-bg);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:5px 0 calc(8px + env(safe-area-inset-bottom));}
 .bottom-nav button{background:none;border:none;color:var(--text-muted);padding:3px 6px;border-radius:8px;cursor:pointer;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:44px;}
 .bottom-nav button.active{color:var(--text);}
 .bottom-nav button.active .nav-icon{background:var(--accent);border-radius:12px;padding:2px 8px;}
@@ -93,8 +104,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .tab.active{display:block;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
+/* ═════════ SEARCH (pinned under the header) ═════════ */
+.search-dock{position:sticky;top:var(--hdr-h);z-index:90;margin:-12px -12px 12px;padding:10px 12px 9px;background:var(--dock-bg);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
+.search-box{position:relative;display:flex;align-items:center;}
+.search-ico{position:absolute;left:15px;width:22px;height:22px;fill:var(--text-muted);pointer-events:none;}
+#searchInput{width:100%;height:52px;padding:0 50px 0 48px;font-size:17px;font-family:inherit;border-radius:14px;background:var(--surface);color:var(--text);border:2px solid var(--border);outline:none;-webkit-appearance:none;appearance:none;box-shadow:0 2px 10px rgba(0,0,0,.25);transition:border-color .15s,box-shadow .15s;}
+#searchInput:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,130,10,.30),0 2px 10px rgba(0,0,0,.25);}
+body.light #searchInput:focus{box-shadow:0 0 0 3px rgba(45,122,58,.28),0 2px 10px rgba(0,0,0,.15);}
+#searchInput::placeholder{color:var(--text-muted);opacity:.9;}
+#searchInput::-webkit-search-cancel-button,#searchInput::-webkit-search-decoration{-webkit-appearance:none;display:none;}
+.search-clear{display:none;position:absolute;right:9px;width:36px;height:36px;border:none;border-radius:50%;background:var(--surface2);align-items:center;justify-content:center;cursor:pointer;padding:0;}
+.search-clear svg{width:18px;height:18px;fill:var(--text);}
+.search-box.has-text .search-clear{display:flex;}
+.filter-btns{display:flex;gap:6px;margin-top:9px;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:1px;}
+.filter-btns::-webkit-scrollbar{display:none;}
+.filter-btns button{flex:0 0 auto;background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);padding:7px 12px;border-radius:999px;cursor:pointer;font-size:12px;white-space:nowrap;}
+.filter-btns button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.search-meta{display:none;font-size:11px;color:var(--text-muted);margin-top:7px;}
+.search-meta.on{display:block;}
+
 /* ═════════ SPOT TAB ═════════ */
-#completionNudge{display:none;background:var(--surface);border:1px solid var(--accent);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:12px;align-items:center;gap:10px;line-height:1.5;}
+#completionNudge{display:none;background:var(--panel);border:1px solid var(--accent);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:12px;align-items:center;gap:10px;line-height:1.5;}
 #completionNudge button{background:var(--accent);color:#fff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;white-space:nowrap;flex-shrink:0;}
 .challenge-hero{border-radius:14px;overflow:hidden;margin-bottom:12px;position:relative;min-height:150px;border:2px solid var(--accent);box-shadow:0 0 20px rgba(200,130,10,.3);}
 .challenge-photo{width:100%;height:165px;object-fit:cover;display:block;}
@@ -104,16 +134,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .challenge-desc{font-size:11px;color:rgba(255,255,255,.8);margin-bottom:7px;}
 .challenge-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:16px;font-size:11px;font-weight:700;cursor:pointer;}
 .challenge-badge{position:absolute;top:7px;right:7px;background:var(--accent);color:#fff;padding:3px 8px;border-radius:9px;font-size:10px;font-weight:700;}
-.controls{display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap;}
-.controls input{flex:1;min-width:130px;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:8px;font-size:13px;}
-.filter-btns{display:flex;gap:4px;flex-wrap:wrap;}
-.filter-btns button{background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);padding:5px 8px;border-radius:5px;cursor:pointer;font-size:11px;}
-.filter-btns button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
-#photoBanner{border-radius:8px;padding:8px 11px;font-size:11px;margin-bottom:10px;display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border);color:var(--text-muted);}
+#photoBanner{border-radius:8px;padding:8px 11px;font-size:11px;margin-bottom:10px;display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--border);color:var(--text-muted);}
 .spin{width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .species-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px;}
-.species-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative;display:flex;flex-direction:column;transition:transform .2s,box-shadow .3s;}
+.species-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative;display:flex;flex-direction:column;transition:transform .2s,box-shadow .3s;}
 .species-card:hover{transform:translateY(-3px);}
 .species-card.glow-common:hover{box-shadow:0 0 14px rgba(76,175,80,.5);border-color:#4caf50;}
 .species-card.glow-uncommon:hover{box-shadow:0 0 14px rgba(33,150,243,.5);border-color:#2196f3;}
@@ -198,7 +223,7 @@ body.light .species-card.unspotted::after{background:radial-gradient(ellipse 60%
 .username-modal input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:8px;font-size:14px;margin-bottom:10px;}
 
 /* ═════════ JOURNAL / SHARE ═════════ */
-.journal-entry{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:7px;display:flex;gap:8px;}
+.journal-entry{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:7px;display:flex;gap:8px;}
 .j-thumb{width:56px;height:56px;object-fit:cover;border-radius:7px;flex-shrink:0;}
 .j-emoji{width:56px;height:56px;border-radius:7px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:25px;flex-shrink:0;}
 .j-name{font-weight:600;font-size:13px;}.j-time{font-size:10px;color:var(--text-muted);}
@@ -212,7 +237,7 @@ body.light .species-card.unspotted::after{background:radial-gradient(ellipse 60%
 
 /* ═════════ STATS ═════════ */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px;}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;}
+.stat-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px;}
 .stat-card h3{font-size:11px;color:var(--text-muted);margin-bottom:2px;}
 .stat-card .big-num{font-size:28px;font-weight:800;color:var(--accent);}
 .tier-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
@@ -220,7 +245,7 @@ body.light .species-card.unspotted::after{background:radial-gradient(ellipse 60%
 .tier-bar-bg{flex:1;background:var(--surface2);border-radius:4px;height:7px;overflow:hidden;}
 .tier-bar{height:100%;border-radius:4px;width:0;transition:width 1.1s cubic-bezier(.2,.8,.2,1);}
 .tier-row .count{width:34px;text-align:right;font-size:10px;color:var(--text-muted);}
-.ranger-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;}
+.ranger-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;}
 .ranger-card h3{font-size:11px;color:var(--text-muted);margin-bottom:8px;}
 .ranger-levels{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:7px;}
 .ranger-lvl{text-align:center;flex:1;}
@@ -236,25 +261,26 @@ body.light .species-card.unspotted::after{background:radial-gradient(ellipse 60%
 .streak-banner .sb-mult{background:rgba(255,255,255,.22);padding:2px 7px;border-radius:7px;font-size:11px;font-weight:700;}
 
 /* ═════════ SCOREBOARD ═════════ */
-.scoreboard-entry{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 13px;margin-bottom:6px;display:flex;align-items:center;gap:9px;}
+.who-row{margin-bottom:9px;display:flex;gap:6px;align-items:center;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:8px 11px;}
+.scoreboard-entry{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 13px;margin-bottom:6px;display:flex;align-items:center;gap:9px;}
 .sb-rank{font-size:19px;font-weight:800;min-width:32px;}
 .sb-name{font-weight:600;font-size:13px;}
 .sb-score{font-size:14px;font-weight:700;color:var(--accent);}
 .sb-species{font-size:10px;color:var(--text-muted);}
 .sb-ranger{font-size:10px;padding:2px 5px;border-radius:7px;background:var(--surface2);}
-.sb-you{border-color:var(--accent);background:var(--surface2);}
-.fb-status{font-size:11px;padding:6px 11px;border-radius:8px;margin-bottom:9px;background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);}
+.sb-you{border-color:var(--accent);background:var(--panel2);}
+.fb-status{font-size:11px;padding:6px 11px;border-radius:8px;margin-bottom:9px;background:var(--panel2);border:1px solid var(--border);color:var(--text-muted);}
 .fb-status.connected{border-color:#238636;color:#56d364;}
 
 /* ═════════ MAP / BADGES ═════════ */
 #map{width:100%;height:430px;border-radius:10px;border:1px solid var(--border);}
-.map-legend{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 11px;margin-bottom:9px;}
+.map-legend{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:8px 11px;margin-bottom:9px;}
 .legend-row{display:flex;align-items:center;gap:6px;font-size:11px;}
 .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-.no-gps-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 10px;margin-bottom:4px;font-size:11px;display:flex;justify-content:space-between;align-items:center;}
+.no-gps-item{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:7px 10px;margin-bottom:4px;font-size:11px;display:flex;justify-content:space-between;align-items:center;}
 .badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:7px;}
-.badge-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center;}
-.badge-card.unlocked{border-color:#ffd700;background:var(--surface2);}
+.badge-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center;}
+.badge-card.unlocked{border-color:#ffd700;background:var(--panel2);}
 .badge-icon{font-size:26px;margin-bottom:5px;filter:grayscale(1) opacity(.3);}
 .badge-card.unlocked .badge-icon{filter:none;}
 .badge-name{font-size:11px;font-weight:600;margin-bottom:2px;}
@@ -269,12 +295,30 @@ body.light .species-card.unspotted::after{background:radial-gradient(ellipse 60%
 .toast-item.badge{border-color:#ffd700;}
 .toast-close{margin-left:auto;font-size:13px;opacity:.5;flex-shrink:0;}
 .danger-btn{background:var(--surface2);border:1px solid #f44336;color:#f44336;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;}
-.section-title{font-size:11px;color:var(--text-muted);margin-bottom:6px;font-weight:600;}
-.empty-state{text-align:center;padding:40px 16px;color:var(--text-muted);}
+.section-title{font-size:11px;color:var(--text-muted);margin-bottom:6px;font-weight:600;text-shadow:0 1px 6px rgba(0,0,0,.55);}
+body.light .section-title{text-shadow:none;}
+.empty-state{text-align:center;padding:36px 16px;color:var(--text-muted);background:var(--panel);border:1px solid var(--border);border-radius:14px;}
 .empty-state .icon{font-size:40px;margin-bottom:10px;}
+.empty-state .btn{margin-top:12px;}
 </style>
 </head>
 <body>
+
+<!-- ═════════ WALLPAPER: the opening scene as a still background ═════════ -->
+<div id="wallpaper" aria-hidden="true">
+  <div class="wp-sun"></div>
+  <svg class="wp-land" viewBox="0 0 400 160" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 110 Q60 78 130 100 T260 92 T400 104 L400 160 L0 160Z" fill="#4a2640"/>
+    <path d="M0 128 Q70 104 150 122 T290 116 T400 126 L400 160 L0 160Z" fill="#2f1731"/>
+    <path d="M0 144 Q80 130 170 142 T330 138 T400 144 L400 160 L0 160Z" fill="#170b19"/>
+    <g fill="#170b19">
+      <rect x="52" y="108" width="3" height="40"/><ellipse cx="53" cy="102" rx="17" ry="9"/><ellipse cx="42" cy="108" rx="11" ry="6"/><ellipse cx="65" cy="107" rx="12" ry="6"/>
+      <rect x="318" y="112" width="3" height="36"/><ellipse cx="320" cy="106" rx="15" ry="8"/><ellipse cx="309" cy="112" rx="10" ry="5"/><ellipse cx="331" cy="111" rx="11" ry="5"/>
+      <rect x="205" y="128" width="2" height="22"/><ellipse cx="206" cy="124" rx="9" ry="5"/>
+    </g>
+  </svg>
+  <div class="wp-scrim"></div>
+</div>
 
 <!-- ═════════ OPENING SPLASH ═════════ -->
 <div id="splash" aria-hidden="true">
@@ -312,12 +356,13 @@ body.light .species-card.unspotted::after{background:radial-gradient(ellipse 60%
 </div>
 
 <div id="tab-spot" class="tab active">
-  <div id="challengeHero"></div>
-  <div id="completionNudge"></div>
-  <div id="photoBanner"><div class="spin"></div><span id="bannerText">Loading wildlife photos…</span></div>
-  <div class="controls">
-    <input type="text" id="searchInput" placeholder="Search species…" oninput="renderSpecies()">
-    <div class="filter-btns">
+  <div class="search-dock" id="searchDock">
+    <div class="search-box" id="searchBox">
+      <svg class="search-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <input type="search" id="searchInput" placeholder="Search animals (e.g. possum)" aria-label="Search animals" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="search" oninput="onSearchInput()" onkeydown="if(event.key==='Enter')this.blur()">
+      <button type="button" class="search-clear" id="searchClear" aria-label="Clear search" onclick="clearSearch(true)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="filter-btns" id="filterBtns">
       <button class="active" data-cat="all" onclick="setFilter('all')">All</button>
       <button data-cat="bird" onclick="setFilter('bird')">🦅 Birds</button>
       <button data-cat="mammal" onclick="setFilter('mammal')">🦘 Mammals</button>
@@ -326,7 +371,11 @@ body.light .species-card.unspotted::after{background:radial-gradient(ellipse 60%
       <button data-cat="insect" onclick="setFilter('insect')">🦋 Insects</button>
       <button data-cat="amphibian" onclick="setFilter('amphibian')">🐸 Frogs</button>
     </div>
+    <div class="search-meta" id="searchMeta"></div>
   </div>
+  <div id="challengeHero"></div>
+  <div id="completionNudge"></div>
+  <div id="photoBanner"><div class="spin"></div><span id="bannerText">Loading wildlife photos…</span></div>
   <div class="species-grid" id="speciesGrid"></div>
 </div>
 
@@ -366,7 +415,7 @@ body.light .species-card.unspotted::after{background:radial-gradient(ellipse 60%
 
 <div id="tab-scoreboard" class="tab">
   <div id="fbStatus" class="fb-status">⏳ Connecting…</div>
-  <div style="margin-bottom:9px;display:flex;gap:6px;align-items:center;">
+  <div class="who-row">
     <span style="font-size:11px;color:var(--text-muted)">Playing as:</span>
     <strong id="sbUsernameDisplay" style="font-size:13px;color:#ffd700">—</strong>
     <button onclick="changeUsername()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);padding:3px 8px;border-radius:5px;cursor:pointer;font-size:11px;">Change</button>
@@ -553,6 +602,12 @@ let soundEnabled = true, isDark = true;
 
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
+/* ═════════ SEARCH MATCHING ═════════ */
+// lower-case, strip accents, turn punctuation/hyphens into spaces so "fairy wren" finds "Fairy-wren"
+const norm = s => String(s == null ? '' : s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+const CAT_WORDS = {bird:'bird birds', mammal:'mammal mammals', reptile:'reptile reptiles', marine:'marine sea ocean', insect:'insect insects bug', amphibian:'frog frogs amphibian'};
+SPECIES.forEach(s => { s._hay = norm(s.name + ' ' + s.sci + ' ' + (CAT_WORDS[s.cat] || '') + ' ' + RARITY_LABELS[s.rarity]); });
+
 /* ═════════ RANGER LEVELS ═════════ */
 const RANGER_LEVELS = [
   {min:0,    label:'Novice',          icon:'🌱', color:'#9ab88a'},
@@ -624,7 +679,7 @@ function renderCompletionNudge() {
   const rl = {common:'Common',uncommon:'Uncommon',rare:'Rare'}[best.rarity];
   el.style.display = 'flex';
   el.innerHTML = `<span style="flex:1"><strong>${best.cat.emoji} So close!</strong> ${best.missing.length} more ${rl} ${best.cat.label} to go — <em>${esc(best.missing.map(s => s.name).join(' & '))}</em></span><button>Show me</button>`;
-  el.querySelector('button').onclick = () => { setFilter(best.cat.key); setTimeout(() => { const c = document.querySelector('.species-card.unspotted'); if (c) c.scrollIntoView({behavior:'smooth', block:'center'}); }, 80); };
+  el.querySelector('button').onclick = () => { resetSearchField(); setFilter(best.cat.key); setTimeout(() => { const c = document.querySelector('.species-card.unspotted'); if (c) c.scrollIntoView({behavior:'smooth', block:'center'}); }, 80); };
 }
 
 /* ═════════ DAILY CHALLENGE ═════════ */
@@ -822,27 +877,48 @@ async function loadAllPhotos() {
   renderSpecies(); renderChallengeHero();
 }
 
-/* ═════════ SPECIES GRID ═════════ */
+/* ═════════ SPECIES GRID + SEARCH ═════════ */
 function thumbHtml(sp) {
   if (!photosLoaded) return '<div class="card-thumb-loading"><div class="spin"></div></div>';
   const pc = photoCache[sp.id];
   return pc ? `<img class="card-thumb" src="${pc.url}" alt="${esc(sp.name)}" loading="lazy">` : `<div class="card-thumb-placeholder">${sp.emoji}</div>`;
 }
 let currentFilter = 'all';
-function setFilter(cat) {
-  currentFilter = cat;
-  document.querySelectorAll('.filter-btns button').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
-  renderSpecies();
+function markChips() { document.querySelectorAll('#filterBtns button').forEach(b => b.classList.toggle('active', b.dataset.cat === currentFilter)); }
+function setFilter(cat) { currentFilter = cat; markChips(); renderSpecies(); }
+function syncSearchUI() {
+  const v = document.getElementById('searchInput').value;
+  document.getElementById('searchBox').classList.toggle('has-text', v.length > 0);
+}
+function onSearchInput() {
+  // searching always looks across every category, so results are never hidden by a chip you forgot about
+  if (document.getElementById('searchInput').value.trim() && currentFilter !== 'all') { currentFilter = 'all'; markChips(); }
+  syncSearchUI(); renderSpecies();
+}
+function resetSearchField() {
+  const inp = document.getElementById('searchInput');
+  inp.value = ''; inp.blur(); syncSearchUI();
+  const meta = document.getElementById('searchMeta'); meta.classList.remove('on'); meta.textContent = '';
+}
+function clearSearch(focus) {
+  const inp = document.getElementById('searchInput');
+  inp.value = ''; syncSearchUI(); renderSpecies();
+  if (focus) inp.focus();
 }
 function logFromCard(btn) { openModal(btn.dataset.id, btn.dataset.ch === 'true'); }
 function renderSpecies() {
-  const q = document.getElementById('searchInput').value.toLowerCase(), chId = getTodayChallenge().id;
+  const raw = document.getElementById('searchInput').value, tokens = norm(raw).split(' ').filter(Boolean), chId = getTodayChallenge().id;
   let list = SPECIES;
   if (currentFilter !== 'all') list = list.filter(s => s.cat === currentFilter);
-  if (q) list = list.filter(s => s.name.toLowerCase().includes(q) || s.sci.toLowerCase().includes(q));
+  if (tokens.length) list = list.filter(s => tokens.every(t => s._hay.includes(t)));
   list = [...list].sort((a, b) => RARITY_ORDER.indexOf(b.rarity) - RARITY_ORDER.indexOf(a.rarity));
+  const meta = document.getElementById('searchMeta');
+  if (tokens.length) { meta.classList.add('on'); meta.textContent = list.length + (list.length === 1 ? ' animal' : ' animals') + ' match “' + raw.trim() + '”'; }
+  else { meta.classList.remove('on'); meta.textContent = ''; }
+  const grid = document.getElementById('speciesGrid');
+  if (!list.length) { grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="icon">🔍</div><p>No animals match “${esc(raw.trim())}”</p><button class="btn btn-secondary" onclick="clearSearch(true)">Clear search</button></div>`; return; }
   const spotted = new Set(state.sightings.map(s => s.speciesId)), mult = getStreakMultiplier(getStreakData().streak);
-  document.getElementById('speciesGrid').innerHTML = list.map(sp => {
+  grid.innerHTML = list.map(sp => {
     const isSp = spotted.has(sp.id), isCh = sp.id === chId, pts = currentPts(sp.id, isCh), cnt = state.globalSpotCounts[sp.id] || 0, r = sp.rarity;
     return `<div class="species-card glow-${r} ${isSp ? 'spotted' : 'unspotted'}">
       ${isSp ? '<div class="card-spotted-badge">✅</div>' : ''}
@@ -915,6 +991,7 @@ function confirmLog() {
   haptic(hp[sp.rarity] || [30]); playLogSound(sp.rarity);
   const btn = document.getElementById('logConfirmBtn'); if (btn && !isNew) { const r = btn.getBoundingClientRect(); triggerBurst(r.left + r.width/2, r.top + r.height/2, sp.rarity); }
   closeModal();
+  resetSearchField();            // search box is emptied after every logged sighting, ready for the next one
   if (isNew) revealOpen = true;   // hold toasts until the reveal is dismissed
   const leveled = checkLevelUp(oldScore, state.totalScore); checkStreakMilestone(newStreak); checkBadges(); pushScoreToFirebase();
   animateScore(oldScore, state.totalScore);
@@ -1178,8 +1255,12 @@ async function onFirebaseReady() {
     setTimeout(() => showUsernameModal(false), 300);
   } else { saveIdentityToFirebase(); initFirebaseListener(); pushScoreToFirebase(); }
 }
+// keeps the pinned search bar sitting exactly under the header, whatever the phone's notch/header height is
+function syncHeaderH() { const h = document.querySelector('.app-header'); if (h) document.documentElement.style.setProperty('--hdr-h', h.offsetHeight + 'px'); }
 (function init() {
   loadLocalState(); applyThemeClasses(); renderAll(); updateUsernameDisplay();
+  syncHeaderH(); window.addEventListener('resize', syncHeaderH); window.addEventListener('orientationchange', syncHeaderH);
+  if (window.ResizeObserver) new ResizeObserver(syncHeaderH).observe(document.querySelector('.app-header'));
   waitForFirebase(onFirebaseReady); loadAllPhotos(); initGyroGloss();
 })();
 </script>
