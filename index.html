@@ -272,6 +272,11 @@ body.light .species-card.unspotted::after{background:radial-gradient(ellipse 60%
 .fb-status{font-size:11px;padding:6px 11px;border-radius:8px;margin-bottom:9px;background:var(--panel2);border:1px solid var(--border);color:var(--text-muted);}
 .fb-status.connected{border-color:#238636;color:#56d364;}
 
+.fb-status.error{border-color:#c0392b;color:#ff8a7a;}
+.score-notice{background:var(--panel2);border:1px solid #ffb84d;border-radius:12px;padding:12px 14px;margin-bottom:10px;font-size:12px;line-height:1.55;}
+.score-notice strong{color:#ffd978;}
+.sn-btns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.sn-btns .btn{flex:1;min-width:130px;}
 /* ═════════ MAP / BADGES ═════════ */
 #map{width:100%;height:430px;border-radius:10px;border:1px solid var(--border);}
 .map-legend{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:8px 11px;margin-bottom:9px;}
@@ -420,6 +425,7 @@ body.light .section-title{text-shadow:none;}
     <strong id="sbUsernameDisplay" style="font-size:13px;color:#ffd700">—</strong>
     <button onclick="changeUsername()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);padding:3px 8px;border-radius:5px;cursor:pointer;font-size:11px;">Change</button>
   </div>
+  <div id="scoreNotice"></div>
   <div id="scoreboardList"><div class="empty-state"><div class="icon">🏆</div><p>Loading…</p></div></div>
 </div>
 
@@ -838,7 +844,7 @@ async function restoreIdentityFromFirebase() {
   try { const snap = await window._fbGet(window._fbRef(window._db, 'devices/' + deviceId)); if (snap.exists() && snap.val().username) { username = snap.val().username; saveLocalState(); return true; } } catch (e) {}
   return false;
 }
-function saveIdentityToFirebase() { if (!window._fbReady || !username) return; try { window._fbSet(window._fbRef(window._db, 'devices/' + deviceId), {username, updatedAt: Date.now()}); } catch (e) {} }
+function saveIdentityToFirebase() { if (!window._fbReady || !username) return; fbWrite('devices/' + deviceId, {username, updatedAt: Date.now()}); }
 
 /* ═════════ SCORING ═════════ */
 function getEffectiveN(id) { const n = state.globalSpotCounts[id] || 0; if (!n) return 0; const t = state.lastSightingDate[id]; if (!t) return n; return Math.max(0, n - Math.floor((Date.now() - t) / MS_DAY / RECOVERY_DAYS)); }
@@ -1034,24 +1040,67 @@ function runShare(btn, sighting) {
 }
 
 /* ═════════ FIREBASE SCOREBOARD ═════════ */
-function pushScoreToFirebase() {
-  if (!window._fbReady || !username) return;
-  const lv = getRangerLevel(state.totalScore);
-  try { window._fbSet(window._fbRef(window._db, 'scores/' + username), {name: username, score: state.totalScore, species: new Set(state.sightings.map(s => s.speciesId)).size, streak: getStreakData().streak, rangerLevel: lv.label, rangerIcon: lv.icon, deviceId, updatedAt: Date.now()}); } catch (e) {}
+// Firebase keys can't contain  . $ # [ ] /  — a name like "Sam T." used to make every save fail silently.
+// The key is made safe here; the player's real display name is stored untouched in the record.
+const fbKey = n => String(n == null ? '' : n).replace(/[.$#\[\]\/\u0000-\u001f\u007f]/g, '_').trim().slice(0, 60);
+let fbListening = false, boardHasData = false, scoreConflict = null, conflictToastShown = false;
+function setBoardStatus(cls, text) { const el = document.getElementById('fbStatus'); el.className = 'fb-status' + (cls ? ' ' + cls : ''); el.textContent = text; }
+function boardError(e) {
+  const msg = String((e && (e.code || e.message)) || e || '');
+  const denied = /permission|denied/i.test(msg);
+  setBoardStatus('error', denied ? '⚠️ The scoreboard database is refusing access (permission denied)' : '⚠️ Scoreboard problem: ' + msg.slice(0, 80));
+  if (!boardHasData) document.getElementById('scoreboardList').innerHTML = '<div class="empty-state"><div class="icon">🏆</div><p>' + (denied ? 'The scoreboard can’t be reached right now. If you run this game, its Firebase rules have probably expired.' : 'Could not reach the scoreboard.') + '</p><button class="btn btn-secondary" onclick="retryBoard()">Try again</button></div>';
+  console.warn('Scoreboard:', e);
 }
-let fbListening = false;
+function retryBoard() { fbListening = false; setBoardStatus('', '⏳ Connecting…'); initFirebaseListener(); pushScoreToFirebase(); }
+function fbWrite(path, value) {   // never throws, never leaves an unhandled rejection
+  try { return Promise.resolve(window._fbSet(window._fbRef(window._db, path), value)).catch(e => { boardError(e); return null; }); }
+  catch (e) { boardError(e); return Promise.resolve(null); }
+}
+async function pushScoreToFirebase(force) {
+  if (!window._fbReady || !username) return;
+  const key = fbKey(username); if (!key) return;
+  const lv = getRangerLevel(state.totalScore);
+  const rec = {name: username, score: state.totalScore, species: new Set(state.sightings.map(s => s.speciesId)).size, streak: getStreakData().streak, rangerLevel: lv.label, rangerIcon: lv.icon, deviceId, updatedAt: Date.now()};
+  try {
+    if (!force) {
+      const snap = await window._fbGet(window._fbRef(window._db, 'scores/' + key));
+      const prev = snap.exists() ? snap.val() : null;
+      if (prev && Number(prev.score) > rec.score) {
+        // this device knows less than the leaderboard does (new phone / cleared storage) — never wipe the higher score
+        scoreConflict = {remote: Number(prev.score), local: rec.score}; renderScoreNotice();
+        if (!conflictToastShown) { conflictToastShown = true; showToast('⚠️ Your leaderboard score is ' + scoreConflict.remote + ' — open the Board tab', 'badge', 7000); }
+        return;
+      }
+    }
+    scoreConflict = null; renderScoreNotice();
+    await window._fbSet(window._fbRef(window._db, 'scores/' + key), rec);
+  } catch (e) { boardError(e); }
+}
+function renderScoreNotice() {
+  const el = document.getElementById('scoreNotice'); if (!el) return;
+  if (!scoreConflict) { el.innerHTML = ''; return; }
+  const c = scoreConflict;
+  el.innerHTML = '<div class="score-notice"><strong>Your leaderboard score is ' + c.remote + '</strong>, but this device only knows about ' + c.local + ' points (new phone, or its saved data was cleared). It has <em>not</em> been overwritten.<div class="sn-btns"><button class="btn btn-primary" id="snRestore">Restore ' + c.remote + ' here</button><button class="btn btn-secondary" id="snReset">Start again from ' + c.local + '</button></div></div>';
+  document.getElementById('snRestore').onclick = () => { state.totalScore = c.remote; saveLocalState(); scoreConflict = null; renderScoreNotice(); renderAll(); pushScoreToFirebase(); showToast('Score restored: ' + c.remote + ' pts', 'score'); };
+  document.getElementById('snReset').onclick = () => { scoreConflict = null; renderScoreNotice(); pushScoreToFirebase(true); showToast('Leaderboard reset to ' + c.local + ' pts', 'score'); };
+}
 function initFirebaseListener() {
   if (!window._fbReady || fbListening) return; fbListening = true;
-  const el = document.getElementById('fbStatus'); el.className = 'fb-status connected'; el.textContent = 'Live scoreboard active';
-  window._fbOnValue(window._fbRef(window._db, 'scores'), snap => renderScoreboard(snap.val() || {}));
+  try {
+    window._fbOnValue(window._fbRef(window._db, 'scores'),
+      snap => { boardHasData = true; setBoardStatus('connected', 'Live scoreboard active'); renderScoreboard(snap.val() || {}); },
+      err => { fbListening = false; boardError(err); });
+  } catch (e) { fbListening = false; boardError(e); }
 }
 function renderScoreboard(data) {
-  const entries = Object.values(data).sort((a, b) => b.score - a.score), el = document.getElementById('scoreboardList');
+  const sc = e => Number(e && e.score) || 0;
+  const entries = Object.values(data).filter(e => e && e.name).sort((a, b) => sc(b) - sc(a)), el = document.getElementById('scoreboardList');
   if (!entries.length) { el.innerHTML = '<div class="empty-state"><div class="icon">🏆</div><p>No scores yet!</p></div>'; return; }
   const medals = ['🥇','🥈','🥉'];
   el.innerHTML = entries.slice(0, 50).map((e, i) => {
     const you = e.name === username;
-    return `<div class="scoreboard-entry${you ? ' sb-you' : ''}"><span class="sb-rank">${medals[i] || '#' + (i + 1)}</span><div style="flex:1"><div class="sb-name">${esc(e.name)}${you ? ' 👈 you' : ''}${e.streak >= 2 ? ' 🔥' + e.streak : ''}</div><div style="display:flex;gap:6px;align-items:center;margin-top:2px;"><span class="sb-species">${e.species || 0} species</span>${e.rangerIcon ? `<span class="sb-ranger">${esc(e.rangerIcon)} ${esc(e.rangerLevel || '')}</span>` : ''}</div></div><div class="sb-score">⭐ ${e.score || 0}</div></div>`;
+    return `<div class="scoreboard-entry${you ? ' sb-you' : ''}"><span class="sb-rank">${medals[i] || '#' + (i + 1)}</span><div style="flex:1"><div class="sb-name">${esc(e.name)}${you ? ' 👈 you' : ''}${e.streak >= 2 ? ' 🔥' + e.streak : ''}</div><div style="display:flex;gap:6px;align-items:center;margin-top:2px;"><span class="sb-species">${e.species || 0} species</span>${e.rangerIcon ? `<span class="sb-ranger">${esc(e.rangerIcon)} ${esc(e.rangerLevel || '')}</span>` : ''}</div></div><div class="sb-score">⭐ ${sc(e)}</div></div>`;
   }).join('');
 }
 function showUsernameModal(isChange) {
@@ -1064,9 +1113,14 @@ function showUsernameModal(isChange) {
 function saveUsername() {
   const v = document.getElementById('usernameInput').value.trim();
   if (v.length < 2) { showToast('Please enter at least 2 characters', 'score'); return; }
+  const old = username;
   username = v; saveLocalState(); saveIdentityToFirebase();
   document.getElementById('usernameOverlay').classList.remove('open');
-  updateUsernameDisplay(); initFirebaseListener(); pushScoreToFirebase();
+  updateUsernameDisplay(); removeOldBoardEntry(old); initFirebaseListener(); pushScoreToFirebase();
+}
+async function removeOldBoardEntry(old) {
+  if (!old || !window._fbReady || fbKey(old) === fbKey(username)) return;
+  try { const r = window._fbRef(window._db, 'scores/' + fbKey(old)), s = await window._fbGet(r); if (s.exists() && s.val().deviceId === deviceId) await window._fbSet(r, null); } catch (e) {}
 }
 function changeUsername() { showUsernameModal(true); }
 function updateUsernameDisplay() { document.getElementById('sbUsernameDisplay').textContent = username || '—'; document.getElementById('headerUsername').textContent = username ? 'Playing as ' + username : ''; }
@@ -1181,7 +1235,7 @@ function showTab(name) {
   document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   document.querySelectorAll('.bottom-nav button')[TAB_ORDER.indexOf(name)].classList.add('active');
-  if (name === 'map') renderMap(); if (name === 'stats') renderStats(true); if (name === 'journal') renderJournal(); if (name === 'badges') renderBadges();
+  if (name === 'scoreboard') initFirebaseListener(); if (name === 'map') renderMap(); if (name === 'stats') renderStats(true); if (name === 'journal') renderJournal(); if (name === 'badges') renderBadges();
   window.scrollTo(0, 0);
 }
 function renderAll() { renderSpecies(); renderJournal(); renderStats(false); renderBadges(); renderChallengeHero(); renderStreakBadge(false); renderRangerLevel(); renderCompletionNudge(); document.getElementById('headerScore').textContent = '⭐ ' + state.totalScore + ' pts'; }
@@ -1189,7 +1243,7 @@ function confirmReset() {
   if (!confirm('Reset ALL data? This cannot be undone.')) return;
   state = {sightings:[], globalSpotCounts:{}, lastSightingDate:{}, totalScore:0};
   ['ws_v16','ws_v15','ws_v14','ws_badges_v16','ws_badges_v15','ws_streak','ws_lastLogDate'].forEach(k => localStorage.removeItem(k));
-  unlockedBadges = new Set(); renderAll(); pushScoreToFirebase(); showToast('Data reset', 'score');
+  unlockedBadges = new Set(); renderAll(); pushScoreToFirebase(true); showToast('Data reset', 'score');
 }
 
 /* ═════════ SHARE CARD ═════════ */
@@ -1245,14 +1299,25 @@ function scDownload(blob, fname) { const a = document.createElement('a'); a.href
 
 /* ═════════ FIREBASE WAIT / INIT ═════════ */
 function waitForFirebase(cb, t) {
-  t = t || 5000; if (window._fbReady) { cb(); return; }
-  window._fbReadyCallback = () => { window._fbReadyCallback = null; cb(); };
-  const start = Date.now(), poll = setInterval(() => { if (window._fbReady || Date.now() - start > t) { clearInterval(poll); window._fbReadyCallback = null; cb(); } }, 100);
+  t = t || 5000;
+  if (window._fbReady) { cb(true); return; }
+  let fired = false;
+  const fire = ok => { if (fired) return; fired = true; cb(ok); };
+  window._fbReadyCallback = () => { window._fbReadyCallback = null; if (fired) afterFirebaseConnected(); else fire(true); };
+  setTimeout(() => fire(false), t);
+  // slow connection: keep watching for two minutes so the scoreboard still starts when Firebase finally loads
+  const poll = setInterval(() => { if (window._fbReady) { clearInterval(poll); if (window._fbReadyCallback) window._fbReadyCallback(); } }, 500);
+  setTimeout(() => clearInterval(poll), 120000);
 }
-async function onFirebaseReady() {
+function onFirebaseReady(ok) {
+  if (ok) { afterFirebaseConnected(); return; }
+  setBoardStatus('', '⏳ Still connecting to the scoreboard…');
+  if (!username) setTimeout(() => showUsernameModal(false), 300);
+}
+async function afterFirebaseConnected() {
   if (!username) {
-    if (await restoreIdentityFromFirebase()) { showToast('Welcome back, ' + username + '!', 'score'); updateUsernameDisplay(); saveIdentityToFirebase(); initFirebaseListener(); pushScoreToFirebase(); return; }
-    setTimeout(() => showUsernameModal(false), 300);
+    if (await restoreIdentityFromFirebase()) { document.getElementById('usernameOverlay').classList.remove('open'); showToast('Welcome back, ' + username + '!', 'score'); updateUsernameDisplay(); saveIdentityToFirebase(); initFirebaseListener(); pushScoreToFirebase(); return; }
+    if (!document.getElementById('usernameOverlay').classList.contains('open')) setTimeout(() => showUsernameModal(false), 300);
   } else { saveIdentityToFirebase(); initFirebaseListener(); pushScoreToFirebase(); }
 }
 // keeps the pinned search bar sitting exactly under the header, whatever the phone's notch/header height is
