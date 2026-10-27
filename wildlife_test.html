@@ -27,7 +27,9 @@ const cfg = {
 try {
   const app = initializeApp(cfg);
   window._db = getDatabase(app);
-  window._fbRef = ref; window._fbSet = () => Promise.resolve();  /* TEST VERSION: never writes to the database */ window._fbGet = get; window._fbOnValue = onValue;
+  window._fbRef = (d, p) => { const r = ref(d, p); try { r.__p = String(p); } catch (e) {} return r; };
+  window._fbSet = (r, v) => (/^groups_test\//.test((r && r.__p) || '') ? set(r, v) : Promise.resolve());   /* TEST VERSION: only the separate test-groups area is ever written */
+  window._fbGet = get; window._fbOnValue = onValue;
   window._fbReady = true;
   if (window._fbReadyCallback) window._fbReadyCallback();
 } catch (e) { window._fbReady = false; }
@@ -311,6 +313,48 @@ body.light .species-card.unspotted::after{background:radial-gradient(ellipse 60%
 .inat-conf-name{font-size:18px;font-weight:800;line-height:1.25;}
 .inat-est{margin-top:10px;font-size:12px;line-height:1.7;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;}
 .inat-note{font-size:11px;color:var(--text-muted);}
+/* ═════════ GROUPS ═════════ */
+.btn:disabled{opacity:.55;cursor:default;}
+.board-tabs{display:flex;gap:7px;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-bottom:10px;padding-bottom:2px;}
+.board-tabs::-webkit-scrollbar{display:none;}
+.board-chip{flex:0 0 auto;background:var(--panel);border:1px solid var(--border);color:var(--text-muted);padding:9px 14px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit;max-width:62vw;overflow:hidden;text-overflow:ellipsis;}
+.board-chip.on{background:var(--accent);border-color:var(--accent);color:#fff;}
+.board-chip.add{border-style:dashed;color:var(--accent);}
+.vis-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:9px;}
+.vis-row strong{font-size:12px;}
+.vis-sub{font-size:10px;color:var(--text-muted);margin-top:2px;line-height:1.5;}
+.switch{position:relative;display:inline-block;width:46px;height:28px;flex-shrink:0;}
+.switch input{opacity:0;width:0;height:0;position:absolute;}
+.slider{position:absolute;inset:0;background:var(--surface2);border:1px solid var(--border);border-radius:999px;transition:.2s;cursor:pointer;}
+.slider::before{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;}
+.switch input:checked + .slider{background:var(--accent);border-color:var(--accent);}
+.switch input:checked + .slider::before{transform:translateX(18px);}
+.seg{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:999px;padding:3px;margin-bottom:9px;}
+.seg button{flex:1;border:none;background:none;color:var(--text-muted);padding:9px 8px;border-radius:999px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.seg button.on{background:var(--accent);color:#fff;}
+.group-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:9px;}
+.gc-top{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.gc-name{font-size:16px;font-weight:800;line-height:1.25;}
+.gc-sub{font-size:11px;color:var(--text-muted);margin-top:2px;}
+.gc-btns{display:flex;gap:8px;margin-top:10px;}
+.gc-btns .btn{flex:1;}
+.code-pill{display:inline-block;font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:800;letter-spacing:1.5px;background:var(--surface2);border:1px dashed var(--accent);color:var(--accent);padding:8px 14px;border-radius:10px;font-size:22px;cursor:pointer;}
+.code-pill.sm{font-size:14px;padding:6px 10px;}
+.g-reset{font-size:11px;color:var(--text-muted);margin:-2px 2px 8px;}
+.g-chase{background:var(--panel2);border:1px solid var(--accent);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:600;margin-bottom:9px;line-height:1.5;}
+.g-lbl{display:block;font-size:11px;color:var(--text-muted);margin:10px 0 4px;}
+.g-in{width:100%;height:46px;padding:0 14px;font-size:16px;font-family:inherit;border-radius:12px;background:var(--surface2);color:var(--text);border:2px solid var(--border);outline:none;-webkit-appearance:none;appearance:none;}
+.g-in:focus{border-color:var(--accent);}
+.g-code{text-transform:uppercase;letter-spacing:1.5px;font-weight:700;}
+.g-go{width:100%;margin-top:12px;padding:12px;font-size:14px;}
+.g-msg{margin-top:10px;font-size:12px;color:#ff9a8a;line-height:1.5;}
+.g-msg.ok{color:var(--text-muted);}
+.g-note{margin-top:12px;font-size:10px;color:var(--text-muted);line-height:1.6;}
+.g-done{text-align:center;padding:4px 0;}
+.g-done-ico{font-size:42px;}
+.g-done-title{font-size:20px;font-weight:800;margin-top:4px;}
+.g-done-sub{font-size:12px;color:var(--text-muted);margin:4px 0 12px;}
+.g-clash{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:13px;line-height:1.6;}
 /* ═════════ MAP / BADGES ═════════ */
 #map{width:100%;height:430px;border-radius:10px;border:1px solid var(--border);}
 .map-legend{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:8px 11px;margin-bottom:9px;}
@@ -453,7 +497,7 @@ body.light .section-title{text-shadow:none;}
   </div>
   <div class="test-panel" id="testPanel">
     <h3>🧪 Test version</h3>
-    <p>This is a separate copy of the game. Your real game’s progress and leaderboard score are not touched, and nothing you do here is sent to the leaderboard (it only reads it).</p>
+    <p>This is a separate copy of the game. Your real game’s progress and leaderboard score are not touched, and nothing you do here is sent to the leaderboard (it only reads it). The one exception is Groups, which are saved to a separate test-only area of the database.</p>
     <div class="test-info" id="testInfo"></div>
     <div class="test-btns"><button class="btn btn-secondary" onclick="testReseed()">Re-copy my real progress</button><button class="btn btn-secondary" onclick="testRemoveCustom()">Remove unused added animals</button></div>
   </div>
@@ -461,14 +505,19 @@ body.light .section-title{text-shadow:none;}
 </div>
 
 <div id="tab-scoreboard" class="tab">
+  <div class="board-tabs" id="boardTabs"></div>
+  <div id="globalPane">
   <div id="fbStatus" class="fb-status">⏳ Connecting…</div>
   <div class="who-row">
     <span style="font-size:11px;color:var(--text-muted)">Playing as:</span>
     <strong id="sbUsernameDisplay" style="font-size:13px;color:#ffd700">—</strong>
     <button onclick="changeUsername()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);padding:3px 8px;border-radius:5px;cursor:pointer;font-size:11px;">Change</button>
   </div>
+  <div class="vis-row"><div><strong>Show me on the global leaderboard</strong><div class="vis-sub" id="visSub"></div></div><label class="switch"><input type="checkbox" id="globalVis" checked onchange="setGlobalVisible(this.checked)"><span class="slider"></span></label></div>
   <div id="scoreNotice"></div>
   <div id="scoreboardList"><div class="empty-state"><div class="icon">🏆</div><p>Loading…</p></div></div>
+  </div>
+  <div id="groupPane" style="display:none"></div>
 </div>
 
 <div id="tab-badges" class="tab"><div class="badges-grid" id="badgesGrid"></div></div>
@@ -514,6 +563,13 @@ body.light .section-title{text-shadow:none;}
   </div>
 </div>
 
+<div class="modal-overlay" id="groupOverlay">
+  <div class="modal inat-modal">
+    <div class="inat-head"><h2>👥 Groups</h2><button class="inat-x" onclick="closeGroupModal()" aria-label="Close">✕</button></div>
+    <p class="inat-sub">Compete with family or friends on your own private leaderboard.</p>
+    <div id="groupBody"></div>
+  </div>
+</div>
 <div class="modal-overlay" id="inatOverlay">
   <div class="modal inat-modal">
     <div class="inat-head"><h2>🔎 Search all wildlife</h2><button class="inat-x" onclick="closeInat()" aria-label="Close">✕</button></div>
@@ -1156,6 +1212,255 @@ function addCustom(sel) {
   return sp;
 }
 
+/* ═════════ GROUPS (private competitions) ═════════ */
+// Each group lives at  <GROUPS_ROOT>/<CODE>/{ meta, members/<deviceId> }.
+// A group only ever receives: nickname, points, this-week points, species count, streak and rank. Never locations or photos.
+const GROUPS_ROOT = TEST ? 'groups_test' : 'groups';
+const CODE_WORDS = ['KOALA','WOMBAT','DINGO','EMU','GALAH','QUOKKA','BILBY','NUMBAT','WALLABY','POSSUM','MAGPIE','WAGTAIL','ROSELLA','PELICAN','GOANNA','PENGUIN','DOLPHIN','WHALE','WATTLE','BANKSIA','OUTBACK','BILLABONG','BOOMERANG','CORELLA','PLATYPUS','ECHIDNA','FALCON','HERON','IBIS','KESTREL','BLUETONGUE','CURLEW'];
+let groups = [], globalVisible = true, boardSel = 'global', groupData, groupErr = null, groupUnsub = null, groupMode = 'week', groupPushErr = null, gm = null;
+
+function loadGroups() {
+  try { groups = JSON.parse(localStorage.getItem('wt_groups') || '[]').filter(g => g && /^[A-Z]{2,12}-[0-9]{3}$/.test(g.code)); } catch (e) { groups = []; }
+  globalVisible = localStorage.getItem('wt_globalVisible') !== '0';
+  boardSel = localStorage.getItem('wt_board') || 'global';
+  if (boardSel !== 'global' && !groups.some(g => g.code === boardSel)) boardSel = 'global';
+}
+function saveGroups() { try { localStorage.setItem('wt_groups', JSON.stringify(groups)); localStorage.setItem('wt_board', boardSel); } catch (e) {} }
+
+/* ── weeks: Monday 00:00 (device local time) to the next Monday ── */
+function weekStart(d) { const x = new Date(d); x.setHours(0, 0, 0, 0); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; }
+function weekIdNow() { const w = weekStart(new Date()); return w.getFullYear() + '-' + String(w.getMonth() + 1).padStart(2, '0') + '-' + String(w.getDate()).padStart(2, '0'); }
+function weekScoreNow() { const t = weekStart(new Date()).getTime(); return state.sightings.reduce((a, s) => a + (new Date(s.ts).getTime() >= t ? (Number(s.ptsEarned) || 0) : 0), 0); }
+function weekResetText() {
+  const n = new Date(), nx = weekStart(n); nx.setDate(nx.getDate() + 7);
+  const ms = nx - n, d = Math.floor(ms / MS_DAY), h = Math.floor((ms % MS_DAY) / 3600000);
+  return d >= 1 ? d + ' day' + (d === 1 ? '' : 's') + ' left' : Math.max(1, h) + ' hour' + (h === 1 ? '' : 's') + ' left';
+}
+
+/* ── codes: a word + 3 digits (2-9 only, so 0/O and 1/I can never be confused) ── */
+function genCode() { let n = ''; for (let i = 0; i < 3; i++) n += String(2 + Math.floor(Math.random() * 8)); return CODE_WORDS[Math.floor(Math.random() * CODE_WORDS.length)] + '-' + n; }
+function normCode(s) { const t = String(s == null ? '' : s).toUpperCase().replace(/[^A-Z0-9]/g, ''), m = t.match(/^([A-Z]{2,12})([0-9]{3})$/); return m ? m[1] + '-' + m[2] : ''; }
+
+/* ── talking to the database (never throws into the UI, always times out) ── */
+const userErr = msg => Object.assign(new Error(msg), {user: true});
+function withTimeout(p, ms) { return new Promise((res, rej) => { const t = setTimeout(() => rej(new Error('timeout')), ms || 10000); Promise.resolve(p).then(v => { clearTimeout(t); res(v); }, e => { clearTimeout(t); rej(e); }); }); }
+function gRead(path) { if (!window._fbReady) return Promise.reject(new Error('offline')); try { return withTimeout(window._fbGet(window._fbRef(window._db, path))); } catch (e) { return Promise.reject(e); } }
+function gWrite(path, v) { if (!window._fbReady) return Promise.reject(new Error('offline')); try { return withTimeout(window._fbSet(window._fbRef(window._db, path), v)); } catch (e) { return Promise.reject(e); } }
+function groupErrText(e) {
+  if (e && e.user) return e.message;
+  const m = String((e && (e.code || e.message)) || e || '');
+  if (/permission|denied/i.test(m)) return 'Groups aren’t switched on yet: the database rules need the new groups section. (Whoever runs the game needs to publish them.)';
+  if (/offline|network|fetch|timeout/i.test(m)) return 'Couldn’t reach the server. Check your connection and try again.';
+  return 'Something went wrong (' + m.slice(0, 60) + ').';
+}
+
+/* ── what a group gets to see about you ── */
+function memberRecord(g) {
+  const lv = getRangerLevel(state.totalScore);
+  return {nick: g.nick, score: state.totalScore, weekScore: weekScoreNow(), weekId: weekIdNow(), species: new Set(state.sightings.map(s => s.speciesId)).size, streak: getStreakData().streak, rangerLevel: lv.label, rangerIcon: lv.icon, updatedAt: Date.now()};
+}
+async function pushGroups() {
+  if (!window._fbReady || !groups.length) return;
+  for (const g of groups) {
+    try { await gWrite(GROUPS_ROOT + '/' + g.code + '/members/' + deviceId, memberRecord(g)); groupPushErr = null; }
+    catch (e) { groupPushErr = e; }
+  }
+  if (boardSel !== 'global') renderGroupBoard();
+}
+
+/* ── create / join / leave ── */
+async function createGroup(name, nick) {
+  let code = '', made = false, lastErr = null;
+  for (let i = 0; i < 8 && !made; i++) {
+    code = genCode();
+    const snap = await gRead(GROUPS_ROOT + '/' + code + '/meta');
+    if (snap.exists()) continue;
+    try { await gWrite(GROUPS_ROOT + '/' + code + '/meta', {name, createdAt: Date.now(), by: deviceId}); made = true; } catch (e) { lastErr = e; }
+  }
+  if (!made) throw lastErr || userErr('Couldn’t find a free code. Please try again.');
+  const g = {code, name, nick, joinedAt: Date.now()};
+  await gWrite(GROUPS_ROOT + '/' + code + '/members/' + deviceId, memberRecord(g));
+  groups.push(g); boardSel = code; saveGroups(); renderBoardTabs();
+  return g;
+}
+async function lookupGroup(codeRaw, nick) {
+  const code = normCode(codeRaw);
+  if (!code) throw userErr('That doesn’t look like a group code. Codes look like KOALA-472.');
+  if (groups.some(g => g.code === code)) throw userErr('You’re already in that group.');
+  const snap = await gRead(GROUPS_ROOT + '/' + code), data = snap.exists() ? snap.val() : null;
+  if (!data || !data.meta) throw userErr('No group found with that code. Check the spelling and try again.');
+  const members = data.members || {};
+  const hit = Object.entries(members).find(([id, m]) => id !== deviceId && m && norm(m.nick) === norm(nick));
+  return {code, name: String(data.meta.name || code), clash: hit ? {id: hit[0], m: hit[1]} : null, count: Object.keys(members).length};
+}
+async function joinGroup(found, nick, takeoverId) {
+  const g = {code: found.code, name: found.name, nick, joinedAt: Date.now()};
+  if (takeoverId && found.clash && Number(found.clash.m.score) > state.totalScore) { state.totalScore = Number(found.clash.m.score); saveLocalState(); renderAll(); }   // same rule as the global board: never lose a higher score
+  await gWrite(GROUPS_ROOT + '/' + g.code + '/members/' + deviceId, memberRecord(g));
+  if (takeoverId) { try { await gWrite(GROUPS_ROOT + '/' + g.code + '/members/' + takeoverId, null); } catch (e) {} pushScoreToFirebase(); }
+  groups.push(g); boardSel = g.code; saveGroups(); renderBoardTabs();
+  return g;
+}
+async function leaveGroup(code) {
+  const g = groups.find(x => x.code === code); if (!g) return;
+  if (!confirm('Leave “' + g.name + '”? Your score will be removed from that group.')) return;
+  try { await gWrite(GROUPS_ROOT + '/' + code + '/members/' + deviceId, null); } catch (e) {}
+  groups = groups.filter(x => x.code !== code);
+  if (boardSel === code) boardSel = 'global';
+  saveGroups(); renderBoardTabs(); showBoardPane(); showToast('Left ' + g.name, 'score');
+}
+function removeGroupLocally(code) { groups = groups.filter(x => x.code !== code); if (boardSel === code) boardSel = 'global'; saveGroups(); renderBoardTabs(); showBoardPane(); }
+
+/* ── inviting people: plain text, so it works from WhatsApp / Messages and never opens the wrong app ── */
+function inviteText(g) {
+  const url = TEST ? location.href.split('#')[0].split('?')[0] : location.origin + location.pathname.replace(/[^/]*$/, '');
+  return 'Join “' + g.name + '” on Wildlife Spotter! Open the app, tap Board › ➕ Group › Join with a code, and enter: ' + g.code + '\nNew to the app? ' + url;
+}
+function copyText(t) {
+  try { if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(t); } catch (e) {}
+  try { const a = document.createElement('textarea'); a.value = t; a.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(a); a.select(); document.execCommand('copy'); a.remove(); } catch (e) {}
+  return Promise.resolve();
+}
+async function sendInvite(code) {
+  const g = groups.find(x => x.code === code); if (!g) return;
+  const text = inviteText(g);
+  if (navigator.share) { try { await navigator.share({text}); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+  await copyText(text); showToast('Invite copied. Paste it into a message.', 'score', 3500);
+}
+
+/* ── board selector (Global + each group) ── */
+function renderBoardTabs() {
+  const el = document.getElementById('boardTabs'); if (!el) return;
+  el.innerHTML = `<button class="board-chip${boardSel === 'global' ? ' on' : ''}" data-sel="global">🌏 Global</button>` +
+    groups.map(g => `<button class="board-chip${boardSel === g.code ? ' on' : ''}" data-sel="${g.code}">👥 ${esc(g.name)}</button>`).join('') +
+    '<button class="board-chip add" id="boardAdd">➕ Group</button>';
+  el.querySelectorAll('[data-sel]').forEach(b => { b.onclick = () => selectBoard(b.dataset.sel); });
+  document.getElementById('boardAdd').onclick = () => openGroupModal('join');
+}
+function selectBoard(sel) { boardSel = sel; saveGroups(); renderBoardTabs(); showBoardPane(); }
+function showBoardPane() {
+  const gl = boardSel === 'global';
+  document.getElementById('globalPane').style.display = gl ? '' : 'none';
+  document.getElementById('groupPane').style.display = gl ? 'none' : '';
+  if (gl) { stopGroupListen(); initFirebaseListener(); renderGlobalVis(); } else listenGroup(boardSel);
+}
+function onBoardTab() { renderBoardTabs(); showBoardPane(); pushGroups(); }
+function stopGroupListen() { if (typeof groupUnsub === 'function') { try { groupUnsub(); } catch (e) {} } groupUnsub = null; }
+function listenGroup(code) {
+  stopGroupListen(); groupData = undefined; groupErr = null; renderGroupBoard();
+  if (!window._fbReady) { groupErr = new Error('offline'); renderGroupBoard(); return; }
+  try {
+    groupUnsub = window._fbOnValue(window._fbRef(window._db, GROUPS_ROOT + '/' + code),
+      snap => { if (boardSel !== code) return; groupErr = null; groupData = snap.exists() ? snap.val() : null; renderGroupBoard(); },
+      err => { if (boardSel !== code) return; groupErr = err; renderGroupBoard(); });
+  } catch (e) { groupErr = e; renderGroupBoard(); }
+}
+function renderGroupBoard() {
+  const el = document.getElementById('groupPane'); if (!el || boardSel === 'global') return;
+  const g = groups.find(x => x.code === boardSel); if (!g) return;
+  if (groupErr) { el.innerHTML = `<div class="empty-state"><div class="icon">👥</div><p>${esc(groupErrText(groupErr))}</p><button class="btn btn-secondary" id="gRetry">Try again</button></div>`; document.getElementById('gRetry').onclick = () => listenGroup(boardSel); return; }
+  if (groupData === undefined) { el.innerHTML = `<div class="empty-state"><span class="spin"></span> Loading ${esc(g.name)}…</div>`; return; }
+  if (groupData === null) { el.innerHTML = `<div class="empty-state"><div class="icon">👥</div><p>“${esc(g.name)}” no longer exists.</p><button class="btn btn-secondary" id="gRemove">Remove it from my list</button></div>`; document.getElementById('gRemove').onclick = () => removeGroupLocally(g.code); return; }
+  const meta = groupData.meta || {};
+  if (meta.name && meta.name !== g.name) { g.name = String(meta.name); saveGroups(); renderBoardTabs(); }
+  const wk = groupMode === 'week', wid = weekIdNow();
+  const rows = Object.entries(groupData.members || {}).map(([id, m]) => Object.assign({id}, m)).filter(m => m && m.nick)
+    .map(m => Object.assign(m, {shown: wk ? (m.weekId === wid ? Number(m.weekScore) || 0 : 0) : Number(m.score) || 0}))
+    .sort((a, b) => b.shown - a.shown || (b.species || 0) - (a.species || 0) || String(a.nick).localeCompare(String(b.nick)));
+  const meIdx = rows.findIndex(r => r.id === deviceId);
+  let chase = '';
+  if (rows.length > 1 && rows.every(r => r.shown === 0)) chase = wk ? '🌱 Nobody has scored this week yet. Be the first!' : '';
+  else if (rows.length > 1 && meIdx === 0) { const lead = rows[0].shown - rows[1].shown; chase = lead > 0 ? '🏆 You’re in the lead by ' + lead + ' pts' : '🤝 You’re tied for the lead with ' + esc(rows[1].nick); }
+  else if (rows.length > 1 && meIdx > 0) { const d = rows[meIdx - 1].shown - rows[meIdx].shown; chase = d > 0 ? '🎯 ' + d + ' pts behind ' + esc(rows[meIdx - 1].nick) : '🤝 Tied with ' + esc(rows[meIdx - 1].nick); }
+  else if (rows.length === 1) chase = '👋 Just you so far. Tap Invite to bring someone in.';
+  const medals = ['🥇', '🥈', '🥉'];
+  const list = rows.map((r, i) => {
+    const me = r.id === deviceId;
+    return `<div class="scoreboard-entry${me ? ' sb-you' : ''}"><span class="sb-rank">${medals[i] || '#' + (i + 1)}</span><div style="flex:1"><div class="sb-name">${esc(r.nick)}${me ? ' 👈 you' : ''}${r.streak >= 2 ? ' 🔥' + r.streak : ''}</div><div style="display:flex;gap:6px;align-items:center;margin-top:2px;"><span class="sb-species">${r.species || 0} species</span>${r.rangerIcon ? `<span class="sb-ranger">${esc(r.rangerIcon)} ${esc(r.rangerLevel || '')}</span>` : ''}${wk ? `<span class="sb-species">· ${Number(r.score) || 0} all-time</span>` : ''}</div></div><div class="sb-score">⭐ ${r.shown}</div></div>`;
+  }).join('');
+  el.innerHTML = `<div class="group-card"><div class="gc-top"><div><div class="gc-name">${esc(g.name)}</div><div class="gc-sub">${rows.length} player${rows.length === 1 ? '' : 's'}${groupPushErr ? ' · ⚠️ couldn’t update your score' : ''}</div></div><div class="code-pill sm" id="gCopy" title="Tap to copy the code">${esc(g.code)}</div></div><div class="gc-btns"><button class="btn btn-primary" id="gInv">📨 Invite</button><button class="btn btn-secondary" id="gLeave">Leave group</button></div></div>
+    <div class="seg"><button class="${wk ? 'on' : ''}" data-gm="week">This week</button><button class="${wk ? '' : 'on'}" data-gm="all">All-time</button></div>
+    <div class="g-reset">${wk ? 'Resets every Monday · ' + weekResetText() : 'Total points since each player started'}</div>
+    ${chase ? `<div class="g-chase">${chase}</div>` : ''}${list}`;
+  el.querySelectorAll('[data-gm]').forEach(b => { b.onclick = () => { groupMode = b.dataset.gm; renderGroupBoard(); }; });
+  document.getElementById('gCopy').onclick = () => { copyText(g.code); showToast('Code copied: ' + g.code, 'score', 1800); };
+  document.getElementById('gInv').onclick = () => sendInvite(g.code);
+  document.getElementById('gLeave').onclick = () => leaveGroup(g.code);
+}
+
+/* ── "show me on the global board" switch ── */
+function renderGlobalVis() {
+  const el = document.getElementById('globalVis'); if (el) el.checked = globalVisible;
+  const sub = document.getElementById('visSub');
+  if (sub) sub.textContent = (globalVisible ? 'Your score appears on the worldwide board and in your groups.' : 'Hidden from the worldwide board. Your groups can still see you.') + (TEST ? ' (Test version: nothing is ever sent to the real global board.)' : '');
+}
+function setGlobalVisible(v) { globalVisible = !!v; try { localStorage.setItem('wt_globalVisible', v ? '1' : '0'); } catch (e) {} renderGlobalVis(); pushScoreToFirebase(); }
+async function hideFromGlobal() {
+  if (TEST || !window._fbReady || !username) return;
+  try { const r = window._fbRef(window._db, 'scores/' + fbKey(username)), s = await window._fbGet(r); if (s.exists() && s.val().deviceId === deviceId) await window._fbSet(r, null); } catch (e) {}
+}
+
+/* ── the join / start window ── */
+function openGroupModal(mode) { gm = {mode: mode || 'join', busy: false, msg: '', msgOk: false, code: '', name: '', nick: ''}; renderGroupModal(); document.getElementById('groupOverlay').classList.add('open'); }
+function closeGroupModal() {
+  const was = gm; gm = null; document.getElementById('groupOverlay').classList.remove('open');
+  if (was && was.mode === 'done') { renderBoardTabs(); showBoardPane(); pushGroups(); }
+}
+function captureGm() { if (!gm) return; const v = id => { const e = document.getElementById(id); return e ? e.value : null; }; const c = v('gCode'), n = v('gName'), k = v('gNick'); if (c !== null) gm.code = c; if (n !== null) gm.name = n; if (k !== null) gm.nick = k; }
+function gmMsg(text, ok) { if (!gm) return; captureGm(); gm.msg = text; gm.msgOk = !!ok; renderGroupModal(); }
+function renderGroupModal() {
+  const b = document.getElementById('groupBody'); if (!b || !gm) return;
+  if (gm.mode === 'done') {
+    b.innerHTML = `<div class="g-done"><div class="g-done-ico">🎉</div><div class="g-done-title">${esc(gm.name)}</div><div class="g-done-sub">${gm.created ? 'Group created. Share this code with your people:' : 'You’re in!'}</div>${gm.created ? `<div class="code-pill" id="gCodeBig">${esc(gm.code)}</div>` : ''}<div class="btn-row" style="margin-top:14px">${gm.created ? '<button class="btn btn-primary" id="gInvite">📨 Send invite</button>' : ''}<button class="btn ${gm.created ? 'btn-secondary' : 'btn-primary'}" id="gDone">${gm.created ? 'Done' : 'See the board'}</button></div></div>`;
+    const inv = document.getElementById('gInvite'); if (inv) inv.onclick = () => sendInvite(gm.code);
+    const cb = document.getElementById('gCodeBig'); if (cb) cb.onclick = () => { copyText(gm.code); showToast('Code copied', 'score', 1500); };
+    document.getElementById('gDone').onclick = closeGroupModal;
+    return;
+  }
+  if (gm.mode === 'clash') {
+    const f = gm.found;
+    b.innerHTML = `<div class="g-clash"><strong>“${esc(gm.nick)}”</strong> is already a player in <strong>${esc(f.name)}</strong>.<br>Is that you, on another phone or app?</div>${gm.msg ? `<div class="g-msg">${esc(gm.msg)}</div>` : ''}<div class="btn-row" style="margin-top:12px"><button class="btn btn-primary" id="gYes" ${gm.busy ? 'disabled' : ''}>Yes, that’s me</button><button class="btn btn-secondary" id="gNo">No, pick another nickname</button></div><p class="g-note">“Yes” moves that player’s score to this device and removes the old entry.</p>`;
+    document.getElementById('gNo').onclick = () => { gm.mode = 'join'; gm.msg = ''; gm.found = null; renderGroupModal(); };
+    document.getElementById('gYes').onclick = async () => {
+      if (gm.busy) return; gm.busy = true; renderGroupModal();
+      try { const g = await joinGroup(gm.found, gm.nick.trim(), gm.found.clash.id); gm = {mode: 'done', code: g.code, name: g.name, created: false}; }
+      catch (e) { gm.busy = false; gm.msg = groupErrText(e); }
+      renderGroupModal();
+    };
+    return;
+  }
+  const join = gm.mode === 'join', busy = gm.busy ? 'disabled' : '';
+  b.innerHTML = `<div class="seg"><button class="${join ? 'on' : ''}" data-m="join">Join with a code</button><button class="${join ? '' : 'on'}" data-m="start">Start a group</button></div>
+    ${join ? `<label class="g-lbl" for="gCode">Group code</label><input class="g-in g-code" id="gCode" maxlength="24" placeholder="e.g. KOALA-472" value="${esc(gm.code)}" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false">`
+           : `<label class="g-lbl" for="gName">Group name</label><input class="g-in" id="gName" maxlength="30" placeholder="e.g. The Tuckers" value="${esc(gm.name)}" autocomplete="off" spellcheck="false">`}
+    <label class="g-lbl" for="gNick">Your nickname in this group</label><input class="g-in" id="gNick" maxlength="20" placeholder="e.g. Dad" value="${esc(gm.nick || suggestNick())}" autocomplete="off" autocapitalize="words" spellcheck="false">
+    ${gm.msg ? `<div class="g-msg${gm.msgOk ? ' ok' : ''}">${esc(gm.msg)}</div>` : ''}
+    <button class="btn btn-primary g-go" id="gGo" ${busy}>${join ? 'Join group' : 'Start group'}</button>
+    <p class="g-note">Groups share only your nickname, points, species count, streak and rank, never your location or photos. Please use a nickname rather than a full name.</p>`;
+  b.querySelectorAll('[data-m]').forEach(x => { x.onclick = () => { captureGm(); gm.mode = x.dataset.m; gm.msg = ''; renderGroupModal(); }; });
+  document.getElementById('gGo').onclick = gmGo;
+  b.querySelectorAll('.g-in').forEach(i => { i.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); i.blur(); gmGo(); } }; });
+}
+function suggestNick() { return String(username || '').slice(0, 20); }
+async function gmGo() {
+  if (!gm || gm.busy) return; captureGm();
+  const nick = (gm.nick || '').trim();
+  if (nick.length < 2) return gmMsg('Please enter a nickname (at least 2 letters).');
+  gm.busy = true; gmMsg('Working…', true);
+  try {
+    if (gm.mode === 'start') {
+      const name = (gm.name || '').trim();
+      if (name.length < 2) { gm.busy = false; return gmMsg('Please give the group a name.'); }
+      const g = await createGroup(name, nick); gm = {mode: 'done', code: g.code, name: g.name, created: true};
+    } else {
+      const found = await lookupGroup(gm.code, nick);
+      if (found.clash) { gm.mode = 'clash'; gm.found = found; gm.busy = false; gm.msg = ''; renderGroupModal(); return; }
+      const g = await joinGroup(found, nick, null); gm = {mode: 'done', code: g.code, name: g.name, created: false};
+    }
+    renderGroupModal();
+  } catch (e) { if (gm) { gm.busy = false; gmMsg(groupErrText(e)); } }
+}
+
 /* ═════════ LOG MODAL ═════════ */
 let pendingId = null, pendingPhoto = null, pendingLat = null, pendingLng = null, pendingChallenge = false;
 function openModal(id, isChallenge) {
@@ -1274,8 +1579,10 @@ function fbWrite(path, value) {
   catch (e) { boardError(e); return Promise.resolve(null); }
 }
 async function pushScoreToFirebase(force) {
-  if (TEST) return;
+  pushGroups();                      // groups are updated by the test version too (separate test area)
+  if (TEST) return;                  // ...but the real global board is never written by the test version
   if (!window._fbReady || !username) return;
+  if (!globalVisible) { hideFromGlobal(); return; }
   const key = fbKey(username); if (!key) return;
   const lv = getRangerLevel(state.totalScore);
   const rec = {name: username, score: state.totalScore, species: new Set(state.sightings.map(s => s.speciesId)).size, streak: getStreakData().streak, rangerLevel: lv.label, rangerIcon: lv.icon, deviceId, updatedAt: Date.now()};
@@ -1455,7 +1762,7 @@ function showTab(name) {
   document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   document.querySelectorAll('.bottom-nav button')[TAB_ORDER.indexOf(name)].classList.add('active');
-  if (name === 'scoreboard') initFirebaseListener(); if (name === 'map') renderMap(); if (name === 'stats') renderStats(true); if (name === 'journal') renderJournal(); if (name === 'badges') renderBadges();
+  if (name === 'scoreboard') onBoardTab(); if (name === 'map') renderMap(); if (name === 'stats') renderStats(true); if (name === 'journal') renderJournal(); if (name === 'badges') renderBadges();
   window.scrollTo(0, 0);
 }
 function renderAll() { renderSpecies(); renderJournal(); renderStats(false); renderBadges(); renderChallengeHero(); renderStreakBadge(false); renderRangerLevel(); renderCompletionNudge(); document.getElementById('headerScore').textContent = '⭐ ' + state.totalScore + ' pts'; }
@@ -1539,11 +1846,12 @@ async function afterFirebaseConnected() {
     if (await restoreIdentityFromFirebase()) { document.getElementById('usernameOverlay').classList.remove('open'); showToast('Welcome back, ' + username + '!', 'score'); updateUsernameDisplay(); saveIdentityToFirebase(); initFirebaseListener(); pushScoreToFirebase(); return; }
     if (!document.getElementById('usernameOverlay').classList.contains('open')) setTimeout(() => showUsernameModal(false), 300);
   } else { saveIdentityToFirebase(); initFirebaseListener(); pushScoreToFirebase(); }
+  try { if (document.getElementById('tab-scoreboard').classList.contains('active')) showBoardPane(); } catch (e) {}
 }
 // keeps the pinned search bar sitting exactly under the header, whatever the phone's notch/header height is
 function syncHeaderH() { const h = document.querySelector('.app-header'); if (h) document.documentElement.style.setProperty('--hdr-h', h.offsetHeight + 'px'); }
 (function init() {
-  loadLocalState(); loadCustom(); applyThemeClasses(); renderAll(); updateUsernameDisplay();
+  loadLocalState(); loadCustom(); loadGroups(); applyThemeClasses(); renderAll(); renderBoardTabs(); renderGlobalVis(); updateUsernameDisplay();
   syncHeaderH(); window.addEventListener('resize', syncHeaderH); window.addEventListener('orientationchange', syncHeaderH);
   if (window.ResizeObserver) new ResizeObserver(syncHeaderH).observe(document.querySelector('.app-header'));
   waitForFirebase(onFirebaseReady); loadAllPhotos(); initGyroGloss();
