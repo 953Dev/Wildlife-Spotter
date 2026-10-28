@@ -210,7 +210,7 @@ body.light .species-card.unspotted::after{background:radial-gradient(ellipse 60%
 .user-photo-preview{width:100%;max-height:115px;object-fit:cover;border-radius:8px;margin-bottom:8px;display:none;}
 .file-upload-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);padding:6px 11px;border-radius:8px;cursor:pointer;font-size:11px;width:100%;margin-bottom:8px;text-align:center;display:block;}
 .btn-gps{background:var(--surface2);color:#58a6ff;border:1px solid #1f6feb;font-size:11px;padding:6px 10px;border-radius:8px;cursor:pointer;width:100%;margin-bottom:8px;}
-.gps-display{font-size:10px;color:#58a6ff;margin-bottom:6px;display:none;}
+.gps-display{font-size:11px;color:#58a6ff;margin-bottom:8px;display:none;line-height:1.7;}
 .dynamic-info{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:11px;color:var(--text-muted);margin-bottom:8px;line-height:1.6;}
 .streak-notice{background:rgba(192,57,10,.12);border:1px solid rgba(192,57,10,.4);border-radius:8px;padding:6px 10px;font-size:11px;color:#e07050;margin-bottom:8px;display:none;}
 .btn-row{display:flex;gap:7px;margin-top:3px;}
@@ -346,6 +346,19 @@ body.light .species-card.unspotted::after{background:radial-gradient(ellipse 60%
 .g-done-title{font-size:20px;font-weight:800;margin-top:4px;}
 .g-done-sub{font-size:12px;color:var(--text-muted);margin:4px 0 12px;}
 .g-clash{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:13px;line-height:1.6;}
+.loc-row{display:flex;gap:7px;margin-bottom:8px;}
+.loc-row .btn-gps{margin-bottom:0;flex:1;padding:9px 6px;font-size:12px;}
+.loc-clear{background:none;border:1px solid #1f6feb;color:#58a6ff;border-radius:999px;font-size:10px;padding:1px 8px;cursor:pointer;margin-left:4px;font-family:inherit;}
+.loc-picker{display:none;position:fixed;inset:0;z-index:250;background:var(--bg);flex-direction:column;overscroll-behavior:contain;}
+.loc-picker.open{display:flex;}
+.lp-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;background:var(--header-bg);border-bottom:1px solid var(--border);}
+.lp-title{font-size:15px;font-weight:800;color:#f0e6d3;}
+.lp-sub{font-size:11px;color:#d8c4a4;margin-top:2px;line-height:1.5;}
+#locMap{flex:1;min-height:0;width:100%;background:var(--surface2);}
+.lp-foot{padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:var(--surface);border-top:1px solid var(--border);}
+.lp-coords{font-size:12px;color:var(--text-muted);margin-bottom:8px;text-align:center;font-family:ui-monospace,Menlo,Consolas,monospace;}
+.lp-coords.set{color:var(--text);}
+.lp-pin{font-size:32px;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,.55));}
 /* ═════════ MAP / BADGES ═════════ */
 #map{width:100%;height:430px;border-radius:10px;border:1px solid var(--border);}
 .map-legend{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:8px 11px;margin-bottom:9px;}
@@ -528,7 +541,7 @@ body.light .section-title{text-shadow:none;}
     <label>📷 Attach Your Photo</label>
     <label class="file-upload-btn" for="photoInput">Choose Photo / Take Picture</label>
     <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(event)">
-    <button class="btn-gps" onclick="getGPS()">📍 Tag GPS Location</button>
+    <div class="loc-row"><button type="button" class="btn-gps" onclick="getGPS()">📍 Use my GPS</button><button type="button" class="btn-gps" onclick="openLocPicker()">🗺️ Pick on map</button></div>
     <div class="gps-display" id="gpsDisplay"></div>
     <label>📝 Notes (optional)</label>
     <textarea id="notesInput" placeholder="Where did you spot it? Any interesting behaviour?"></textarea>
@@ -564,6 +577,17 @@ body.light .section-title{text-shadow:none;}
       <input type="search" id="inatInput" placeholder="e.g. bearded dragon" aria-label="Search all wildlife" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="search" oninput="onInatInput()" onkeydown="if(event.key==='Enter'){this.blur();const q=this.value.trim();if(q.length>=2)runInatSearch(q);}">
     </div>
     <div id="inatBody"></div>
+  </div>
+</div>
+<div class="loc-picker" id="locPicker" role="dialog" aria-label="Pick a location on the map">
+  <div class="lp-head">
+    <div style="min-width:0"><div class="lp-title">🗺️ Where did you see it?</div><div class="lp-sub">Tap the map to drop a pin. Drag the pin to fine-tune. Zoom in for accuracy.</div></div>
+    <button type="button" class="inat-x" onclick="closeLocPicker()" aria-label="Close">✕</button>
+  </div>
+  <div id="locMap"></div>
+  <div class="lp-foot">
+    <div class="lp-coords" id="lpCoords">No pin yet. Tap the map where you saw it.</div>
+    <div class="btn-row"><button type="button" class="btn btn-secondary" onclick="closeLocPicker()">Cancel</button><button type="button" class="btn btn-primary" id="lpUse" disabled onclick="useLocPick()">Use this location</button></div>
   </div>
 </div>
 <div id="reveal" aria-live="polite"></div>
@@ -1404,10 +1428,10 @@ async function gmGo() {
 }
 
 /* ═════════ LOG MODAL ═════════ */
-let pendingId = null, pendingPhoto = null, pendingLat = null, pendingLng = null, pendingChallenge = false;
+let pendingId = null, pendingPhoto = null, pendingLat = null, pendingLng = null, pendingChallenge = false, pendingLocSrc = null;
 function openModal(id, isChallenge) {
   const sp = SPECIES.find(s => s.id === id);
-  pendingId = id; pendingPhoto = pendingLat = pendingLng = null; pendingChallenge = !!isChallenge;
+  pendingId = id; pendingPhoto = pendingLat = pendingLng = null; pendingLocSrc = null; pendingChallenge = !!isChallenge;
   document.getElementById('modalTitle').textContent = sp.emoji + ' ' + sp.name + (isChallenge ? ' 📅' : '');
   document.getElementById('modalSci').textContent = sp.sci;
   document.getElementById('modalDynInfo').innerHTML = dynInfo(id, isChallenge);
@@ -1415,7 +1439,7 @@ function openModal(id, isChallenge) {
   if (pc) { ref.src = pc.url; ref.style.display = 'block'; document.getElementById('modalRefCredit').textContent = 'Photo: ' + pc.credit; } else { ref.style.display = 'none'; document.getElementById('modalRefCredit').textContent = ''; }
   document.getElementById('userPhotoPreview').style.display = 'none';
   document.getElementById('photoInput').value = ''; document.getElementById('notesInput').value = '';
-  document.getElementById('gpsDisplay').style.display = 'none';
+  showPendingLoc();
   const {streak} = getStreakData(), mult = getStreakMultiplier(streak), sn = document.getElementById('streakNotice');
   if (mult > 1) { sn.style.display = 'block'; sn.textContent = '🔥 ' + streak + '-day streak: ' + mult + 'x bonus!'; } else sn.style.display = 'none';
   document.getElementById('modalOverlay').classList.add('open');
@@ -1438,12 +1462,56 @@ function handlePhoto(e) {
   reader.readAsDataURL(file);
 }
 function getGPS() {
-  if (!navigator.geolocation) { showToast('Geolocation not supported', 'score'); return; }
+  if (!navigator.geolocation) { showToast('Geolocation not supported. Try “Pick on map” instead.', 'score', 3500); return; }
   navigator.geolocation.getCurrentPosition(pos => {
-    pendingLat = pos.coords.latitude.toFixed(6); pendingLng = pos.coords.longitude.toFixed(6);
-    const el = document.getElementById('gpsDisplay'); el.textContent = 'Location: ' + pendingLat + ', ' + pendingLng; el.style.display = 'block';
+    pendingLat = pos.coords.latitude.toFixed(6); pendingLng = pos.coords.longitude.toFixed(6); pendingLocSrc = 'gps';
+    showPendingLoc();
     showToast('Location captured!', 'score', 2000);
-  }, () => showToast('Could not get location', 'score'));
+  }, () => showToast('Could not get your location. Try “Pick on map” instead.', 'score', 3500));
+}
+
+/* ═════════ LOCATION: GPS, or pick it on the map afterwards ═════════ */
+const DEFAULT_CENTRE = [-34.9285, 138.6007];
+let locMap = null, locMarker = null, locPick = null;
+function showPendingLoc() {
+  const el = document.getElementById('gpsDisplay');
+  if (!pendingLat || !pendingLng) { el.style.display = 'none'; el.innerHTML = ''; return; }
+  el.innerHTML = (pendingLocSrc === 'manual' ? '🗺️ Picked on map: ' : '📍 GPS location: ') + esc(pendingLat) + ', ' + esc(pendingLng) + ' <button type="button" class="loc-clear" onclick="clearPendingLoc()">✕ Remove</button>';
+  el.style.display = 'block';
+}
+function clearPendingLoc() { pendingLat = pendingLng = null; pendingLocSrc = null; showPendingLoc(); }
+function lastKnownLoc() { const s = state.sightings.find(x => x.lat && x.lng); return s ? [parseFloat(s.lat), parseFloat(s.lng)] : null; }
+function setLocPick(lat, lng) {
+  lat = Math.max(-90, Math.min(90, lat)); locPick = {lat, lng};
+  if (!locMarker) {
+    locMarker = L.marker([lat, lng], {draggable: true, icon: L.divIcon({className: '', html: '<div class="lp-pin">📍</div>', iconSize: [34, 34], iconAnchor: [17, 32]})}).addTo(locMap);
+    locMarker.on('dragend', () => { const p = locMarker.getLatLng().wrap(); setLocPick(p.lat, p.lng); });
+  } else locMarker.setLatLng([lat, lng]);
+  const c = document.getElementById('lpCoords'); c.textContent = lat.toFixed(6) + ', ' + lng.toFixed(6); c.classList.add('set');
+  document.getElementById('lpUse').disabled = false;
+}
+function openLocPicker() {
+  if (typeof L === 'undefined') { showToast('The map couldn’t load. It needs an internet connection.', 'score', 3500); return; }
+  document.getElementById('locPicker').classList.add('open');
+  const has = pendingLat && pendingLng, past = has ? null : lastKnownLoc();
+  const centre = has ? [parseFloat(pendingLat), parseFloat(pendingLng)] : (past || DEFAULT_CENTRE), zoom = has ? 16 : (past ? 14 : 11);
+  if (!locMap) {
+    locMap = L.map('locMap').setView(centre, zoom);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '© OpenStreetMap contributors', maxZoom: 19}).addTo(locMap);
+    locMap.on('click', e => { const p = e.latlng.wrap(); setLocPick(p.lat, p.lng); });
+  } else { locMap.invalidateSize(); locMap.setView(centre, zoom); }
+  locPick = null;
+  if (locMarker) { locMarker.remove(); locMarker = null; }
+  const c = document.getElementById('lpCoords'); c.textContent = 'No pin yet. Tap the map where you saw it.'; c.classList.remove('set');
+  document.getElementById('lpUse').disabled = true;
+  if (has) setLocPick(centre[0], centre[1]);
+  setTimeout(() => { if (locMap) locMap.invalidateSize(); }, 150);
+}
+function closeLocPicker() { document.getElementById('locPicker').classList.remove('open'); }
+function useLocPick() {
+  if (!locPick) return;
+  pendingLat = locPick.lat.toFixed(6); pendingLng = locPick.lng.toFixed(6); pendingLocSrc = 'manual';
+  closeLocPicker(); showPendingLoc(); showToast('🗺️ Location set from the map', 'score', 2000);
 }
 function confirmLog() {
   if (!pendingId) return;
@@ -1451,7 +1519,7 @@ function confirmLog() {
   const isNew = !(state.globalSpotCounts[pendingId] > 0), oldStreak = getStreakData().streak;
   state.globalSpotCounts[pendingId] = (state.globalSpotCounts[pendingId] || 0) + 1;
   state.lastSightingDate[pendingId] = Date.now();
-  const ns = {id: Date.now(), speciesId: pendingId, ts: new Date().toISOString(), photo: pendingPhoto, lat: pendingLat, lng: pendingLng, notes: document.getElementById('notesInput').value.trim(), ptsEarned: pts, isChallenge: pendingChallenge};
+  const ns = {id: Date.now(), speciesId: pendingId, ts: new Date().toISOString(), photo: pendingPhoto, lat: pendingLat, lng: pendingLng, locSrc: pendingLat ? pendingLocSrc : null, notes: document.getElementById('notesInput').value.trim(), ptsEarned: pts, isChallenge: pendingChallenge};
   state.sightings.unshift(ns); state.totalScore += pts;
   const newStreak = recordStreakLog();
   saveLocalState();
@@ -1597,7 +1665,7 @@ function renderJournal() {
     const sp = SPECIES.find(x => x.id === s.speciesId); if (!sp) return '';
     const r = sp.rarity, pc = photoCache[sp.id], date = new Date(s.ts).toLocaleString('en-AU', {dateStyle:'medium', timeStyle:'short'});
     const thumb = s.photo ? `<img src="${s.photo}" class="j-thumb" alt="">` : pc ? `<img src="${pc.url}" class="j-thumb" alt="">` : `<div class="j-emoji">${sp.emoji}</div>`;
-    return `<div class="journal-entry">${thumb}<div style="flex:1"><div class="j-name">${sp.emoji} ${esc(sp.name)}${s.isChallenge ? ' 📅' : ''}</div><div class="j-time">${date}</div>${s.lat ? `<div class="j-coords" data-lat="${s.lat}" data-lng="${s.lng}">📍 ${s.lat}, ${s.lng}</div>` : ''}<div style="font-size:11px;color:${RARITY_COLORS[r]}">+${s.ptsEarned} pts · <span class="rarity-badge r-${r}">${RARITY_LABELS[r]}</span></div>${s.notes ? `<div class="j-notes">"${esc(s.notes)}"</div>` : ''}<div class="j-actions"><button class="share-btn" data-sid="${s.id}">${SHARE_SVG} Share</button></div></div></div>`;
+    return `<div class="journal-entry">${thumb}<div style="flex:1"><div class="j-name">${sp.emoji} ${esc(sp.name)}${s.isChallenge ? ' 📅' : ''}</div><div class="j-time">${date}</div>${s.lat ? `<div class="j-coords" data-lat="${s.lat}" data-lng="${s.lng}">📍 ${s.lat}, ${s.lng}${s.locSrc === 'manual' ? ' · picked on map' : ''}</div>` : ''}<div style="font-size:11px;color:${RARITY_COLORS[r]}">+${s.ptsEarned} pts · <span class="rarity-badge r-${r}">${RARITY_LABELS[r]}</span></div>${s.notes ? `<div class="j-notes">"${esc(s.notes)}"</div>` : ''}<div class="j-actions"><button class="share-btn" data-sid="${s.id}">${SHARE_SVG} Share</button></div></div></div>`;
   }).join('');
   el.querySelectorAll('.share-btn').forEach(b => b.onclick = () => { const s = state.sightings.find(x => x.id === Number(b.dataset.sid)); if (s) runShare(b, s); });
   el.querySelectorAll('.j-coords').forEach(c => c.onclick = () => jumpToMap(parseFloat(c.dataset.lat), parseFloat(c.dataset.lng)));
@@ -1637,7 +1705,7 @@ function renderMap() {
     const color = RARITY_COLORS[sp.rarity], pc = photoCache[sp.id];
     const icon = L.divIcon({className:'', html:`<div style="width:24px;height:24px;border-radius:50%;background:${color};border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;box-shadow:0 2px 5px rgba(0,0,0,.5)">${sp.emoji}</div>`, iconSize:[24,24], iconAnchor:[12,12]});
     const ph = s.photo ? `<img src="${s.photo}" style="width:100%;border-radius:5px;margin-top:5px">` : pc ? `<img src="${pc.url}" style="width:100%;border-radius:5px;margin-top:5px">` : '';
-    mapMarkers.push(L.marker([parseFloat(s.lat), parseFloat(s.lng)], {icon}).addTo(leafletMap).bindPopup(`<div style="min-width:140px"><strong>${sp.emoji} ${esc(sp.name)}</strong><br><small>${new Date(s.ts).toLocaleString('en-AU', {dateStyle:'short', timeStyle:'short'})}</small><br><span style="color:${color};font-weight:700">+${s.ptsEarned} pts</span>${ph}${s.notes ? `<p style="margin-top:4px;font-style:italic;font-size:11px">${esc(s.notes)}</p>` : ''}</div>`));
+    mapMarkers.push(L.marker([parseFloat(s.lat), parseFloat(s.lng)], {icon}).addTo(leafletMap).bindPopup(`<div style="min-width:140px"><strong>${sp.emoji} ${esc(sp.name)}</strong><br><small>${new Date(s.ts).toLocaleString('en-AU', {dateStyle:'short', timeStyle:'short'})}</small><br><span style="color:${color};font-weight:700">+${s.ptsEarned} pts</span>${s.locSrc === 'manual' ? '<br><small>🗺️ picked on map</small>' : ''}${ph}${s.notes ? `<p style="margin-top:4px;font-style:italic;font-size:11px">${esc(s.notes)}</p>` : ''}</div>`));
   });
   if (mapMarkers.length) leafletMap.fitBounds(L.featureGroup(mapMarkers).getBounds().pad(0.2));
   const noGPS = state.sightings.filter(s => !s.lat && !s.lng);
@@ -1666,7 +1734,7 @@ const BADGES = [
   {id:'all_mammals',icon:'🦘',name:'Mammal Tracker',desc:'Spot all Mammal species'},
   {id:'all_marine',icon:'🐋',name:'Marine Biologist',desc:'Spot all Marine species'},
   {id:'photographer',icon:'📸',name:'Wildlife Photographer',desc:'Log a sighting with a photo'},
-  {id:'cartographer',icon:'🗺️',name:'Field Cartographer',desc:'Log a sighting with GPS'},
+  {id:'cartographer',icon:'🗺️',name:'Field Cartographer',desc:'Log a sighting with a location'},
   {id:'ten_sightings',icon:'📓',name:'Dedicated',desc:'Log 10 total sightings'},
   {id:'challenge_1',icon:'📅',name:'Daily Challenger',desc:'Complete a daily challenge'},
   {id:'challenge_7',icon:'🗓️',name:'Week Warrior',desc:'Complete 7 daily challenges'},
