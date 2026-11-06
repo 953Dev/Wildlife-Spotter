@@ -2196,6 +2196,17 @@ body.light .t-name{text-shadow:0 1px 2px rgba(255,255,255,.7)}
   .t-log{display:block;margin:11px 13px 13px;padding:8px 10px;text-align:center;border-radius:9px;background:var(--accent);color:#fff;font-size:12px;font-weight:700;transition:filter .15s}
   .t-log:hover{filter:brightness(1.12)}
 }
+
+/* ═════════ MOCK-UP: shine that follows the tilt of the phone / the mouse (same effect as the main version) ═════════ */
+.t-star{z-index:1}
+.tile.unspotted .t-img::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(ellipse 70% 50% at var(--gx,50%) var(--gy,30%),rgba(255,255,255,.22) 0%,transparent 70%)}
+body.light .tile.unspotted .t-img::after{background:radial-gradient(ellipse 70% 50% at var(--gx,50%) var(--gy,30%),rgba(255,255,255,.5) 0%,transparent 70%)}
+@media (min-width:900px){
+  .tile{position:relative}
+  .tile.unspotted .t-img::after{display:none}
+  .tile.unspotted::after{content:'';position:absolute;inset:0;border-radius:16px;pointer-events:none;background:radial-gradient(ellipse 60% 40% at var(--gx,50%) var(--gy,30%),rgba(255,255,255,.13) 0%,transparent 70%)}
+  body.light .tile.unspotted::after{background:radial-gradient(ellipse 60% 40% at var(--gx,50%) var(--gy,30%),rgba(255,255,255,.45) 0%,transparent 70%)}
+}
 </style>
 <script>
 (function(){
@@ -2242,7 +2253,7 @@ body.light .t-name{text-shadow:0 1px 2px rgba(255,255,255,.7)}
       g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><div class="icon">\uD83D\uDD0D</div><p>No animals match \u201c'+esc(raw.trim())+'\u201d</p><button class="btn btn-secondary" onclick="clearSearch(true)">Clear search</button>'+(typeof inatCta==='function'?inatCta(raw.trim()):'')+'</div>';return;}
     var seen=new Set(state.sightings.map(function(s){return s.speciesId;}));
     g.innerHTML=list.map(function(sp){var pc=photoCache[sp.id],ch=sp.id===chId;
-      return '<button class="tile" data-id="'+esc(sp.id)+'" style="--rc:'+RARITY_COLORS[sp.rarity]+'" aria-label="'+esc(sp.name)+'"><div class="t-img">'+(pc?'<img src="'+esc(pc.url)+'" alt="" loading="lazy">':'<div class="t-emoji">'+sp.emoji+'</div>')+(seen.has(sp.id)?'<span class="t-chk">\u2713</span>':'')+(ch?'<span class="t-star">\u2B50</span>':'')+'</div><div class="t-name">'+esc(sp.name)+'</div><div class="t-extra"><span class="rarity-badge r-'+sp.rarity+'">'+RARITY_LABELS[sp.rarity]+'</span><span class="pts-badge pts-'+sp.rarity+'">'+currentPts(sp.id,ch)+' pts'+(ch?' \u2B50':'')+'</span></div><span class="t-log" role="button" tabindex="0">\uD83D\uDCCD Log sighting</span></button>';
+      return '<button class="tile'+(seen.has(sp.id)?'':' unspotted')+'" data-id="'+esc(sp.id)+'" style="--rc:'+RARITY_COLORS[sp.rarity]+'" aria-label="'+esc(sp.name)+'"><div class="t-img">'+(pc?'<img src="'+esc(pc.url)+'" alt="" loading="lazy">':'<div class="t-emoji">'+sp.emoji+'</div>')+(seen.has(sp.id)?'<span class="t-chk">\u2713</span>':'')+(ch?'<span class="t-star">\u2B50</span>':'')+'</div><div class="t-name">'+esc(sp.name)+'</div><div class="t-extra"><span class="rarity-badge r-'+sp.rarity+'">'+RARITY_LABELS[sp.rarity]+'</span><span class="pts-badge pts-'+sp.rarity+'">'+currentPts(sp.id,ch)+' pts'+(ch?' \u2B50':'')+'</span></div><span class="t-log" role="button" tabindex="0">\uD83D\uDCCD Log sighting</span></button>';
     }).join('');
     g.onclick=function(e){var t=e.target.closest('.tile');if(!t)return;if(e.target.closest('.t-log')){var id=t.dataset.id;openModal(id,id===getTodayChallenge().id);return;}openTilePop(t.dataset.id);};
   };
