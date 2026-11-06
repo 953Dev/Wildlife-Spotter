@@ -608,25 +608,32 @@ body.light .section-title{text-shadow:none;}
 </nav>
 
 <div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <h2 id="modalTitle"></h2>
-    <div class="sci" id="modalSci"></div>
-    <img id="modalRefPhoto" class="modal-ref-photo" alt="">
-    <div class="modal-ref-credit" id="modalRefCredit"></div>
-    <div class="streak-notice" id="streakNotice"></div>
-    <div class="dynamic-info" id="modalDynInfo"></div>
-    <img id="userPhotoPreview" class="user-photo-preview" alt="">
-    <label>📷 Attach Your Photo</label>
-    <label class="file-upload-btn" for="photoInput">Choose Photo / Take Picture</label>
-    <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(event)">
-    <div class="loc-row"><button type="button" class="btn-gps" onclick="getGPS()">📍 Use my GPS</button><button type="button" class="btn-gps" onclick="openLocPicker()">🗺️ Pick on map</button></div>
-    <div class="gps-display" id="gpsDisplay"></div>
-    <label>📝 Notes (optional)</label>
-    <textarea id="notesInput" placeholder="Where did you spot it? Any interesting behaviour?"></textarea>
-    <div class="btn-row">
-      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" id="logConfirmBtn" onclick="confirmLog()">✅ Log Sighting</button>
+  <div class="modal log-modal" role="dialog" aria-labelledby="modalTitle">
+    <button type="button" class="lg-x" onclick="closeModal()" aria-label="Close">✕</button>
+    <div class="lg-head">
+      <div class="lg-thumbbox"><img id="modalRefPhoto" class="lg-thumb" alt=""><span id="lgEmoji" class="lg-emoji"></span></div>
+      <div class="lg-headtxt">
+        <h2 id="modalTitle"></h2>
+        <div class="sci" id="modalSci"></div>
+        <div class="lg-pts"><span class="lg-ptsnum" id="lgPts"></span><span id="lgTags" class="lg-tags"></span></div>
+      </div>
     </div>
+    <div class="modal-ref-credit" id="modalRefCredit"></div>
+    <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(event)">
+    <div class="lg-actions">
+      <button type="button" class="lg-act" id="lgPhotoBtn" onclick="document.getElementById('photoInput').click()">
+        <img id="userPhotoPreview" class="lg-pthumb" alt="">
+        <span class="lg-ico">📷</span><span class="lg-lbl" id="lgPhotoLbl">Add photo</span>
+      </button>
+      <button type="button" class="lg-act" id="lgLocBtn" onclick="locPrimary()">
+        <span class="lg-ico" id="lgLocIco">📍</span><span class="lg-lbl" id="lgLocLbl">Add location</span>
+      </button>
+    </div>
+    <div class="lg-sub"><div id="lgPhotoSub"></div><div><button type="button" class="lg-link" id="lgLocAlt" onclick="locAlt()"></button></div></div>
+    <div class="gps-display" id="gpsDisplay"></div>
+    <button type="button" class="lg-link lg-note" id="noteToggle" onclick="toggleNote()">＋ Add a note</button>
+    <textarea id="notesInput" placeholder="Where did you spot it? Anything interesting?" style="display:none"></textarea>
+    <button type="button" class="btn btn-primary lg-go" id="logConfirmBtn" onclick="confirmLog()">✅ Log it</button>
   </div>
 </div>
 
@@ -673,6 +680,7 @@ body.light .section-title{text-shadow:none;}
   <div class="bd-body" id="bdBody"></div>
 </div>
 <div id="reveal" aria-live="polite"></div>
+<canvas id="leafCanvas" aria-hidden="true"></canvas>
 <canvas id="celebCanvas"></canvas>
 <div class="toast-container" id="toastContainer"></div>
 
@@ -1697,16 +1705,16 @@ let pendingId = null, pendingPhoto = null, pendingLat = null, pendingLng = null,
 function openModal(id, isChallenge) {
   const sp = SPECIES.find(s => s.id === id);
   pendingId = id; pendingPhoto = pendingLat = pendingLng = null; pendingLocSrc = null; pendingChallenge = !!isChallenge;
-  document.getElementById('modalTitle').textContent = sp.emoji + ' ' + sp.name + (isChallenge ? ' 📅' : '');
+  document.getElementById('modalTitle').textContent = sp.name;
   document.getElementById('modalSci').textContent = sp.sci;
-  document.getElementById('modalDynInfo').innerHTML = dynInfo(id, isChallenge);
-  const pc = photoCache[id], ref = document.getElementById('modalRefPhoto');
-  if (pc) { ref.src = pc.url; ref.style.display = 'block'; document.getElementById('modalRefCredit').textContent = 'Photo: ' + pc.credit; } else { ref.style.display = 'none'; document.getElementById('modalRefCredit').textContent = ''; }
-  document.getElementById('userPhotoPreview').style.display = 'none';
-  document.getElementById('photoInput').value = ''; document.getElementById('notesInput').value = '';
-  showPendingLoc();
-  const {streak} = getStreakData(), mult = getStreakMultiplier(streak), sn = document.getElementById('streakNotice');
-  if (mult > 1) { sn.style.display = 'block'; sn.textContent = '🔥 ' + streak + '-day streak: ' + mult + 'x bonus!'; } else sn.style.display = 'none';
+  const pts = currentPts(id, isChallenge), mult = getStreakMultiplier(getStreakData().streak);
+  document.getElementById('lgPts').textContent = '+' + pts + ' pts';
+  document.getElementById('lgTags').innerHTML = (isChallenge ? '<span class="lg-tag">⭐ Daily challenge 2x</span>' : '') + (mult > 1 ? '<span class="lg-tag hot">🔥 ' + mult + 'x streak</span>' : '');
+  const pc = photoCache[id], ref = document.getElementById('modalRefPhoto'), em = document.getElementById('lgEmoji'), cr = document.getElementById('modalRefCredit');
+  if (pc) { ref.src = pc.url; ref.style.display = 'block'; em.style.display = 'none'; cr.textContent = 'Photo: ' + pc.credit; cr.style.display = 'block'; }
+  else { ref.removeAttribute('src'); ref.style.display = 'none'; em.textContent = sp.emoji; em.style.display = 'block'; cr.textContent = ''; cr.style.display = 'none'; }
+  document.getElementById('photoInput').value = ''; document.getElementById('notesInput').value = ''; setNoteOpen(false);
+  showPendingLoc();   // also refreshes the photo and location buttons
   document.getElementById('modalOverlay').classList.add('open');
 }
 function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); pendingId = null; }
@@ -1720,7 +1728,7 @@ function handlePhoto(e) {
       if (w > h && w > MAX) { h = h * MAX / w; w = MAX; } else if (h > MAX) { w = w * MAX / h; h = MAX; }
       c.width = w; c.height = h; c.getContext('2d').drawImage(img, 0, 0, w, h);
       pendingPhoto = c.toDataURL('image/jpeg', 0.75);
-      const pv = document.getElementById('userPhotoPreview'); pv.src = pendingPhoto; pv.style.display = 'block';
+      syncLogButtons();
     };
     img.src = ev.target.result;
   };
@@ -1729,7 +1737,7 @@ function handlePhoto(e) {
 function getGPS() {
   if (!navigator.geolocation) { showToast('Geolocation not supported. Try “Pick on map” instead.', 'score', 3500); return; }
   navigator.geolocation.getCurrentPosition(pos => {
-    pendingLat = pos.coords.latitude.toFixed(6); pendingLng = pos.coords.longitude.toFixed(6); pendingLocSrc = 'gps';
+    pendingLat = pos.coords.latitude.toFixed(6); pendingLng = pos.coords.longitude.toFixed(6); pendingLocSrc = 'gps'; setLocMethod('gps');
     showPendingLoc();
     showToast('Location captured!', 'score', 2000);
   }, () => showToast('Could not get your location. Try “Pick on map” instead.', 'score', 3500));
@@ -1740,9 +1748,9 @@ const DEFAULT_CENTRE = [-34.9285, 138.6007];
 let locMap = null, locMarker = null, locPick = null;
 function showPendingLoc() {
   const el = document.getElementById('gpsDisplay');
-  if (!pendingLat || !pendingLng) { el.style.display = 'none'; el.innerHTML = ''; return; }
-  el.innerHTML = (pendingLocSrc === 'manual' ? '🗺️ Picked on map: ' : '📍 GPS location: ') + esc(pendingLat) + ', ' + esc(pendingLng) + ' <button type="button" class="loc-clear" onclick="clearPendingLoc()">✕ Remove</button>';
-  el.style.display = 'block';
+  if (!pendingLat || !pendingLng) { el.style.display = 'none'; el.innerHTML = ''; }
+  else { el.innerHTML = (pendingLocSrc === 'manual' ? '🗺️ Pinned on the map' : '📍 Using your GPS location') + ' <button type="button" class="loc-clear" onclick="clearPendingLoc()">✕ Remove</button>'; el.style.display = 'block'; }
+  syncLogButtons();
 }
 function clearPendingLoc() { pendingLat = pendingLng = null; pendingLocSrc = null; showPendingLoc(); }
 function lastKnownLoc() { const s = state.sightings.find(x => x.lat && x.lng); return s ? [parseFloat(s.lat), parseFloat(s.lng)] : null; }
@@ -1775,7 +1783,7 @@ function openLocPicker() {
 function closeLocPicker() { document.getElementById('locPicker').classList.remove('open'); }
 function useLocPick() {
   if (!locPick) return;
-  pendingLat = locPick.lat.toFixed(6); pendingLng = locPick.lng.toFixed(6); pendingLocSrc = 'manual';
+  pendingLat = locPick.lat.toFixed(6); pendingLng = locPick.lng.toFixed(6); pendingLocSrc = 'manual'; setLocMethod('map');
   closeLocPicker(); showPendingLoc(); showToast('🗺️ Location set from the map', 'score', 2000);
 }
 function confirmLog() {
@@ -1790,7 +1798,7 @@ function confirmLog() {
   saveLocalState();
   const hp = {common:[30], uncommon:[30,20,30], rare:[50,20,50,20,50], 'very-rare':[80,20,80,20,80,20,80], legendary:[100,30,100,30,100,30,100,30,100]};
   haptic(hp[sp.rarity] || [30]); playLogSound(sp.rarity);
-  const btn = document.getElementById('logConfirmBtn'); if (btn && !isNew) { const r = btn.getBoundingClientRect(); triggerBurst(r.left + r.width/2, r.top + r.height/2, sp.rarity); }
+  const btn = document.getElementById('logConfirmBtn'); if (btn) { const r = btn.getBoundingClientRect(), cx = r.left + r.width/2, cy = r.top + r.height/2; if (!isNew) triggerBurst(cx, cy, sp.rarity); leafShower(sp.rarity, cx, cy); }
   closeModal();
   resetSearchField();            // search box is emptied after every logged sighting, ready for the next one
   if (isNew) revealOpen = true;   // hold toasts until the reveal is dismissed
@@ -1802,6 +1810,78 @@ function confirmLog() {
   const toast = () => showSightingToast(ns, sp, pts, newStreak);
   if (isNew) { showReveal(sp, ns, toast); if (celeb) setTimeout(() => flockCelebration(celeb), 800); }
   else { toast(); if (celeb) flockCelebration(celeb); }
+}
+
+/* ═════════ SIMPLER LOG WINDOW: photo + location up front, notes tucked away ═════════ */
+function getLocMethod() { try { return localStorage.getItem('mk_locMethod') === 'map' ? 'map' : 'gps'; } catch (e) { return 'gps'; } }
+function setLocMethod(m) { try { localStorage.setItem('mk_locMethod', m); } catch (e) {} }
+function locPrimary() { if (getLocMethod() === 'map') openLocPicker(); else getGPS(); }   // the button does whatever you used last time
+function locAlt() { if (getLocMethod() === 'map') getGPS(); else openLocPicker(); }       // the small link offers the other way
+function clearPhoto() { pendingPhoto = null; document.getElementById('photoInput').value = ''; syncLogButtons(); }
+function setNoteOpen(open) { document.getElementById('notesInput').style.display = open ? 'block' : 'none'; document.getElementById('noteToggle').style.display = open ? 'none' : 'block'; }
+function toggleNote() { setNoteOpen(true); document.getElementById('notesInput').focus(); }
+function syncLogButtons() {
+  const hasPhoto = !!pendingPhoto, hasLoc = !!(pendingLat && pendingLng), method = getLocMethod();
+  const pv = document.getElementById('userPhotoPreview');
+  document.getElementById('lgPhotoBtn').classList.toggle('has', hasPhoto);
+  if (hasPhoto) { pv.src = pendingPhoto; pv.style.display = 'block'; } else { pv.removeAttribute('src'); pv.style.display = 'none'; }
+  document.getElementById('lgPhotoLbl').textContent = hasPhoto ? 'Photo added ✓' : 'Add photo';
+  document.getElementById('lgPhotoSub').innerHTML = hasPhoto ? '<button type="button" class="lg-link" onclick="clearPhoto()">✕ Remove photo</button>' : '';
+  document.getElementById('lgLocBtn').classList.toggle('has', hasLoc);
+  document.getElementById('lgLocIco').textContent = hasLoc ? (pendingLocSrc === 'manual' ? '🗺️' : '📍') : (method === 'map' ? '🗺️' : '📍');
+  document.getElementById('lgLocLbl').textContent = hasLoc ? (pendingLocSrc === 'manual' ? 'Pinned on map ✓' : 'Location added ✓') : 'Add location';
+  document.getElementById('lgLocAlt').textContent = method === 'map' ? '📍 Use my GPS instead' : '🗺️ Pick on map instead';
+}
+
+/* ═════════ GUM LEAF SHOWER: falls on every logged sighting (bigger for rarer finds) ═════════ */
+const LEAF_COUNT = {common: 50, uncommon: 65, rare: 85, 'very-rare': 110, legendary: 150};
+const LEAF_COLS = [['#82b58a', '#5a9262', 24], ['#9fc7a2', '#6f9d75', 22], ['#6cab77', '#488857', 22], ['#b6cc9c', '#8ca874', 16], ['#92b862', '#6a8d46', 14], ['#d9c862', '#a99a3c', 3], ['#c97a46', '#9a5528', 3]];
+let leaves = [], leafRaf = 0, leafLast = 0, leafW = 0, leafH = 0;
+function pickLeafCol() { let r = Math.random() * 104, i = 0; while (i < LEAF_COLS.length - 1 && r >= LEAF_COLS[i][2]) { r -= LEAF_COLS[i][2]; i++; } return LEAF_COLS[i]; }
+function leafShower(rarity, ox, oy) {
+  if (REDUCE) return;
+  const cv = document.getElementById('leafCanvas'); if (!cv) return;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  if (!leaves.length) { leafW = window.innerWidth; leafH = window.innerHeight; cv.width = leafW * dpr; cv.height = leafH * dpr; }
+  const r = (a, b) => a + Math.random() * (b - a), n = LEAF_COUNT[rarity] || 34, nBurst = Math.round(n * 0.35), wind = r(-45, 45), now = performance.now();
+  if (typeof ox !== 'number') { ox = leafW / 2; oy = leafH * 0.8; }
+  for (let i = 0; i < n; i++) {
+    const burst = i < nBurst, col = pickLeafCol(), ang = -Math.PI / 2 + r(-0.5, 0.5) * Math.PI * 0.95, sp = r(380, 780);
+    leaves.push({
+      t0: now + (burst ? 0 : r(0, 1000)), x: burst ? ox : r(0, leafW), y: burst ? oy : -r(20, 50),
+      vx: burst ? Math.cos(ang) * sp : r(-40, 40), vy: burst ? Math.sin(ang) * sp : r(60, 160),
+      vt: r(210, 360), drift: wind + r(-25, 25), sf: r(1.6, 3.4), sa: r(40, 110), sp: r(0, 6.28),
+      rot: r(0, 6.28), vr: r(1, 3.2) * (Math.random() < 0.5 ? -1 : 1), fp: r(0, 6.28), vf: r(3, 7), L: r(20, 34), f: col[0], b: col[1]
+    });
+  }
+  if (!leafRaf) { leafLast = now; leafRaf = requestAnimationFrame(leafFrame); }
+}
+function leafFrame(now) {
+  const cv = document.getElementById('leafCanvas'), ctx = cv.getContext('2d'), dpr = Math.min(window.devicePixelRatio || 1, 2), k = 2.4;
+  const dt = Math.min(0.05, (now - leafLast) / 1000); leafLast = now;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, leafW, leafH);
+  const alive = [];
+  for (const l of leaves) {
+    if (now < l.t0) { alive.push(l); continue; }
+    l.vy += (l.vt - l.vy) * k * dt;
+    l.vx += (Math.cos(now * 0.001 * l.sf + l.sp) * l.sa + l.drift - l.vx) * k * dt;
+    l.x += l.vx * dt; l.y += l.vy * dt; l.rot += l.vr * dt; l.fp += l.vf * dt;
+    if (l.y > leafH + 40 || now - l.t0 > 9000) continue;
+    alive.push(l);
+    const fx = Math.cos(l.fp), L = l.L, w = L * 0.17;
+    ctx.save(); ctx.translate(l.x, l.y); ctx.rotate(l.rot); ctx.scale(Math.max(0.14, Math.abs(fx)), 1);
+    ctx.fillStyle = fx >= 0 ? l.f : l.b;
+    ctx.beginPath(); ctx.moveTo(0, -L / 2);
+    ctx.bezierCurveTo(w * 1.7, -L * 0.30, w * 1.3, L * 0.20, L * 0.07, L / 2);
+    ctx.bezierCurveTo(-w * 0.55, L * 0.22, -w * 1.5, -L * 0.24, 0, -L / 2);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = 'rgba(15,30,20,.38)'; ctx.lineWidth = 0.9; ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,.34)'; ctx.lineWidth = Math.max(0.8, L * 0.04);
+    ctx.beginPath(); ctx.moveTo(0, -L / 2 + L * 0.06); ctx.quadraticCurveTo(L * 0.04, 0, L * 0.06, L / 2 - L * 0.02); ctx.stroke();
+    ctx.restore();
+  }
+  leaves = alive;
+  if (leaves.length) leafRaf = requestAnimationFrame(leafFrame); else { leafRaf = 0; ctx.clearRect(0, 0, leafW, leafH); }
 }
 
 /* ═════════ TOASTS ═════════ */
@@ -2197,7 +2277,7 @@ body.light .t-name{text-shadow:0 1px 2px rgba(255,255,255,.7)}
   .t-log:hover{filter:brightness(1.12)}
 }
 
-/* ═════════ MOCK-UP: shine that follows the tilt of the phone / the mouse (same effect as the main version) ═════════ */
+/* ═════════ MOCK-UP: shine that follows the tilt of the phone / the mouse ═════════ */
 .t-star{z-index:1}
 .tile.unspotted .t-img::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(ellipse 70% 50% at var(--gx,50%) var(--gy,30%),rgba(255,255,255,.22) 0%,transparent 70%)}
 body.light .tile.unspotted .t-img::after{background:radial-gradient(ellipse 70% 50% at var(--gx,50%) var(--gy,30%),rgba(255,255,255,.5) 0%,transparent 70%)}
@@ -2207,6 +2287,39 @@ body.light .tile.unspotted .t-img::after{background:radial-gradient(ellipse 70% 
   .tile.unspotted::after{content:'';position:absolute;inset:0;border-radius:16px;pointer-events:none;background:radial-gradient(ellipse 60% 40% at var(--gx,50%) var(--gy,30%),rgba(255,255,255,.13) 0%,transparent 70%)}
   body.light .tile.unspotted::after{background:radial-gradient(ellipse 60% 40% at var(--gx,50%) var(--gy,30%),rgba(255,255,255,.45) 0%,transparent 70%)}
 }
+
+/* ═════════ MOCK-UP: simpler log window ═════════ */
+#leafCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9650;}
+.log-modal{position:relative;padding:18px 18px 16px;max-width:400px}
+.lg-x{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);color:var(--text-muted);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;padding:0}
+.lg-head{display:flex;gap:12px;align-items:center;padding-right:34px;margin-bottom:6px}
+.lg-thumbbox{width:64px;height:64px;border-radius:14px;overflow:hidden;flex-shrink:0;background:var(--surface2);display:flex;align-items:center;justify-content:center}
+.lg-thumb{width:100%;height:100%;object-fit:cover;display:none}
+.lg-emoji{font-size:30px}
+.lg-headtxt{min-width:0}
+.log-modal h2{font-size:17px;line-height:1.25;margin:0 0 2px}
+.log-modal .sci{margin-bottom:6px}
+.lg-pts{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.lg-tags{display:contents}
+.lg-ptsnum{font-size:15px;font-weight:800;color:var(--accent)}
+.lg-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--surface2);border:1px solid var(--border);color:var(--text)}
+.lg-tag.hot{border-color:rgba(224,112,80,.55);color:#e07050}
+.log-modal .modal-ref-credit{text-align:left;margin:0 0 10px;font-size:9px;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lg-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.lg-act{min-height:78px;border-radius:14px;background:var(--surface2);border:1.5px solid var(--border);color:var(--text);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:10px 6px;cursor:pointer;font-family:inherit;transition:transform .12s,border-color .15s,background .15s}
+.lg-act:active{transform:scale(.97)}
+.lg-act.has{border-color:#3fa66b;background:rgba(63,166,107,.15)}
+.lg-ico{font-size:25px;line-height:1}
+.lg-lbl{font-size:13px;font-weight:700}
+.lg-pthumb{width:36px;height:36px;object-fit:cover;border-radius:9px;display:none}
+#lgPhotoBtn.has .lg-ico{display:none}
+.lg-sub{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;min-height:20px}
+.lg-sub>div{text-align:center}
+.lg-link{background:none;border:none;color:var(--text-muted);font-size:11px;font-family:inherit;cursor:pointer;padding:4px 2px;text-decoration:underline;text-underline-offset:2px}
+.log-modal .gps-display{margin:6px 0 0;font-size:12px;color:var(--text-muted);text-align:center}
+.lg-note{display:block;margin:8px auto 0;font-size:12px}
+.log-modal textarea{margin:8px 0 0}
+.lg-go{display:block;width:100%;margin-top:14px;padding:15px 14px;font-size:16px;font-weight:800;border-radius:14px}
 </style>
 <script>
 (function(){
