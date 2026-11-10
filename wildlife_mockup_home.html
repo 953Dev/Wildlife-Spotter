@@ -750,59 +750,104 @@ const SPECIES = [
   {id:'kookaburra',name:'Laughing Kookaburra',sci:'Dacelo novaeguineae',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5,inatId:2413},
   {id:'galah',name:'Galah',sci:'Eolophus roseicapilla',cat:'bird',emoji:'🦜',rarity:'common',maxPts:5,inatId:144560},
   {id:'magpie',name:'Australian Magpie',sci:'Gymnorhina tibicen',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5,inatId:8575},
-  {id:'wagtail',name:'Willie Wagtail',sci:'Rhipidura leucophrys',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5,inatId:8143},
   {id:'lorikeet',name:'Rainbow Lorikeet',sci:'Trichoglossus moluccanus',cat:'bird',emoji:'🦜',rarity:'common',maxPts:5,inatId:980095},
+  {id:'wagtail',name:'Willie Wagtail',sci:'Rhipidura leucophrys',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5,inatId:8143},
+  {id:'magpielark',name:'Magpie-lark',sci:'Grallina cyanoleuca',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5},
+  {id:'noisy_miner',name:'Noisy Miner',sci:'Manorina melanocephala',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5},
+  {id:'nh_honeyeater',name:'New Holland Honeyeater',sci:'Phylidonyris novaehollandiae',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5},
+  {id:'red_wattlebird',name:'Red Wattlebird',sci:'Anthochaera carunculata',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5},
+  {id:'silvereye',name:'Silvereye',sci:'Zosterops lateralis',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5},
+  {id:'welcome_swallow',name:'Welcome Swallow',sci:'Hirundo neoxena',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5},
+  {id:'rosella',name:'Adelaide Rosella',sci:'Platycercus elegans',cat:'bird',emoji:'🦜',rarity:'common',maxPts:5,inatId:18921},
   {id:'corella',name:'Little Corella',sci:'Cacatua sanguinea',cat:'bird',emoji:'🦅',rarity:'common',maxPts:5,inatId:116838},
   {id:'raven',name:'Australian Raven',sci:'Corvus coronoides',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5,inatId:8040},
   {id:'ibis',name:'Australian White Ibis',sci:'Threskiornis molucca',cat:'bird',emoji:'🦢',rarity:'common',maxPts:5,inatId:3740},
+  {id:'silver_gull',name:'Silver Gull',sci:'Chroicocephalus novaehollandiae',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5},
+  {id:'masked_lapwing',name:'Masked Lapwing',sci:'Vanellus miles',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5},
+  {id:'wood_duck',name:'Australian Wood Duck',sci:'Chenonetta jubata',cat:'bird',emoji:'🦆',rarity:'common',maxPts:5},
+  {id:'black_duck',name:'Pacific Black Duck',sci:'Anas superciliosa',cat:'bird',emoji:'🦆',rarity:'common',maxPts:5},
+  {id:'black_swan',name:'Black Swan',sci:'Cygnus atratus',cat:'bird',emoji:'🦢',rarity:'common',maxPts:5},
   {id:'pelican',name:'Australian Pelican',sci:'Pelecanus conspicillatus',cat:'bird',emoji:'🦢',rarity:'common',maxPts:5,inatId:4326},
-  {id:'emu',name:'Emu',sci:'Dromaius novaehollandiae',cat:'bird',emoji:'🦤',rarity:'common',maxPts:5,inatId:20504},
+  {id:'feral_pigeon',name:'Feral Pigeon',sci:'Columba livia',cat:'bird',emoji:'🕊️',rarity:'common',maxPts:5,intro:true},
+  {id:'house_sparrow',name:'House Sparrow',sci:'Passer domesticus',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5,intro:true},
+  {id:'blackbird',name:'Common Blackbird',sci:'Turdus merula',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5,intro:true},
   {id:'fairy_wren',name:'Superb Fairy-wren',sci:'Malurus cyaneus',cat:'bird',emoji:'🐦',rarity:'uncommon',maxPts:15,inatId:12065},
-  {id:'rosella',name:'Adelaide Rosella',sci:'Platycercus elegans',cat:'bird',emoji:'🦜',rarity:'uncommon',maxPts:15,inatId:18921},
-  {id:'emu_wren',name:'Southern Emu-wren',sci:'Stipiturus malachurus',cat:'bird',emoji:'🐦',rarity:'uncommon',maxPts:15,inatId:12133},
-  {id:'osprey',name:'Osprey',sci:'Pandion haliaetus',cat:'bird',emoji:'🦅',rarity:'uncommon',maxPts:15,inatId:116999},
   {id:'wedge_eagle',name:'Wedge-tailed Eagle',sci:'Aquila audax',cat:'bird',emoji:'🦅',rarity:'uncommon',maxPts:15,inatId:5080},
-  {id:'malleefowl',name:'Malleefowl',sci:'Leipoa ocellata',cat:'bird',emoji:'🐔',rarity:'uncommon',maxPts:15,inatId:2040},
+  {id:'emu',name:'Emu',sci:'Dromaius novaehollandiae',cat:'bird',emoji:'🦤',rarity:'uncommon',maxPts:15,inatId:20504},
+  {id:'nankeen_kestrel',name:'Nankeen Kestrel',sci:'Falco cenchroides',cat:'bird',emoji:'🦅',rarity:'uncommon',maxPts:15},
+  {id:'tawny_frogmouth',name:'Tawny Frogmouth',sci:'Podargus strigoides',cat:'bird',emoji:'🦉',rarity:'uncommon',maxPts:15},
+  {id:'boobook',name:'Southern Boobook',sci:'Ninox boobook',cat:'bird',emoji:'🦉',rarity:'uncommon',maxPts:15},
+  {id:'sc_cockatoo',name:'Sulphur-crested Cockatoo',sci:'Cacatua galerita',cat:'bird',emoji:'🦜',rarity:'uncommon',maxPts:15},
+  {id:'wf_heron',name:'White-faced Heron',sci:'Egretta novaehollandiae',cat:'bird',emoji:'🦢',rarity:'uncommon',maxPts:15},
+  {id:'r_spoonbill',name:'Royal Spoonbill',sci:'Platalea regia',cat:'bird',emoji:'🦢',rarity:'uncommon',maxPts:15},
+  {id:'bs_kite',name:'Black-shouldered Kite',sci:'Elanus axillaris',cat:'bird',emoji:'🦅',rarity:'uncommon',maxPts:15},
   {id:'reg_parrot',name:'Regent Parrot',sci:'Polytelis anthopeplus',cat:'bird',emoji:'🦜',rarity:'rare',maxPts:40,inatId:19251},
   {id:'hooded_plover',name:'Hooded Plover',sci:'Thinornis cucullatus',cat:'bird',emoji:'🐦',rarity:'rare',maxPts:40,inatId:144487},
+  {id:'osprey',name:'Osprey',sci:'Pandion haliaetus',cat:'bird',emoji:'🦅',rarity:'rare',maxPts:40,inatId:116999},
+  {id:'malleefowl',name:'Malleefowl',sci:'Leipoa ocellata',cat:'bird',emoji:'🐔',rarity:'rare',maxPts:40,inatId:2040},
+  {id:'emu_wren',name:'Southern Emu-wren',sci:'Stipiturus malachurus',cat:'bird',emoji:'🐦',rarity:'rare',maxPts:40,inatId:12133},
   {id:'brolga',name:'Brolga',sci:'Antigone rubicunda',cat:'bird',emoji:'🦢',rarity:'very-rare',maxPts:80,inatId:3774},
+  {id:'glossy_cockatoo',name:'Glossy Black-Cockatoo',sci:'Calyptorhynchus lathami',cat:'bird',emoji:'🦜',rarity:'very-rare',maxPts:80},
   {id:'wg_kanga',name:'Western Grey Kangaroo',sci:'Macropus fuliginosus',cat:'mammal',emoji:'🦘',rarity:'common',maxPts:5,inatId:42881},
-  {id:'eg_kanga',name:'Eastern Grey Kangaroo',sci:'Macropus giganteus',cat:'mammal',emoji:'🦘',rarity:'common',maxPts:5,inatId:42888},
-  {id:'red_kanga',name:'Red Kangaroo',sci:'Osphranter rufus',cat:'mammal',emoji:'🦘',rarity:'common',maxPts:5,inatId:1453439},
-  {id:'euro',name:'Euro / Wallaroo',sci:'Osphranter robustus',cat:'mammal',emoji:'🦘',rarity:'common',maxPts:5,inatId:1453438},
   {id:'possum',name:'Common Brushtail Possum',sci:'Trichosurus vulpecula',cat:'mammal',emoji:'🐾',rarity:'common',maxPts:5,inatId:42808},
   {id:'ringtail',name:'Common Ringtail Possum',sci:'Pseudocheirus peregrinus',cat:'mammal',emoji:'🐾',rarity:'common',maxPts:5,inatId:42775},
-  {id:'wombat',name:'Southern Hairy-nosed Wombat',sci:'Lasiorhinus latifrons',cat:'mammal',emoji:'🐻',rarity:'common',maxPts:5,inatId:43007},
+  {id:'eg_kanga',name:'Eastern Grey Kangaroo',sci:'Macropus giganteus',cat:'mammal',emoji:'🦘',rarity:'common',maxPts:5,inatId:42888},
+  {id:'red_kanga',name:'Red Kangaroo',sci:'Osphranter rufus',cat:'mammal',emoji:'🦘',rarity:'common',maxPts:5,inatId:1453439},
+  {id:'rabbit',name:'European Rabbit',sci:'Oryctolagus cuniculus',cat:'mammal',emoji:'🐇',rarity:'common',maxPts:5,intro:true},
+  {id:'fox',name:'Red Fox',sci:'Vulpes vulpes',cat:'mammal',emoji:'🦊',rarity:'common',maxPts:5,intro:true},
   {id:'koala',name:'Koala',sci:'Phascolarctos cinereus',cat:'mammal',emoji:'🐨',rarity:'uncommon',maxPts:15,inatId:42983},
   {id:'echidna',name:'Short-beaked Echidna',sci:'Tachyglossus aculeatus',cat:'mammal',emoji:'🦔',rarity:'uncommon',maxPts:15,inatId:43239},
   {id:'sugar_glider',name:'Sugar Glider',sci:'Petaurus breviceps',cat:'mammal',emoji:'🐿️',rarity:'uncommon',maxPts:15,inatId:40276},
   {id:'flying_fox',name:'Grey-headed Flying Fox',sci:'Pteropus poliocephalus',cat:'mammal',emoji:'🦇',rarity:'uncommon',maxPts:15,inatId:40905},
+  {id:'wombat',name:'Southern Hairy-nosed Wombat',sci:'Lasiorhinus latifrons',cat:'mammal',emoji:'🐻',rarity:'uncommon',maxPts:15,inatId:43007},
+  {id:'euro',name:'Euro / Wallaroo',sci:'Osphranter robustus',cat:'mammal',emoji:'🦘',rarity:'uncommon',maxPts:15,inatId:1453438},
   {id:'yf_wallaby',name:'Yellow-footed Rock-wallaby',sci:'Petrogale xanthopus',cat:'mammal',emoji:'🦘',rarity:'rare',maxPts:40,inatId:42931},
   {id:'dunnart',name:'Fat-tailed Dunnart',sci:'Sminthopsis crassicaudata',cat:'mammal',emoji:'🐭',rarity:'rare',maxPts:40,inatId:40205},
   {id:'bandicoot',name:'Southern Brown Bandicoot',sci:'Isoodon obesulus',cat:'mammal',emoji:'🐾',rarity:'rare',maxPts:40,inatId:43294},
   {id:'platypus',name:'Platypus',sci:'Ornithorhynchus anatinus',cat:'mammal',emoji:'🦆',rarity:'very-rare',maxPts:80,inatId:43236},
-  {id:'numbat',name:'Numbat',sci:'Myrmecobius fasciatus',cat:'mammal',emoji:'🐾',rarity:'very-rare',maxPts:80,inatId:40262},
-  {id:'little_penguin',name:'Little Penguin',sci:'Eudyptula minor',cat:'marine',emoji:'🐧',rarity:'uncommon',maxPts:15,inatId:3817},
-  {id:'dolphin',name:'Indo-Pacific Bottlenose Dolphin',sci:'Tursiops aduncus',cat:'marine',emoji:'🐬',rarity:'uncommon',maxPts:15,inatId:41481},
-  {id:'aus_sealion',name:'Australian Sea Lion',sci:'Neophoca cinerea',cat:'marine',emoji:'🦭',rarity:'rare',maxPts:40,inatId:41759},
-  {id:'weedy_sd',name:'Weedy Seadragon',sci:'Phyllopteryx taeniolatus',cat:'marine',emoji:'🐉',rarity:'rare',maxPts:40,inatId:54536},
-  {id:'cuttlefish',name:'Giant Cuttlefish',sci:'Ascarosepion apama',cat:'marine',emoji:'🦑',rarity:'rare',maxPts:40,inatId:1500730},
-  {id:'great_white',name:'Great White Shark',sci:'Carcharodon carcharias',cat:'marine',emoji:'🦈',rarity:'very-rare',maxPts:80,inatId:50873},
-  {id:'leafy_sd',name:'Leafy Seadragon',sci:'Phycodurus eques',cat:'marine',emoji:'🐉',rarity:'very-rare',maxPts:80,inatId:49105},
-  {id:'sr_whale',name:'Southern Right Whale',sci:'Eubalaena australis',cat:'marine',emoji:'🐋',rarity:'legendary',maxPts:200,inatId:41571},
   {id:'bluetongue',name:'Eastern Blue-tongue',sci:'Tiliqua scincoides',cat:'reptile',emoji:'🦎',rarity:'common',maxPts:5,inatId:37456},
   {id:'shingleback',name:'Shingleback Lizard',sci:'Tiliqua rugosa',cat:'reptile',emoji:'🦎',rarity:'common',maxPts:5,inatId:37460},
-  {id:'net_dragon',name:'Central Netted Dragon',sci:'Ctenophorus nuchalis',cat:'reptile',emoji:'🦎',rarity:'uncommon',maxPts:15,inatId:31230},
-  {id:'sand_goanna',name:'Sand Goanna',sci:'Varanus gouldii',cat:'reptile',emoji:'🦎',rarity:'uncommon',maxPts:15,inatId:39414},
+  {id:'marbled_gecko',name:'Marbled Gecko',sci:'Christinus marmoratus',cat:'reptile',emoji:'🦎',rarity:'common',maxPts:5},
+  {id:'garden_skink',name:'Garden Skink',sci:'Lampropholis guichenoti',cat:'reptile',emoji:'🦎',rarity:'common',maxPts:5},
   {id:'tiger_snake',name:'Tiger Snake',sci:'Notechis scutatus',cat:'reptile',emoji:'🐍',rarity:'uncommon',maxPts:15,inatId:35178},
+  {id:'sand_goanna',name:'Sand Goanna',sci:'Varanus gouldii',cat:'reptile',emoji:'🦎',rarity:'uncommon',maxPts:15,inatId:39414},
+  {id:'brown_snake',name:'Eastern Brown Snake',sci:'Pseudonaja textilis',cat:'reptile',emoji:'🐍',rarity:'uncommon',maxPts:15},
+  {id:'bearded_dragon',name:'Bearded Dragon',sci:'Pogona barbata',cat:'reptile',emoji:'🦎',rarity:'uncommon',maxPts:15},
   {id:'king_brown',name:'King Brown Snake',sci:'Pseudechis australis',cat:'reptile',emoji:'🐍',rarity:'rare',maxPts:40,inatId:35161},
   {id:'w_bluetongue',name:'Western Blue-tongue',sci:'Tiliqua occipitalis',cat:'reptile',emoji:'🦎',rarity:'rare',maxPts:40,inatId:37459},
-  {id:'ros_goanna',name:"Rosenberg's Goanna",sci:'Varanus rosenbergi',cat:'reptile',emoji:'🦎',rarity:'rare',maxPts:40,inatId:39416},
-  {id:'emp_moth',name:'Emperor Gum Moth',sci:'Opodiphthera eucalypti',cat:'insect',emoji:'🦋',rarity:'uncommon',maxPts:15,inatId:68135},
-  {id:'bogong',name:'Bogong Moth',sci:'Agrotis infusa',cat:'insect',emoji:'🦋',rarity:'uncommon',maxPts:15,inatId:200008},
   {id:'pobblebonk',name:'Pobblebonk Frog',sci:'Limnodynastes dumerilii',cat:'amphibian',emoji:'🐸',rarity:'common',maxPts:5,inatId:22038},
+  {id:'froglet',name:'Common Froglet',sci:'Crinia signifera',cat:'amphibian',emoji:'🐸',rarity:'common',maxPts:5},
+  {id:'tree_frog',name:'Brown Tree Frog',sci:'Litoria ewingii',cat:'amphibian',emoji:'🐸',rarity:'common',maxPts:5},
+  {id:'marsh_frog',name:'Spotted Marsh Frog',sci:'Limnodynastes tasmaniensis',cat:'amphibian',emoji:'🐸',rarity:'uncommon',maxPts:15},
+  {id:'honey_bee',name:'European Honey Bee',sci:'Apis mellifera',cat:'insect',emoji:'🐝',rarity:'common',maxPts:5,intro:true},
+  {id:'common_brown',name:'Common Brown',sci:'Heteronympha merope',cat:'insect',emoji:'🦋',rarity:'common',maxPts:5},
+  {id:'ladybird',name:'Ladybird',sci:'Coccinellidae',cat:'insect',emoji:'🐞',rarity:'common',maxPts:5},
+  {id:'orb_weaver',name:'Garden Orb-weaver',sci:'Eriophora',cat:'insect',emoji:'🕷️',rarity:'common',maxPts:5},
+  {id:'huntsman',name:'Huntsman Spider',sci:'Sparassidae',cat:'insect',emoji:'🕷️',rarity:'common',maxPts:5},
+  {id:'bull_ant',name:'Bull Ant',sci:'Myrmecia',cat:'insect',emoji:'🐜',rarity:'common',maxPts:5},
+  {id:'cicada',name:'Cicada',sci:'Cicadidae',cat:'insect',emoji:'🦗',rarity:'common',maxPts:5},
+  {id:'cabbage_white',name:'Cabbage White',sci:'Pieris rapae',cat:'insect',emoji:'🦋',rarity:'common',maxPts:5,intro:true},
+  {id:'garden_snail',name:'Garden Snail',sci:'Cornu aspersum',cat:'insect',emoji:'🐌',rarity:'common',maxPts:5,intro:true},
+  {id:'slater',name:'Slater (Woodlouse)',sci:'Armadillidium vulgare',cat:'insect',emoji:'🐛',rarity:'common',maxPts:5,intro:true},
+  {id:'emp_moth',name:'Emperor Gum Moth',sci:'Opodiphthera eucalypti',cat:'insect',emoji:'🦋',rarity:'uncommon',maxPts:15,inatId:68135},
+  {id:'monarch',name:'Monarch',sci:'Danaus plexippus',cat:'insect',emoji:'🦋',rarity:'uncommon',maxPts:15},
+  {id:'blue_banded_bee',name:'Blue-banded Bee',sci:'Amegilla',cat:'insect',emoji:'🐝',rarity:'uncommon',maxPts:15},
+  {id:'mantis',name:'Praying Mantis',sci:'Orthodera ministralis',cat:'insect',emoji:'🦗',rarity:'uncommon',maxPts:15},
+  {id:'blue_crab',name:'Blue Swimmer Crab',sci:'Portunus armatus',cat:'marine',emoji:'🦀',rarity:'common',maxPts:5},
+  {id:'moon_jelly',name:'Moon Jellyfish',sci:'Aurelia aurita',cat:'marine',emoji:'🌊',rarity:'common',maxPts:5},
+  {id:'little_penguin',name:'Little Penguin',sci:'Eudyptula minor',cat:'marine',emoji:'🐧',rarity:'uncommon',maxPts:15,inatId:3817},
+  {id:'dolphin',name:'Indo-Pacific Bottlenose Dolphin',sci:'Tursiops aduncus',cat:'marine',emoji:'🐬',rarity:'uncommon',maxPts:15,inatId:41481},
+  {id:'fur_seal',name:'New Zealand Fur Seal',sci:'Arctocephalus forsteri',cat:'marine',emoji:'🦭',rarity:'uncommon',maxPts:15},
+  {id:'aus_sealion',name:'Australian Sea Lion',sci:'Neophoca cinerea',cat:'marine',emoji:'🦭',rarity:'rare',maxPts:40,inatId:41759},
+  {id:'cuttlefish',name:'Giant Cuttlefish',sci:'Ascarosepion apama',cat:'marine',emoji:'🦑',rarity:'rare',maxPts:40,inatId:1500730},
+  {id:'weedy_sd',name:'Weedy Seadragon',sci:'Phyllopteryx taeniolatus',cat:'marine',emoji:'🐉',rarity:'rare',maxPts:40,inatId:54536},
+  {id:'leafy_sd',name:'Leafy Seadragon',sci:'Phycodurus eques',cat:'marine',emoji:'🐉',rarity:'very-rare',maxPts:80,inatId:49105},
+  {id:'sr_whale',name:'Southern Right Whale',sci:'Eubalaena australis',cat:'marine',emoji:'🐋',rarity:'legendary',maxPts:200,inatId:41571},
+  {id:'great_white',name:'Great White Shark',sci:'Carcharodon carcharias',cat:'marine',emoji:'🦈',rarity:'legendary',maxPts:200,inatId:50873}
 ];
-const CHALLENGE_POOL = SPECIES.filter(s => s.rarity === 'common');
+const CHALLENGE_POOL = SPECIES.filter(s => s.rarity === 'common' && !s.intro);   // introduced pests (fox, rabbit, pigeon...) never become "today's challenge"
+/* new animals carry only their scientific name; their iNaturalist photo id is looked up once, then remembered on this device */
+try { const idc = JSON.parse(localStorage.getItem('mk_inatIds') || '{}'); SPECIES.forEach(s => { if (!s.inatId && idc[s.sci] > 0) s.inatId = idc[s.sci]; }); } catch (e) {}
 const RARITY_ORDER = ['common','uncommon','rare','very-rare','legendary'];
 const RARITY_LABELS = {common:'Common',uncommon:'Uncommon',rare:'Rare','very-rare':'Very Rare',legendary:'Legendary'};
 const RARITY_COLORS = {common:'#4caf50',uncommon:'#2196f3',rare:'#9c27b0','very-rare':'#ff9800',legendary:'#f44336'};
@@ -1074,26 +1119,50 @@ function dynInfo(id, isChallenge) {
 }
 
 /* ═════════ PHOTOS ═════════ */
-async function loadAllPhotos() {
-  const ids = [...new Set(SPECIES.map(s => s.inatId))], batches = [];
-  for (let i = 0; i < ids.length; i += 30) batches.push(ids.slice(i, i + 30));
-  let loaded = 0, failed = 0;
+async function fetchTaxaPhotos(ids) {
+  const uniq = [...new Set(ids.filter(Boolean))], batches = []; let ok = 0, bad = 0;
+  for (let i = 0; i < uniq.length; i += 30) batches.push(uniq.slice(i, i + 30));
   for (const batch of batches) {
     try {
       const res = await fetch('https://api.inaturalist.org/v1/taxa/' + batch.join(','));
       if (!res.ok) throw new Error('http');
       const data = await res.json();
       for (const taxon of (data.results || [])) for (const sp of SPECIES.filter(s => s.inatId === taxon.id)) {
-        if (taxon.default_photo && taxon.default_photo.medium_url) { photoCache[sp.id] = {url: taxon.default_photo.medium_url, credit: (taxon.default_photo.attribution || 'iNaturalist').substring(0, 70)}; loaded++; } else failed++;
+        if (taxon.default_photo && taxon.default_photo.medium_url) { photoCache[sp.id] = {url: taxon.default_photo.medium_url, credit: (taxon.default_photo.attribution || 'iNaturalist').substring(0, 70)}; ok++; } else bad++;
       }
-    } catch (e) { failed += batch.length; }
-    document.getElementById('bannerText').textContent = 'Loading photos… ' + loaded + ' loaded';
+    } catch (e) { bad += batch.length; }
+  }
+  return {ok, bad};
+}
+// finds the iNaturalist id for animals that only have a scientific name (exact name match only, so a wrong animal can never be picked)
+async function resolveInatIds(list, say) {
+  let cache = {}; try { cache = JSON.parse(localStorage.getItem('mk_inatIds') || '{}'); } catch (e) {}
+  let n = 0;
+  for (const sp of list) {
+    n++; say('Finding photos… ' + n + ' of ' + list.length);
+    try {
+      const j = await inatFetch('https://api.inaturalist.org/v1/taxa?q=' + encodeURIComponent(sp.sci) + '&taxon_id=1&is_active=true&per_page=10', 9000);
+      const hit = (j.results || []).find(r => norm(r.name) === norm(sp.sci));
+      if (hit) { sp.inatId = hit.id; cache[sp.sci] = hit.id; }
+    } catch (e) {}
+    await new Promise(r => setTimeout(r, 140));
+  }
+  try { localStorage.setItem('mk_inatIds', JSON.stringify(cache)); } catch (e) {}
+}
+async function loadAllPhotos() {
+  const say = t => { const b = document.getElementById('bannerText'); if (b) b.textContent = t; };
+  let loaded = 0, failed = 0, r = await fetchTaxaPhotos(SPECIES.map(s => s.inatId));
+  loaded += r.ok; failed += r.bad;
+  if (loaded) { renderSpecies(); renderChallengeHero(); }          // the first photos appear straight away
+  const todo = SPECIES.filter(s => !s.inatId && !s.custom && s.sci);
+  if (todo.length) {
+    await resolveInatIds(todo, say);
+    r = await fetchTaxaPhotos(todo.map(s => s.inatId)); loaded += r.ok; failed += r.bad + todo.filter(s => !s.inatId).length;
   }
   photosLoaded = true;
   document.getElementById('photoBanner').innerHTML = loaded > 0 ? `✅ ${loaded} photos loaded${failed ? ' (' + failed + ' unavailable)' : ''}` : '⚠️ Could not load photos — check connection.';
   renderSpecies(); renderChallengeHero();
 }
-
 /* ═════════ SPECIES GRID + SEARCH ═════════ */
 function thumbHtml(sp) {
   if (!photosLoaded && !photoCache[sp.id]) return '<div class="card-thumb-loading"><div class="spin"></div></div>';
@@ -1619,8 +1688,7 @@ const FACTS = {
   koala: {t: 'Koalas have fingerprints almost identical to human ones. They evolved them independently, which is called convergent evolution.', s: 'ScienceInsights'},
   echidna: {t: 'Echidnas lay eggs! Only the echidnas and the platypus, five living species in all, are egg-laying mammals.', s: 'Wikipedia; WildlifeDB'},
   sugar_glider: {t: 'Sugar gliders glide on skin membranes stretching from their front legs to their back legs, much like flying squirrels, though the two aren’t closely related.', s: 'Wikipedia'},
-  platypus: {t: 'Underwater, a platypus shuts its eyes, ears and nostrils and finds prey with electric sensors in its bill that pick up the tiny signals from muscles.', s: 'University of Western Australia; Australian Platypus Conservancy'},
-  numbat: {t: 'The numbat is active by day and eats almost nothing but termites. It has been reintroduced to fenced reserves in South Australia.', s: 'Wikipedia'}
+  platypus: {t: 'Underwater, a platypus shuts its eyes, ears and nostrils and finds prey with electric sensors in its bill that pick up the tiny signals from muscles.', s: 'University of Western Australia; Australian Platypus Conservancy'}
 };
 function factOf(sp) { return (sp && !sp.custom && FACTS[sp.id]) || null; }
 function revealFact(sp) { const f = factOf(sp); return f ? `<div class="reveal-fact"><b>💡 Did you know?</b>${esc(f.t)}</div>` : ''; }
