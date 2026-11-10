@@ -817,7 +817,7 @@ const SPECIES = [
   {id:'w_bluetongue',name:'Western Blue-tongue',sci:'Tiliqua occipitalis',cat:'reptile',emoji:'🦎',rarity:'rare',maxPts:40,inatId:37459},
   {id:'pobblebonk',name:'Pobblebonk Frog',sci:'Limnodynastes dumerilii',cat:'amphibian',emoji:'🐸',rarity:'common',maxPts:5,inatId:22038},
   {id:'froglet',name:'Common Froglet',sci:'Crinia signifera',cat:'amphibian',emoji:'🐸',rarity:'common',maxPts:5},
-  {id:'tree_frog',name:'Brown Tree Frog',sci:'Litoria ewingii',cat:'amphibian',emoji:'🐸',rarity:'common',maxPts:5},
+  {id:'tree_frog',name:'Brown Tree Frog',sci:'Rawlinsonia ewingii',alt:'Litoria ewingii',cat:'amphibian',emoji:'🐸',rarity:'common',maxPts:5,inatId:1633164,altId:23668},
   {id:'marsh_frog',name:'Spotted Marsh Frog',sci:'Limnodynastes tasmaniensis',cat:'amphibian',emoji:'🐸',rarity:'uncommon',maxPts:15},
   {id:'honey_bee',name:'European Honey Bee',sci:'Apis mellifera',cat:'insect',emoji:'🐝',rarity:'common',maxPts:5,intro:true},
   {id:'common_brown',name:'Common Brown',sci:'Heteronympha merope',cat:'insect',emoji:'🦋',rarity:'common',maxPts:5},
@@ -867,7 +867,7 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;
 // lower-case, strip accents, turn punctuation/hyphens into spaces so "fairy wren" finds "Fairy-wren"
 const norm = s => String(s == null ? '' : s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
 const CAT_WORDS = {bird:'bird birds', mammal:'mammal mammals', reptile:'reptile reptiles', marine:'marine sea ocean', insect:'insect insects bug', amphibian:'frog frogs amphibian', other:'other'};
-SPECIES.forEach(s => { s._hay = norm(s.name + ' ' + s.sci + ' ' + (CAT_WORDS[s.cat] || '') + ' ' + RARITY_LABELS[s.rarity]); });
+SPECIES.forEach(s => { s._hay = norm(s.name + ' ' + s.sci + ' ' + (s.alt || '') + ' ' + (CAT_WORDS[s.cat] || '') + ' ' + RARITY_LABELS[s.rarity]); });
 
 /* ═════════ RANGER LEVELS ═════════ */
 const RANGER_LEVELS = [
@@ -1119,20 +1119,32 @@ function dynInfo(id, isChallenge) {
 }
 
 /* ═════════ PHOTOS ═════════ */
+const photoOf = t => { const d = t && t.default_photo; if (d && d.medium_url) return d; const tp = ((t && t.taxon_photos) || []).map(x => x && x.photo).find(p => p && (p.medium_url || p.url)); return tp || null; };
+const setPhoto = (sp, ph) => { photoCache[sp.id] = {url: ph.medium_url || ph.url, credit: String(ph.attribution || 'iNaturalist').substring(0, 70)}; };
 async function fetchTaxaPhotos(ids) {
-  const uniq = [...new Set(ids.filter(Boolean))], batches = []; let ok = 0, bad = 0;
+  const uniq = [...new Set(ids.filter(Boolean))], batches = [], moved = [];
   for (let i = 0; i < uniq.length; i += 30) batches.push(uniq.slice(i, i + 30));
   for (const batch of batches) {
     try {
       const res = await fetch('https://api.inaturalist.org/v1/taxa/' + batch.join(','));
       if (!res.ok) throw new Error('http');
       const data = await res.json();
-      for (const taxon of (data.results || [])) for (const sp of SPECIES.filter(s => s.inatId === taxon.id)) {
-        if (taxon.default_photo && taxon.default_photo.medium_url) { photoCache[sp.id] = {url: taxon.default_photo.medium_url, credit: (taxon.default_photo.attribution || 'iNaturalist').substring(0, 70)}; ok++; } else bad++;
+      for (const taxon of (data.results || [])) {
+        const ph = photoOf(taxon), sps = SPECIES.filter(s => s.inatId === taxon.id);
+        if (ph) sps.forEach(sp => setPhoto(sp, ph));
+        else if (taxon.current_synonymous_taxon_ids && taxon.current_synonymous_taxon_ids.length) moved.push({from: taxon.id, to: taxon.current_synonymous_taxon_ids[0]});   // retired taxon: follow it to the current one
       }
-    } catch (e) { bad += batch.length; }
+    } catch (e) {}
   }
-  return {ok, bad};
+  if (moved.length) {
+    try {
+      const res = await fetch('https://api.inaturalist.org/v1/taxa/' + moved.map(m => m.to).join(','));
+      if (res.ok) for (const taxon of ((await res.json()).results || [])) {
+        const ph = photoOf(taxon); if (!ph) continue;
+        moved.filter(m => m.to === taxon.id).forEach(m => SPECIES.filter(s => s.inatId === m.from).forEach(sp => setPhoto(sp, ph)));
+      }
+    } catch (e) {}
+  }
 }
 // finds the iNaturalist id for animals that only have a scientific name (exact name match only, so a wrong animal can never be picked)
 async function resolveInatIds(list, say) {
@@ -1140,27 +1152,31 @@ async function resolveInatIds(list, say) {
   let n = 0;
   for (const sp of list) {
     n++; say('Finding photos… ' + n + ' of ' + list.length);
-    try {
-      const j = await inatFetch('https://api.inaturalist.org/v1/taxa?q=' + encodeURIComponent(sp.sci) + '&taxon_id=1&is_active=true&per_page=10', 9000);
-      const hit = (j.results || []).find(r => norm(r.name) === norm(sp.sci));
-      if (hit) { sp.inatId = hit.id; cache[sp.sci] = hit.id; }
-    } catch (e) {}
+    for (const name of [sp.sci, sp.alt].filter(Boolean)) {
+      let hit = null;
+      for (let tries = 0; tries < 2 && !hit; tries++) {          // one retry if the first request hiccups
+        try {
+          const j = await inatFetch('https://api.inaturalist.org/v1/taxa?q=' + encodeURIComponent(name) + '&taxon_id=1&is_active=true&per_page=10', 9000);
+          hit = (j.results || []).find(r => norm(r.name) === norm(name)) || null; break;
+        } catch (e) { await new Promise(r => setTimeout(r, 400)); }
+      }
+      if (hit) { sp.inatId = hit.id; cache[sp.sci] = hit.id; break; }
+    }
     await new Promise(r => setTimeout(r, 140));
   }
   try { localStorage.setItem('mk_inatIds', JSON.stringify(cache)); } catch (e) {}
 }
 async function loadAllPhotos() {
   const say = t => { const b = document.getElementById('bannerText'); if (b) b.textContent = t; };
-  let loaded = 0, failed = 0, r = await fetchTaxaPhotos(SPECIES.map(s => s.inatId));
-  loaded += r.ok; failed += r.bad;
-  if (loaded) { renderSpecies(); renderChallengeHero(); }          // the first photos appear straight away
+  await fetchTaxaPhotos(SPECIES.map(s => s.inatId));
+  if (Object.keys(photoCache).length) { renderSpecies(); renderChallengeHero(); }          // the first photos appear straight away
   const todo = SPECIES.filter(s => !s.inatId && !s.custom && s.sci);
-  if (todo.length) {
-    await resolveInatIds(todo, say);
-    r = await fetchTaxaPhotos(todo.map(s => s.inatId)); loaded += r.ok; failed += r.bad + todo.filter(s => !s.inatId).length;
-  }
+  if (todo.length) { await resolveInatIds(todo, say); await fetchTaxaPhotos(todo.map(s => s.inatId)); }
+  const lost = SPECIES.filter(s => !photoCache[s.id] && s.altId && !s.custom);                 // last resort: an older iNaturalist id for renamed animals
+  if (lost.length) { lost.forEach(s => { s.inatId = s.altId; }); await fetchTaxaPhotos(lost.map(s => s.altId)); }
   photosLoaded = true;
-  document.getElementById('photoBanner').innerHTML = loaded > 0 ? `✅ ${loaded} photos loaded${failed ? ' (' + failed + ' unavailable)' : ''}` : '⚠️ Could not load photos — check connection.';
+  const base = BASE(), have = base.filter(s => photoCache[s.id]).length, miss = base.length - have;
+  document.getElementById('photoBanner').innerHTML = have > 0 ? `✅ ${have} photos loaded${miss ? ' (' + miss + ' unavailable)' : ''}` : '⚠️ Could not load photos — check connection.';
   renderSpecies(); renderChallengeHero();
 }
 /* ═════════ SPECIES GRID + SEARCH ═════════ */
@@ -2472,6 +2488,34 @@ body[data-view=hub] .challenge-name{font-size:17px}
   .cat-name{font-size:22px}.cat-count{font-size:13px}
   .cat-mosaic>div{font-size:46px}
 }
+
+/* ═════════ MOCK-UP v9: rarity glow on the tiles (rarer = brighter, legendary pulses) + shine on the group tiles ═════════ */
+.tile.g-uncommon .t-img{box-shadow:0 4px 14px rgba(0,0,0,.38),0 0 9px rgba(33,150,243,.40)}
+.tile.g-rare .t-img{box-shadow:0 4px 14px rgba(0,0,0,.38),0 0 12px rgba(156,39,176,.55)}
+.tile.g-very-rare .t-img{box-shadow:0 4px 14px rgba(0,0,0,.38),0 0 16px rgba(255,152,0,.70)}
+.tile.g-legendary .t-img{animation:lgTile 2s ease-in-out infinite}
+@keyframes lgTile{0%,100%{box-shadow:0 4px 14px rgba(0,0,0,.38),0 0 12px rgba(244,67,54,.45)}50%{box-shadow:0 4px 14px rgba(0,0,0,.38),0 0 28px rgba(244,67,54,.90)}}
+.tile.hint.g-legendary .t-img{animation:hintPulse 1.8s ease-out infinite}
+@media (prefers-reduced-motion:reduce){.tile.g-legendary .t-img{animation:none;box-shadow:0 4px 14px rgba(0,0,0,.38),0 0 20px rgba(244,67,54,.75)}}
+@media (min-width:900px){
+  .tile.g-uncommon .t-img,.tile.g-rare .t-img,.tile.g-very-rare .t-img,.tile.g-legendary .t-img{box-shadow:none;animation:none}
+  .tile.g-uncommon{box-shadow:0 0 10px rgba(33,150,243,.35)}
+  .tile.g-rare{box-shadow:0 0 14px rgba(156,39,176,.50)}
+  .tile.g-very-rare{box-shadow:0 0 18px rgba(255,152,0,.65)}
+  .tile.g-legendary{animation:lgCard 2s ease-in-out infinite}
+  @keyframes lgCard{0%,100%{box-shadow:0 0 12px rgba(244,67,54,.40)}50%{box-shadow:0 0 28px rgba(244,67,54,.85)}}
+  .tile.hint.g-legendary{animation:hintPulseCard 1.8s ease-out infinite}
+  .tile.g-common:hover{box-shadow:0 10px 28px rgba(0,0,0,.35),0 0 14px rgba(76,175,80,.55)}
+  .tile.g-uncommon:hover{box-shadow:0 10px 28px rgba(0,0,0,.35),0 0 16px rgba(33,150,243,.60)}
+  .tile.g-rare:hover{box-shadow:0 10px 28px rgba(0,0,0,.35),0 0 20px rgba(156,39,176,.70)}
+  .tile.g-very-rare:hover{box-shadow:0 10px 28px rgba(0,0,0,.35),0 0 24px rgba(255,152,0,.80)}
+  .tile.g-legendary:hover{box-shadow:0 10px 28px rgba(0,0,0,.35),0 0 30px rgba(244,67,54,.90)}
+}
+@media (min-width:900px) and (prefers-reduced-motion:reduce){.tile.g-legendary{animation:none;box-shadow:0 0 22px rgba(244,67,54,.70)}}
+/* the same tilt-following shine, now on the big group tiles */
+.cat-tile::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:1;background:radial-gradient(ellipse 70% 50% at var(--gx,50%) var(--gy,30%),rgba(255,255,255,.20) 0%,transparent 70%)}
+body.light .cat-tile::after{background:radial-gradient(ellipse 70% 50% at var(--gx,50%) var(--gy,30%),rgba(255,255,255,.42) 0%,transparent 70%)}
+.cat-info,.cat-star{z-index:2}
 </style>
 <script>
 (function(){
@@ -2518,7 +2562,7 @@ body[data-view=hub] .challenge-name{font-size:17px}
       g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><div class="icon">\uD83D\uDD0D</div><p>'+(raw.trim()?'No animals match \u201c'+esc(raw.trim())+'\u201d':'No animals in this group yet.')+'</p>'+(raw.trim()?'<button class="btn btn-secondary" onclick="clearSearch(true)">Clear search</button>':'<button class="btn btn-primary" onclick="openInat()">\uD83D\uDD0E Search all wildlife</button>')+'</div>';syncHint();return;}
     var seen=new Set(state.sightings.map(function(s){return s.speciesId;}));
     var hn=hintOn();g.innerHTML=list.map(function(sp,i){var pc=photoCache[sp.id],ch=sp.id===chId;
-      return '<button class="tile'+(seen.has(sp.id)?'':' unspotted')+(hn&&i===0?' hint':'')+'" data-id="'+esc(sp.id)+'" style="--rc:'+RARITY_COLORS[sp.rarity]+'" aria-label="'+esc(sp.name)+'"><div class="t-img">'+(pc?'<img src="'+esc(pc.url)+'" alt="" loading="lazy">':'<div class="t-emoji">'+sp.emoji+'</div>')+(seen.has(sp.id)?'<span class="t-chk">\u2713</span>':'')+(ch?'<span class="t-ribbon">2\u00D7 today</span>':'')+'</div><div class="t-name">'+esc(sp.name)+'</div><div class="t-extra"><span class="rarity-badge r-'+sp.rarity+'">'+RARITY_LABELS[sp.rarity]+'</span><span class="pts-badge pts-'+sp.rarity+'">'+currentPts(sp.id,ch)+' pts'+(ch?' \u2B50':'')+'</span></div><span class="t-log" role="button" tabindex="0">\uD83D\uDCCD Log sighting</span></button>';
+      return '<button class="tile'+(seen.has(sp.id)?'':' unspotted')+(hn&&i===0?' hint':'')+' g-'+sp.rarity+'" data-id="'+esc(sp.id)+'" style="--rc:'+RARITY_COLORS[sp.rarity]+'" aria-label="'+esc(sp.name)+'"><div class="t-img">'+(pc?'<img src="'+esc(pc.url)+'" alt="" loading="lazy">':'<div class="t-emoji">'+sp.emoji+'</div>')+(seen.has(sp.id)?'<span class="t-chk">\u2713</span>':'')+(ch?'<span class="t-ribbon">2\u00D7 today</span>':'')+'</div><div class="t-name">'+esc(sp.name)+'</div><div class="t-extra"><span class="rarity-badge r-'+sp.rarity+'">'+RARITY_LABELS[sp.rarity]+'</span><span class="pts-badge pts-'+sp.rarity+'">'+currentPts(sp.id,ch)+' pts'+(ch?' \u2B50':'')+'</span></div><span class="t-log" role="button" tabindex="0">\uD83D\uDCCD Log sighting</span></button>';
     }).join('')+(tokens.length?'':'<button class="tile tile-more" aria-label="Search all wildlife"><div class="t-img"><div class="t-emoji">\uD83D\uDD0E</div></div><div class="t-name">Can\u2019t see it? Search all wildlife</div></button>');
     syncHint();
     g.onclick=function(e){var t=e.target.closest('.tile');if(!t)return;if(t.classList.contains('tile-more')){openInat();return;}if(e.target.closest('.t-log')){var id=t.dataset.id;openModal(id,id===getTodayChallenge().id);return;}openTilePop(t.dataset.id);};
