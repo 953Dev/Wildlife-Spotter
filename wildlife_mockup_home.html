@@ -2320,6 +2320,32 @@ body.light .tile.unspotted .t-img::after{background:radial-gradient(ellipse 70% 
 .lg-note{display:block;margin:8px auto 0;font-size:12px}
 .log-modal textarea{margin:8px 0 0}
 .lg-go{display:block;width:100%;margin-top:14px;padding:15px 14px;font-size:16px;font-weight:800;border-radius:14px}
+
+/* ═════════ MOCK-UP v5: clearer front page (hint, challenge ribbon, search tile) ═════════ */
+#mockChip{pointer-events:auto!important;cursor:pointer;padding:5px 12px!important;bottom:-12px!important}
+/* 2. one-time "tap an animal" hint */
+.tile-hint{display:none;position:relative;align-items:center;gap:7px;margin:-4px 0 14px 4px;padding:8px 14px;border-radius:999px;background:var(--accent);color:#fff;font-size:12.5px;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.35);animation:hintBob 2s ease-in-out infinite}
+.tile-hint.on{display:inline-flex}
+.tile-hint::after{content:'';position:absolute;left:34px;bottom:-6px;border:7px solid transparent;border-top-color:var(--accent);border-bottom:0}
+@keyframes hintBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.tile.hint .t-img{animation:hintPulse 1.8s ease-out infinite}
+@keyframes hintPulse{0%{box-shadow:0 4px 14px rgba(0,0,0,.38),0 0 0 0 rgba(255,190,70,.85)}70%{box-shadow:0 4px 14px rgba(0,0,0,.38),0 0 0 11px rgba(255,190,70,0)}100%{box-shadow:0 4px 14px rgba(0,0,0,.38),0 0 0 0 rgba(255,190,70,0)}}
+@keyframes hintPulseCard{0%{box-shadow:0 0 0 0 rgba(255,190,70,.85)}70%{box-shadow:0 0 0 12px rgba(255,190,70,0)}100%{box-shadow:0 0 0 0 rgba(255,190,70,0)}}
+@media (min-width:900px){.tile.hint .t-img{animation:none}.tile.hint{animation:hintPulseCard 1.8s ease-out infinite}.tile-hint::after{left:40px}}
+@media (prefers-reduced-motion:reduce){.tile-hint{animation:none}.tile.hint .t-img{animation:none;box-shadow:0 0 0 3px var(--accent)}.tile.hint{animation:none!important}}
+/* 3. daily challenge: the card is the doorway, the tile carries the "2x today" ribbon */
+.challenge-hero.tappable{cursor:pointer;transition:transform .12s}
+.challenge-hero.tappable:active{transform:scale(.985)}
+.ch-go{display:inline-block;margin-left:4px;color:#ffb84d;font-weight:800;white-space:nowrap}
+.t-ribbon{position:absolute;left:0;right:0;bottom:0;padding:2px 0 2px;background:linear-gradient(90deg,#c8820a,#e8a020);color:#fff;font-size:9px;font-weight:800;letter-spacing:.4px;text-align:center;text-transform:uppercase;line-height:1.3;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+@media (min-width:900px){.t-ribbon{font-size:11px;padding:3px 0}}
+/* 4. "Can't see it? Search all wildlife" tile at the end of the grid */
+.tile-more{--rc:var(--accent)}
+.tile-more .t-img{background:rgba(255,255,255,.07);border:2px dashed var(--accent);box-shadow:none}
+.tile-more .t-emoji{font-size:28px}
+.tile-more .t-name{-webkit-line-clamp:3;color:#ffc766}
+body.light .tile-more .t-name{color:var(--accent)}
+@media (min-width:900px){.tile-more{border-style:dashed;border-color:var(--accent)}.tile-more .t-img{border:none;border-bottom:2px dashed var(--accent)}.tile-more .t-emoji{font-size:54px}.tile-more .t-name{padding-bottom:14px;color:var(--accent)}}
 </style>
 <script>
 (function(){
@@ -2363,13 +2389,40 @@ body.light .tile.unspotted .t-img::after{background:radial-gradient(ellipse 70% 
     if(tokens.length){meta.classList.add('on');meta.textContent=list.length+(list.length===1?' animal':' animals')+' match \u201c'+raw.trim()+'\u201d';}else{meta.classList.remove('on');meta.textContent='';}
     var g=document.getElementById('speciesGrid');g.classList.add('compact');
     if(!list.length){
-      g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><div class="icon">\uD83D\uDD0D</div><p>No animals match \u201c'+esc(raw.trim())+'\u201d</p><button class="btn btn-secondary" onclick="clearSearch(true)">Clear search</button>'+(typeof inatCta==='function'?inatCta(raw.trim()):'')+'</div>';return;}
+      g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><div class="icon">\uD83D\uDD0D</div><p>'+(raw.trim()?'No animals match \u201c'+esc(raw.trim())+'\u201d':'No animals in this group yet.')+'</p>'+(raw.trim()?'<button class="btn btn-secondary" onclick="clearSearch(true)">Clear search</button>':'<button class="btn btn-primary" onclick="openInat()">\uD83D\uDD0E Search all wildlife</button>')+'</div>';syncHint();return;}
     var seen=new Set(state.sightings.map(function(s){return s.speciesId;}));
-    g.innerHTML=list.map(function(sp){var pc=photoCache[sp.id],ch=sp.id===chId;
-      return '<button class="tile'+(seen.has(sp.id)?'':' unspotted')+'" data-id="'+esc(sp.id)+'" style="--rc:'+RARITY_COLORS[sp.rarity]+'" aria-label="'+esc(sp.name)+'"><div class="t-img">'+(pc?'<img src="'+esc(pc.url)+'" alt="" loading="lazy">':'<div class="t-emoji">'+sp.emoji+'</div>')+(seen.has(sp.id)?'<span class="t-chk">\u2713</span>':'')+(ch?'<span class="t-star">\u2B50</span>':'')+'</div><div class="t-name">'+esc(sp.name)+'</div><div class="t-extra"><span class="rarity-badge r-'+sp.rarity+'">'+RARITY_LABELS[sp.rarity]+'</span><span class="pts-badge pts-'+sp.rarity+'">'+currentPts(sp.id,ch)+' pts'+(ch?' \u2B50':'')+'</span></div><span class="t-log" role="button" tabindex="0">\uD83D\uDCCD Log sighting</span></button>';
-    }).join('');
-    g.onclick=function(e){var t=e.target.closest('.tile');if(!t)return;if(e.target.closest('.t-log')){var id=t.dataset.id;openModal(id,id===getTodayChallenge().id);return;}openTilePop(t.dataset.id);};
+    var hn=hintOn();g.innerHTML=list.map(function(sp,i){var pc=photoCache[sp.id],ch=sp.id===chId;
+      return '<button class="tile'+(seen.has(sp.id)?'':' unspotted')+(hn&&i===0?' hint':'')+'" data-id="'+esc(sp.id)+'" style="--rc:'+RARITY_COLORS[sp.rarity]+'" aria-label="'+esc(sp.name)+'"><div class="t-img">'+(pc?'<img src="'+esc(pc.url)+'" alt="" loading="lazy">':'<div class="t-emoji">'+sp.emoji+'</div>')+(seen.has(sp.id)?'<span class="t-chk">\u2713</span>':'')+(ch?'<span class="t-ribbon">2\u00D7 today</span>':'')+'</div><div class="t-name">'+esc(sp.name)+'</div><div class="t-extra"><span class="rarity-badge r-'+sp.rarity+'">'+RARITY_LABELS[sp.rarity]+'</span><span class="pts-badge pts-'+sp.rarity+'">'+currentPts(sp.id,ch)+' pts'+(ch?' \u2B50':'')+'</span></div><span class="t-log" role="button" tabindex="0">\uD83D\uDCCD Log sighting</span></button>';
+    }).join('')+(tokens.length?'':'<button class="tile tile-more" aria-label="Search all wildlife"><div class="t-img"><div class="t-emoji">\uD83D\uDD0E</div></div><div class="t-name">Can\u2019t see it? Search all wildlife</div></button>');
+    syncHint();
+    g.onclick=function(e){var t=e.target.closest('.tile');if(!t)return;if(t.classList.contains('tile-more')){openInat();return;}if(e.target.closest('.t-log')){var id=t.dataset.id;openModal(id,id===getTodayChallenge().id);return;}openTilePop(t.dataset.id);};
   };
+
+  /* ═════ v5 · 2. one-time hint: pulse the first tile + one short caption, gone after the first logged sighting ═════ */
+  var hintEl=document.createElement('div');hintEl.id='tileHint';hintEl.className='tile-hint';hintEl.innerHTML='<span aria-hidden="true">\uD83D\uDC46</span><span>Tap an animal you\u2019ve seen</span>';
+  grid.parentNode.insertBefore(hintEl,grid);
+  var HINT_URL=/[?&#]hint\b/i.test(location.search+location.hash), hintGone=false;
+  function hintPreview(){try{return localStorage.getItem('mk_hintPreview')==='1';}catch(e){return false;}}
+  window.hintOn=function(){return !hintGone&&(HINT_URL||hintPreview()||state.sightings.length===0);};
+  window.syncHint=function(){hintEl.classList.toggle('on',hintOn()&&!!document.querySelector('#speciesGrid .tile.hint'));};
+  var _confirmLog=window.confirmLog;
+  window.confirmLog=function(){var before=state.sightings.length;_confirmLog.apply(this,arguments);if(state.sightings.length>before){hintGone=true;renderSpecies();}};
+  // tapping the MOCK-UP chip previews the first-time hint on this device (tap again to switch off)
+  var chip=document.getElementById('mockChip');
+  if(chip)chip.addEventListener('click',function(){var on=!hintPreview();try{localStorage.setItem('mk_hintPreview',on?'1':'0');}catch(e){}hintGone=false;renderSpecies();showToast(on?'\uD83D\uDC4B First-time hint preview ON':'First-time hint preview OFF','score',2200);});
+
+  /* ═════ v5 · 3. daily challenge: no competing button; the whole card opens the animal, its tile carries the 2x ribbon ═════ */
+  window.renderChallengeHero=function(){
+    var sp=getTodayChallenge(),done=isChallengeCompleted(),pc=photoCache[sp.id],el=document.getElementById('challengeHero');
+    var ph=pc?'<img class="challenge-photo" src="'+esc(pc.url)+'" alt="">':'<div style="width:100%;height:165px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:52px;">'+sp.emoji+'</div>';
+    el.innerHTML='<div class="challenge-hero'+(done?'':' tappable')+'"'+(done?'':' role="button" tabindex="0" aria-label="Open today\u2019s challenge: '+esc(sp.name)+'"')+'>'+ph+
+      '<div class="challenge-overlay"><div class="challenge-label">Daily Challenge'+(done?' \u2014 Completed!':'')+'</div><div class="challenge-name">'+sp.emoji+' '+esc(sp.name)+'</div>'+
+      '<div class="challenge-desc">'+(done?'Great work! Come back tomorrow.':'Spot this today for <strong>2x points!</strong> <span class="ch-go">Tap to log it \u203A</span>')+'</div></div>'+
+      '<div class="challenge-badge">'+(done?'\u2705 Done':'\u2B50 2x pts')+'</div></div>';
+    var h=el.querySelector('.tappable');
+    if(h){h.onclick=function(){openTilePop(sp.id);};h.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();openTilePop(sp.id);}};}
+  };
+  renderChallengeHero();
   renderSpecies();
 })();
 </script>
