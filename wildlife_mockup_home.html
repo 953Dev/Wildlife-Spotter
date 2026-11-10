@@ -2324,7 +2324,6 @@ body.light .tile.unspotted .t-img::after{background:radial-gradient(ellipse 70% 
 
 /* ═════════ MOCK-UP v5: clearer front page (hint, challenge ribbon, search tile) ═════════ */
 #mockChip{pointer-events:auto!important;cursor:pointer;padding:5px 12px!important;bottom:-12px!important}
-/* 2. one-time "tap an animal" hint */
 .tile-hint{display:none;position:relative;align-items:center;gap:7px;margin:-4px 0 14px 4px;padding:8px 14px;border-radius:999px;background:var(--accent);color:#fff;font-size:12.5px;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.35);animation:hintBob 2s ease-in-out infinite}
 .tile-hint.on{display:inline-flex}
 .tile-hint::after{content:'';position:absolute;left:34px;bottom:-6px;border:7px solid transparent;border-top-color:var(--accent);border-bottom:0}
@@ -2334,26 +2333,77 @@ body.light .tile.unspotted .t-img::after{background:radial-gradient(ellipse 70% 
 @keyframes hintPulseCard{0%{box-shadow:0 0 0 0 rgba(255,190,70,.85)}70%{box-shadow:0 0 0 12px rgba(255,190,70,0)}100%{box-shadow:0 0 0 0 rgba(255,190,70,0)}}
 @media (min-width:900px){.tile.hint .t-img{animation:none}.tile.hint{animation:hintPulseCard 1.8s ease-out infinite}.tile-hint::after{left:40px}}
 @media (prefers-reduced-motion:reduce){.tile-hint{animation:none}.tile.hint .t-img{animation:none;box-shadow:0 0 0 3px var(--accent)}.tile.hint{animation:none!important}}
-/* 3. daily challenge: the card is the doorway, the tile carries the "2x today" ribbon */
 .challenge-hero.tappable{cursor:pointer;transition:transform .12s}
 .challenge-hero.tappable:active{transform:scale(.985)}
 .ch-go{display:inline-block;margin-left:4px;color:#ffb84d;font-weight:800;white-space:nowrap}
 .t-ribbon{position:absolute;left:0;right:0;bottom:0;padding:2px 0 2px;background:linear-gradient(90deg,#c8820a,#e8a020);color:#fff;font-size:9px;font-weight:800;letter-spacing:.4px;text-align:center;text-transform:uppercase;line-height:1.3;text-shadow:0 1px 2px rgba(0,0,0,.35)}
 @media (min-width:900px){.t-ribbon{font-size:11px;padding:3px 0}}
-/* 4. "Can't see it? Search all wildlife" tile at the end of the grid */
 .tile-more{--rc:var(--accent)}
 .tile-more .t-img{background:rgba(255,255,255,.07);border:2px dashed var(--accent);box-shadow:none}
 .tile-more .t-emoji{font-size:28px}
 .tile-more .t-name{-webkit-line-clamp:3;color:#ffc766}
 body.light .tile-more .t-name{color:var(--accent)}
 @media (min-width:900px){.tile-more{border-style:dashed;border-color:var(--accent)}.tile-more .t-img{border:none;border-bottom:2px dashed var(--accent)}.tile-more .t-emoji{font-size:54px}.tile-more .t-name{padding-bottom:14px;color:var(--accent)}}
-
-/* ═════════ MOCK-UP v6: five-button bottom bar (Spot · Book · Map · Board · Me) ═════════ */
+/* ═════════ MOCK-UP v6: five-button bottom bar ═════════ */
 .me-pane{display:none}
 .me-pane.on{display:block;animation:fadeIn .25s ease}
 .bottom-nav button{font-size:11px!important;gap:3px!important}
 .nav-icon{font-size:21px!important}
 @media (min-width:900px){.bottom-nav{justify-content:center;gap:34px}.bottom-nav button{flex:0 0 96px!important}}
+
+/* ═════════ MOCK-UP v7: animal-group tiles first, individual animals one tap deeper ═════════ */
+#filterBtns{display:none!important}
+#catHub,#catHead{display:none}
+body[data-view=hub] #catHub{display:block;animation:viewIn .28s ease}
+body[data-view=cat] #catHead{display:grid;animation:viewIn .28s ease}
+body[data-view=cat] #speciesGrid,body[data-view=search] #speciesGrid{animation:viewIn .28s ease}
+@keyframes viewIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){body[data-view=hub] #catHub,body[data-view=cat] #catHead,#speciesGrid{animation:none!important}}
+body[data-view=hub] #gridRow,body[data-view=hub] #speciesGrid,body[data-view=hub] #inatCta{display:none!important}
+body[data-view=cat] #challengeHero,body[data-view=search] #challengeHero,
+body[data-view=cat] #todayLbl,body[data-view=search] #todayLbl,
+body[data-view=cat] #completionNudge,body[data-view=search] #completionNudge{display:none!important}
+.cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:0 0 14px}
+.cat-tile{position:relative;aspect-ratio:1/1;border-radius:22px;overflow:hidden;border:none;padding:0;cursor:pointer;background:#2a1d10;color:#fff;font-family:inherit;text-align:left;box-shadow:0 6px 18px rgba(0,0,0,.42);transition:transform .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent}
+.cat-tile:active{transform:scale(.97)}
+.cat-mosaic{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px}
+.cat-mosaic.m1{grid-template-columns:1fr;grid-template-rows:1fr}
+.cat-mosaic.m2{grid-template-rows:1fr}
+.cat-mosaic.m3>div:first-child{grid-column:1/3}
+.cat-mosaic>div{overflow:hidden;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:38px}
+.cat-mosaic>div.e{padding-bottom:26px}
+.cat-mosaic img{width:100%;height:100%;object-fit:cover;display:block}
+.cat-tint{position:absolute;inset:0;background:var(--cc);mix-blend-mode:soft-light;opacity:.6;pointer-events:none}
+.cat-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.86) 100%);pointer-events:none}
+.cat-info{position:absolute;left:0;right:0;bottom:0;padding:12px 14px 14px}
+.cat-name{font-size:19px;font-weight:800;line-height:1.15;text-shadow:0 1px 4px rgba(0,0,0,.5)}
+.cat-count{font-size:12px;font-weight:600;opacity:.92;margin-top:2px}
+.cat-bar{height:5px;border-radius:3px;background:rgba(255,255,255,.28);margin-top:8px;overflow:hidden}
+.cat-bar i{display:block;height:100%;background:var(--cc);border-radius:3px;box-shadow:0 0 6px var(--cc)}
+.cat-star{position:absolute;top:10px;right:10px;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:800;background:linear-gradient(90deg,#c8820a,#e8a020);color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.cat-tile.hint{animation:hintPulseCard 1.8s ease-out infinite}
+@media (prefers-reduced-motion:reduce){.cat-tile.hint{animation:none;box-shadow:0 0 0 3px var(--accent)}}
+.cat-search{display:block;width:100%;margin:2px 0 18px;padding:13px 14px;border-radius:16px;border:2px dashed var(--accent);background:rgba(255,255,255,.06);color:#ffc766;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer}
+body.light .cat-search{color:var(--accent)}
+#catHead{margin:0 0 12px;padding:10px 12px 12px;border-radius:16px;background:var(--surface);border:1px solid var(--border);grid-template-columns:auto 1fr;align-items:center;gap:8px 12px}
+#catBack{font-family:inherit;font-size:13px;font-weight:800;padding:9px 13px;border-radius:999px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer}
+.ch-name{font-size:19px;font-weight:800;line-height:1.15}
+.ch-sub{font-size:12px;color:var(--text-muted);margin-top:1px}
+.ch-bar{grid-column:1/-1;height:5px;border-radius:3px;background:rgba(255,255,255,.16);overflow:hidden}
+.ch-bar i{display:block;height:100%;width:0;background:var(--cc,var(--accent));border-radius:3px;transition:width .45s}
+body[data-view=hub] .challenge-photo{height:112px!important}
+body[data-view=hub] .challenge-hero{min-height:112px!important;margin-bottom:16px!important}
+body[data-view=hub] .challenge-overlay{padding:14px 14px 9px}
+body[data-view=hub] .challenge-name{font-size:17px}
+.cat-tile{aspect-ratio:1/.92}
+@media (min-width:900px){
+  body[data-view=hub] .challenge-photo{height:190px!important}
+  .cat-grid{grid-template-columns:repeat(3,1fr);gap:16px}
+  .cat-tile{aspect-ratio:16/10}
+  .cat-tile:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(0,0,0,.5)}
+  .cat-name{font-size:22px}.cat-count{font-size:13px}
+  .cat-mosaic>div{font-size:46px}
+}
 </style>
 <script>
 (function(){
@@ -2406,7 +2456,6 @@ body.light .tile-more .t-name{color:var(--accent)}
     g.onclick=function(e){var t=e.target.closest('.tile');if(!t)return;if(t.classList.contains('tile-more')){openInat();return;}if(e.target.closest('.t-log')){var id=t.dataset.id;openModal(id,id===getTodayChallenge().id);return;}openTilePop(t.dataset.id);};
   };
 
-  /* ═════ v5 · 2. one-time hint: pulse the first tile + one short caption, gone after the first logged sighting ═════ */
   var hintEl=document.createElement('div');hintEl.id='tileHint';hintEl.className='tile-hint';hintEl.innerHTML='<span aria-hidden="true">\uD83D\uDC46</span><span>Tap an animal you\u2019ve seen</span>';
   grid.parentNode.insertBefore(hintEl,grid);
   var HINT_URL=/[?&#]hint\b/i.test(location.search+location.hash), hintGone=false;
@@ -2415,14 +2464,12 @@ body.light .tile-more .t-name{color:var(--accent)}
   window.syncHint=function(){hintEl.classList.toggle('on',hintOn()&&!!document.querySelector('#speciesGrid .tile.hint'));};
   var _confirmLog=window.confirmLog;
   window.confirmLog=function(){var before=state.sightings.length;_confirmLog.apply(this,arguments);if(state.sightings.length>before){hintGone=true;renderSpecies();}};
-  // tapping the MOCK-UP chip previews the first-time hint on this device (tap again to switch off)
   var chip=document.getElementById('mockChip');
   if(chip)chip.addEventListener('click',function(){var on=!hintPreview();try{localStorage.setItem('mk_hintPreview',on?'1':'0');}catch(e){}hintGone=false;renderSpecies();showToast(on?'\uD83D\uDC4B First-time hint preview ON':'First-time hint preview OFF','score',2200);});
 
-  /* ═════ v5 · 3. daily challenge: no competing button; the whole card opens the animal, its tile carries the 2x ribbon ═════ */
   window.renderChallengeHero=function(){
     var sp=getTodayChallenge(),done=isChallengeCompleted(),pc=photoCache[sp.id],el=document.getElementById('challengeHero');
-    var ph=pc?'<img class="challenge-photo" src="'+esc(pc.url)+'" alt="">':'<div style="width:100%;height:165px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:52px;">'+sp.emoji+'</div>';
+    var ph=pc?'<img class="challenge-photo" src="'+esc(pc.url)+'" alt="">':'<div style="width:100%;height:112px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:52px;">'+sp.emoji+'</div>';
     el.innerHTML='<div class="challenge-hero'+(done?'':' tappable')+'"'+(done?'':' role="button" tabindex="0" aria-label="Open today\u2019s challenge: '+esc(sp.name)+'"')+'>'+ph+
       '<div class="challenge-overlay"><div class="challenge-label">Daily Challenge'+(done?' \u2014 Completed!':'')+'</div><div class="challenge-name">'+sp.emoji+' '+esc(sp.name)+'</div>'+
       '<div class="challenge-desc">'+(done?'Great work! Come back tomorrow.':'Spot this today for <strong>2x points!</strong> <span class="ch-go">Tap to log it \u203A</span>')+'</div></div>'+
@@ -2431,7 +2478,6 @@ body.light .tile-more .t-name{color:var(--accent)}
     if(h){h.onclick=function(){openTilePop(sp.id);};h.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();openTilePop(sp.id);}};}
   };
 
-  /* ═════ v6 · bottom bar: Journal, Stats and Badges now live together under "Me" ═════ */
   var ME_PANES=['journal','stats','badges'], NAV_ORDER=['spot','book','map','scoreboard','me'], mePane='journal';
   try{var sv=localStorage.getItem('mk_mePane');if(ME_PANES.indexOf(sv)>-1)mePane=sv;}catch(e){}
   function showMePane(p,animate){
@@ -2455,6 +2501,83 @@ body.light .tile-more .t-name{color:var(--accent)}
     window.scrollTo(0,0);
   };
   showMePane(mePane,false);
+
+  /* ═════ v7 · group tiles first; tap a group to open its animals ═════ */
+  row.id='gridRow';
+  if(hero.previousElementSibling)hero.previousElementSibling.id='todayLbl';
+  var CATS=[['bird','\uD83E\uDD85','Birds','#4aa3df'],['mammal','\uD83E\uDD98','Mammals','#e0913f'],['reptile','\uD83E\uDD8E','Reptiles','#6bbf59'],['amphibian','\uD83D\uDC38','Frogs','#2fb59a'],['marine','\uD83D\uDC1F','Marine','#3b8fd9'],['insect','\uD83E\uDD8B','Bugs','#b569d6'],['other','\uD83D\uDC1A','Other','#c9a24a']];
+
+  var hub=document.createElement('div');hub.id='catHub';
+  hub.innerHTML='<div class="sec-row"><span class="sec-label">Pick a group</span></div><div class="cat-grid" id="catGrid"></div><button type="button" class="cat-search" id="catSearch">\uD83D\uDD0E Can\u2019t find it? Search all wildlife</button>';
+  row.parentNode.insertBefore(hub,row);
+  var head=document.createElement('div');head.id='catHead';
+  head.innerHTML='<button type="button" id="catBack" aria-label="Back to all groups">\u2039 Groups</button><div><div class="ch-name" id="chName"></div><div class="ch-sub" id="chSub"></div></div><div class="ch-bar"><i id="chBar"></i></div>';
+  row.parentNode.insertBefore(head,row);
+  var gridLabel=row.querySelector('.sec-label'),catGridEl=document.getElementById('catGrid');
+
+  function catStats(){
+    var seen=new Set(state.sightings.map(function(s){return s.speciesId;})),chId=getTodayChallenge().id;
+    return CATS.map(function(c){
+      var list=SPECIES.filter(function(s){return s.cat===c[0];});
+      return {key:c[0],emoji:c[1],name:c[2],color:c[3],list:list,seen:list.filter(function(s){return seen.has(s.id);}).length,ch:list.some(function(s){return s.id===chId;})};
+    }).filter(function(c){return c.list.length;});
+  }
+  function mosaic(list){
+    var pick=list.slice(0,4),n=pick.length;
+    return '<div class="cat-mosaic m'+(n>3?4:n)+'">'+pick.map(function(sp){var pc=photoCache[sp.id];return '<div'+(pc?'':' class="e"')+'>'+(pc?'<img src="'+esc(pc.url)+'" alt="" loading="lazy">':sp.emoji)+'</div>';}).join('')+'</div>';
+  }
+  function renderHub(stats){
+    var hn=hintOn();
+    catGridEl.innerHTML=stats.map(function(c,i){
+      var pct=Math.round(100*c.seen/c.list.length);
+      return '<button type="button" class="cat-tile'+(hn&&i===0?' hint':'')+'" data-cat="'+c.key+'" style="--cc:'+c.color+'" aria-label="'+c.name+', '+c.seen+' of '+c.list.length+' spotted">'+
+        mosaic(c.list)+'<div class="cat-tint"></div><div class="cat-shade"></div>'+
+        (c.ch?'<span class="cat-star">\u2B50 2\u00D7 today</span>':'')+
+        '<div class="cat-info"><div class="cat-name">'+c.emoji+' '+c.name+'</div><div class="cat-count">'+c.seen+' of '+c.list.length+' spotted</div><div class="cat-bar"><i style="width:'+pct+'%"></i></div></div></button>';
+    }).join('');
+  }
+
+  function openCat(k){try{if(history.state&&history.state.cat)history.replaceState({cat:k},'');else history.pushState({cat:k},'');}catch(e){}setFilter(k);window.scrollTo(0,0);}
+  function closeCat(){if(history.state&&history.state.cat){history.back();}else{setFilter('all');window.scrollTo(0,0);}}
+  catGridEl.onclick=function(e){var t=e.target.closest('.cat-tile');if(t)openCat(t.dataset.cat);};
+  document.getElementById('catBack').onclick=closeCat;
+  document.getElementById('catSearch').onclick=function(){openInat();};
+  window.addEventListener('popstate',function(e){setFilter((e.state&&e.state.cat)||'all');window.scrollTo(0,0);});
+  // tapping the Spot button while you are already on Spot (inside a group) takes you back to the groups
+  document.querySelector('.bottom-nav button').addEventListener('click',function(){
+    if(document.getElementById('tab-spot').classList.contains('active')&&document.body.getAttribute('data-view')==='cat')closeCat();
+  },true);
+
+  // the hint now guides in two steps: pick a group, then tap an animal
+  window.syncHint=function(){
+    var v=document.body.getAttribute('data-view'),on=hintOn(),has=false;
+    if(v==='hub'){has=!!catGridEl.querySelector('.cat-tile.hint');if(hintEl.nextElementSibling!==catGridEl)catGridEl.parentNode.insertBefore(hintEl,catGridEl);hintEl.lastChild.textContent='Pick a group to begin';}
+    else if(v==='cat'){has=!!grid.querySelector('.tile.hint');if(hintEl.nextElementSibling!==grid)grid.parentNode.insertBefore(hintEl,grid);hintEl.lastChild.textContent='Tap an animal you\u2019ve seen';}
+    hintEl.classList.toggle('on',on&&has);
+  };
+
+  var _core=window.renderSpeciesCore;
+  window.renderSpeciesCore=function(){
+    var raw=document.getElementById('searchInput').value.trim();
+    var view=raw?'search':(currentFilter==='all'?'hub':'cat');
+    document.body.setAttribute('data-view',view);
+    if(view!=='cat'&&history.state&&history.state.cat){try{history.replaceState(null,'');}catch(e){}}
+    var stats=catStats();
+    if(view==='hub'){renderHub(stats);}
+    else{
+      _core();
+      if(view==='cat'){
+        var cs=stats.filter(function(c){return c.key===currentFilter;})[0]||{emoji:'',name:'',seen:0,list:[],color:'#c9a24a'};
+        document.getElementById('chName').textContent=cs.emoji+' '+cs.name;
+        document.getElementById('chSub').textContent=cs.seen+' of '+cs.list.length+' spotted';
+        head.style.setProperty('--cc',cs.color);
+        document.getElementById('chBar').style.width=(cs.list.length?Math.round(100*cs.seen/cs.list.length):0)+'%';
+        gridLabel.textContent='Rarest first';
+      }else{gridLabel.textContent='Results';}
+    }
+    syncHint();
+  };
+  renderSpecies();
   renderChallengeHero();
   renderSpecies();
 })();
