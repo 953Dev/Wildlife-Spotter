@@ -522,6 +522,116 @@ body.light .section-title{text-shadow:none;}
 .empty-state{text-align:center;padding:36px 16px;color:var(--text-muted);background:var(--panel);border:1px solid var(--border);border-radius:14px;}
 .empty-state .icon{font-size:40px;margin-bottom:10px;}
 .empty-state .btn{margin-top:12px;}
+/* ═════════ HOME PAGE: first-time hint, daily-challenge card, search tile ═════════ */
+.tile-hint{display:none;position:relative;align-items:center;gap:7px;margin:-4px 0 14px 4px;padding:8px 14px;border-radius:999px;background:var(--accent);color:#fff;font-size:12.5px;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.35);animation:hintBob 2s ease-in-out infinite}
+.tile-hint.on{display:inline-flex}
+.tile-hint::after{content:'';position:absolute;left:34px;bottom:-6px;border:7px solid transparent;border-top-color:var(--accent);border-bottom:0}
+@keyframes hintBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.tile.hint .t-img{animation:hintPulse 1.8s ease-out infinite}
+@keyframes hintPulse{0%{box-shadow:0 4px 14px rgba(0,0,0,.38),0 0 0 0 rgba(255,190,70,.85)}70%{box-shadow:0 4px 14px rgba(0,0,0,.38),0 0 0 11px rgba(255,190,70,0)}100%{box-shadow:0 4px 14px rgba(0,0,0,.38),0 0 0 0 rgba(255,190,70,0)}}
+@keyframes hintPulseCard{0%{box-shadow:0 0 0 0 rgba(255,190,70,.85)}70%{box-shadow:0 0 0 12px rgba(255,190,70,0)}100%{box-shadow:0 0 0 0 rgba(255,190,70,0)}}
+@media (min-width:900px){.tile.hint .t-img{animation:none}.tile.hint{animation:hintPulseCard 1.8s ease-out infinite}.tile-hint::after{left:40px}}
+@media (prefers-reduced-motion:reduce){.tile-hint{animation:none}.tile.hint .t-img{animation:none;box-shadow:0 0 0 3px var(--accent)}.tile.hint{animation:none!important}}
+.challenge-hero.tappable{cursor:pointer;transition:transform .12s}
+.challenge-hero.tappable:active{transform:scale(.985)}
+.ch-go{display:inline-block;margin-left:4px;color:#ffb84d;font-weight:800;white-space:nowrap}
+.t-ribbon{position:absolute;left:0;right:0;bottom:0;padding:2px 0 2px;background:linear-gradient(90deg,#c8820a,#e8a020);color:#fff;font-size:9px;font-weight:800;letter-spacing:.4px;text-align:center;text-transform:uppercase;line-height:1.3;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+@media (min-width:900px){.t-ribbon{font-size:11px;padding:3px 0}}
+.tile-more{--rc:var(--accent)}
+.tile-more .t-img{background:rgba(255,255,255,.07);border:2px dashed var(--accent);box-shadow:none}
+.tile-more .t-emoji{font-size:28px}
+.tile-more .t-name{-webkit-line-clamp:3;color:#ffc766}
+body.light .tile-more .t-name{color:var(--accent)}
+@media (min-width:900px){.tile-more{border-style:dashed;border-color:var(--accent)}.tile-more .t-img{border:none;border-bottom:2px dashed var(--accent)}.tile-more .t-emoji{font-size:54px}.tile-more .t-name{padding-bottom:14px;color:var(--accent)}}
+/* ═════════ five-button bottom bar ═════════ */
+.me-pane{display:none}
+.me-pane.on{display:block;animation:fadeIn .25s ease}
+.bottom-nav button{font-size:11px!important;gap:3px!important}
+.nav-icon{font-size:21px!important}
+@media (min-width:900px){.bottom-nav{justify-content:center;gap:34px}.bottom-nav button{flex:0 0 96px!important}}
+
+/* ═════════ animal-group tiles first, individual animals one tap deeper ═════════ */
+#catHub,#catHead{display:none}
+body[data-view=hub] #catHub{display:block;animation:viewIn .28s ease}
+body[data-view=cat] #catHead{display:grid;animation:viewIn .28s ease}
+body[data-view=cat] #speciesGrid,body[data-view=search] #speciesGrid{animation:viewIn .28s ease}
+@keyframes viewIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){body[data-view=hub] #catHub,body[data-view=cat] #catHead,#speciesGrid{animation:none!important}}
+body[data-view=hub] #gridRow,body[data-view=hub] #speciesGrid,body[data-view=hub] #inatCta{display:none!important}
+body[data-view=cat] #challengeHero,body[data-view=search] #challengeHero,
+body[data-view=cat] #todayLbl,body[data-view=search] #todayLbl,
+body[data-view=cat] #completionNudge,body[data-view=search] #completionNudge{display:none!important}
+.cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:0 0 14px}
+.cat-tile{position:relative;aspect-ratio:1/1;border-radius:22px;overflow:hidden;border:none;padding:0;cursor:pointer;background:#2a1d10;color:#fff;font-family:inherit;text-align:left;box-shadow:0 6px 18px rgba(0,0,0,.42);transition:transform .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent}
+.cat-tile:active{transform:scale(.97)}
+.cat-mosaic{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px}
+.cat-mosaic.m1{grid-template-columns:1fr;grid-template-rows:1fr}
+.cat-mosaic.m2{grid-template-rows:1fr}
+.cat-mosaic.m3>div:first-child{grid-column:1/3}
+.cat-mosaic>div{overflow:hidden;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:38px}
+.cat-mosaic>div.e{padding-bottom:26px}
+.cat-mosaic img{width:100%;height:100%;object-fit:cover;display:block}
+.cat-tint{position:absolute;inset:0;background:var(--cc);mix-blend-mode:soft-light;opacity:.6;pointer-events:none}
+.cat-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.86) 100%);pointer-events:none}
+.cat-info{position:absolute;left:0;right:0;bottom:0;padding:12px 14px 14px}
+.cat-name{font-size:19px;font-weight:800;line-height:1.15;text-shadow:0 1px 4px rgba(0,0,0,.5)}
+.cat-count{font-size:12px;font-weight:600;opacity:.92;margin-top:2px}
+.cat-bar{height:5px;border-radius:3px;background:rgba(255,255,255,.28);margin-top:8px;overflow:hidden}
+.cat-bar i{display:block;height:100%;background:var(--cc);border-radius:3px;box-shadow:0 0 6px var(--cc)}
+.cat-star{position:absolute;top:10px;right:10px;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:800;background:linear-gradient(90deg,#c8820a,#e8a020);color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.cat-tile.hint{animation:hintPulseCard 1.8s ease-out infinite}
+@media (prefers-reduced-motion:reduce){.cat-tile.hint{animation:none;box-shadow:0 0 0 3px var(--accent)}}
+.cat-search{display:block;width:100%;margin:2px 0 18px;padding:13px 14px;border-radius:16px;border:2px dashed var(--accent);background:rgba(255,255,255,.06);color:#ffc766;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer}
+body.light .cat-search{color:var(--accent)}
+#catHead{margin:0 0 12px;padding:10px 12px 12px;border-radius:16px;background:var(--surface);border:1px solid var(--border);grid-template-columns:auto 1fr;align-items:center;gap:8px 12px}
+#catBack{font-family:inherit;font-size:13px;font-weight:800;padding:9px 13px;border-radius:999px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer}
+.ch-name{font-size:19px;font-weight:800;line-height:1.15}
+.ch-sub{font-size:12px;color:var(--text-muted);margin-top:1px}
+.ch-bar{grid-column:1/-1;height:5px;border-radius:3px;background:rgba(255,255,255,.16);overflow:hidden}
+.ch-bar i{display:block;height:100%;width:0;background:var(--cc,var(--accent));border-radius:3px;transition:width .45s}
+body[data-view=hub] .challenge-photo{height:112px!important}
+body[data-view=hub] .challenge-hero{min-height:112px!important;margin-bottom:16px!important}
+body[data-view=hub] .challenge-overlay{padding:14px 14px 9px}
+body[data-view=hub] .challenge-name{font-size:17px}
+.cat-tile{aspect-ratio:1/.92}
+@media (min-width:900px){
+  body[data-view=hub] .challenge-photo{height:190px!important}
+  .cat-grid{grid-template-columns:repeat(3,1fr);gap:16px}
+  .cat-tile{aspect-ratio:16/10}
+  .cat-tile:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(0,0,0,.5)}
+  .cat-name{font-size:22px}.cat-count{font-size:13px}
+  .cat-mosaic>div{font-size:46px}
+}
+
+/* ═════════ rarity glow on the tiles (rarer = brighter, legendary pulses) + shine on the group tiles ═════════ */
+.tile.g-uncommon .t-img{box-shadow:0 4px 14px rgba(0,0,0,.38),0 0 9px rgba(33,150,243,.40)}
+.tile.g-rare .t-img{box-shadow:0 4px 14px rgba(0,0,0,.38),0 0 12px rgba(156,39,176,.55)}
+.tile.g-very-rare .t-img{box-shadow:0 4px 14px rgba(0,0,0,.38),0 0 16px rgba(255,152,0,.70)}
+.tile.g-legendary .t-img{animation:lgTile 2s ease-in-out infinite}
+@keyframes lgTile{0%,100%{box-shadow:0 4px 14px rgba(0,0,0,.38),0 0 12px rgba(244,67,54,.45)}50%{box-shadow:0 4px 14px rgba(0,0,0,.38),0 0 28px rgba(244,67,54,.90)}}
+.tile.hint.g-legendary .t-img{animation:hintPulse 1.8s ease-out infinite}
+@media (prefers-reduced-motion:reduce){.tile.g-legendary .t-img{animation:none;box-shadow:0 4px 14px rgba(0,0,0,.38),0 0 20px rgba(244,67,54,.75)}}
+@media (min-width:900px){
+  .tile.g-uncommon .t-img,.tile.g-rare .t-img,.tile.g-very-rare .t-img,.tile.g-legendary .t-img{box-shadow:none;animation:none}
+  .tile.g-uncommon{box-shadow:0 0 10px rgba(33,150,243,.35)}
+  .tile.g-rare{box-shadow:0 0 14px rgba(156,39,176,.50)}
+  .tile.g-very-rare{box-shadow:0 0 18px rgba(255,152,0,.65)}
+  .tile.g-legendary{animation:lgCard 2s ease-in-out infinite}
+  @keyframes lgCard{0%,100%{box-shadow:0 0 12px rgba(244,67,54,.40)}50%{box-shadow:0 0 28px rgba(244,67,54,.85)}}
+  .tile.hint.g-legendary{animation:hintPulseCard 1.8s ease-out infinite}
+  .tile.g-common:hover{box-shadow:0 10px 28px rgba(0,0,0,.35),0 0 14px rgba(76,175,80,.55)}
+  .tile.g-uncommon:hover{box-shadow:0 10px 28px rgba(0,0,0,.35),0 0 16px rgba(33,150,243,.60)}
+  .tile.g-rare:hover{box-shadow:0 10px 28px rgba(0,0,0,.35),0 0 20px rgba(156,39,176,.70)}
+  .tile.g-very-rare:hover{box-shadow:0 10px 28px rgba(0,0,0,.35),0 0 24px rgba(255,152,0,.80)}
+  .tile.g-legendary:hover{box-shadow:0 10px 28px rgba(0,0,0,.35),0 0 30px rgba(244,67,54,.90)}
+}
+@media (min-width:900px) and (prefers-reduced-motion:reduce){.tile.g-legendary{animation:none;box-shadow:0 0 22px rgba(244,67,54,.70)}}
+/* the same tilt-following shine, now on the big group tiles */
+.cat-tile::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:1;background:radial-gradient(ellipse 70% 50% at var(--gx,50%) var(--gy,30%),rgba(255,255,255,.20) 0%,transparent 70%)}
+body.light .cat-tile::after{background:radial-gradient(ellipse 70% 50% at var(--gx,50%) var(--gy,30%),rgba(255,255,255,.42) 0%,transparent 70%)}
+.cat-info,.cat-star{z-index:2}
+body.light .ch-bar{background:rgba(0,0,0,.12)}
+body.light .cat-search{background:rgba(255,255,255,.55)}
 </style>
 </head>
 <body>
@@ -585,23 +695,20 @@ body.light .section-title{text-shadow:none;}
       <input type="search" id="searchInput" placeholder="Search animals (e.g. possum)" aria-label="Search animals" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="search" oninput="onSearchInput()" onkeydown="if(event.key==='Enter')this.blur()">
       <button type="button" class="search-clear" id="searchClear" aria-label="Clear search" onclick="clearSearch(true)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
     </div>
-    <div class="filter-btns" id="filterBtns">
-      <button class="active" data-cat="all" onclick="setFilter('all')">All</button>
-      <button data-cat="bird" onclick="setFilter('bird')">🦅 Birds</button>
-      <button data-cat="mammal" onclick="setFilter('mammal')">🦘 Mammals</button>
-      <button data-cat="reptile" onclick="setFilter('reptile')">🦎 Reptiles</button>
-      <button data-cat="marine" onclick="setFilter('marine')">🐟 Marine</button>
-      <button data-cat="insect" onclick="setFilter('insect')">🦋 Bugs</button>
-      <button data-cat="amphibian" onclick="setFilter('amphibian')">🐸 Frogs</button>
-      <button data-cat="other" onclick="setFilter('other')">🐚 Other</button>
-    </div>
     <div class="search-meta" id="searchMeta"></div>
   </div>
-  <div class="sec-label">Today</div>
+  <div class="sec-label" id="todayLbl">Today</div>
   <div id="challengeHero"></div>
   <div id="completionNudge"></div>
   <div id="photoBanner"><div class="spin"></div><span id="bannerText">Loading wildlife photos…</span></div>
-  <div class="sec-label sec-all">All animals</div>
+  <div id="catHub">
+    <div class="sec-label sec-all">Pick a group</div>
+    <div class="cat-grid" id="catGrid"></div>
+    <button type="button" class="cat-search" id="catSearch">🔎 Can’t find it? Search all wildlife</button>
+  </div>
+  <div id="catHead"><button type="button" id="catBack" aria-label="Back to all groups">‹ Groups</button><div><div class="ch-name" id="chName"></div><div class="ch-sub" id="chSub"></div></div><div class="ch-bar"><i id="chBar"></i></div></div>
+  <div class="sec-label sec-all" id="gridRow">Rarest first</div>
+  <div class="tile-hint" id="tileHint"><span aria-hidden="true">👆</span><span>Tap an animal you’ve seen</span></div>
   <div class="species-grid compact" id="speciesGrid"></div>
   <div id="inatCta"></div>
 </div>
@@ -615,8 +722,6 @@ body.light .section-title{text-shadow:none;}
   <div class="bk-grid" id="bookGrid"></div>
   <div class="bk-foot" id="bookFoot"></div>
 </div>
-<div id="tab-journal" class="tab"><div id="journalList"></div></div>
-
 <div id="tab-map" class="tab">
   <div class="map-legend">
     <p class="section-title">📍 Your Sighting Locations</p>
@@ -630,23 +735,6 @@ body.light .section-title{text-shadow:none;}
   </div>
   <div id="map"></div>
   <div id="noGpsList" style="margin-top:9px;"></div>
-</div>
-
-<div id="tab-stats" class="tab">
-  <div class="ranger-card" id="rangerCard"></div>
-  <div id="streakStatCard"></div>
-  <div class="stats-grid">
-    <div class="stat-card"><h3>Total Score</h3><div class="big-num" id="statScore">0</div></div>
-    <div class="stat-card"><h3>Species Spotted</h3><div class="big-num" id="statCount">0</div><div id="statBonus" style="font-size:10px;color:var(--text-muted);margin-top:2px"></div></div>
-    <div class="stat-card"><h3>Total Sightings</h3><div class="big-num" id="statSightings">0</div></div>
-    <div class="stat-card"><h3>Rarest Find</h3><div class="big-num" id="statRarest" style="font-size:15px;margin-top:4px">—</div></div>
-  </div>
-  <div class="stat-card"><h3>Progress by Rarity</h3><div id="tierProgress" style="margin-top:8px;"></div></div>
-  <div class="stat-card" style="margin-top:8px;">
-    <h3>⚡ Dynamic Scoring</h3>
-    <p style="font-size:11px;color:var(--text-muted);margin-top:6px;line-height:1.7;">Each sighting reduces a species value by <strong>10%</strong> (floor 20%), recovering after <strong>30 days</strong>. Daily challenge = <strong>2x</strong>. Streak bonus: 3 days = <strong>1.25x</strong> · 7 days = <strong>1.5x</strong> · 30 days = <strong>2x</strong>.</p>
-  </div>
-  <div style="margin-top:11px;"><button class="danger-btn" onclick="confirmReset()">🗑️ Reset All Data</button></div>
 </div>
 
 <div id="tab-scoreboard" class="tab">
@@ -665,16 +753,36 @@ body.light .section-title{text-shadow:none;}
   <div id="groupPane" style="display:none"></div>
 </div>
 
-<div id="tab-badges" class="tab"><div class="badges-grid" id="badgesGrid"></div></div>
+<div id="tab-me" class="tab">
+  <div class="search-dock" id="meDock"><div class="seg" id="meSeg" style="margin-bottom:0"><button data-p="journal">📓 Journal</button><button data-p="stats">📊 Stats</button><button data-p="badges">🏅 Badges</button></div></div>
+<div id="tab-journal" class="me-pane"><div id="journalList"></div></div>
 
+<div id="tab-stats" class="me-pane">
+  <div class="ranger-card" id="rangerCard"></div>
+  <div id="streakStatCard"></div>
+  <div class="stats-grid">
+    <div class="stat-card"><h3>Total Score</h3><div class="big-num" id="statScore">0</div></div>
+    <div class="stat-card"><h3>Species Spotted</h3><div class="big-num" id="statCount">0</div><div id="statBonus" style="font-size:10px;color:var(--text-muted);margin-top:2px"></div></div>
+    <div class="stat-card"><h3>Total Sightings</h3><div class="big-num" id="statSightings">0</div></div>
+    <div class="stat-card"><h3>Rarest Find</h3><div class="big-num" id="statRarest" style="font-size:15px;margin-top:4px">—</div></div>
+  </div>
+  <div class="stat-card"><h3>Progress by Rarity</h3><div id="tierProgress" style="margin-top:8px;"></div></div>
+  <div class="stat-card" style="margin-top:8px;">
+    <h3>⚡ Dynamic Scoring</h3>
+    <p style="font-size:11px;color:var(--text-muted);margin-top:6px;line-height:1.7;">Each sighting reduces a species value by <strong>10%</strong> (floor 20%), recovering after <strong>30 days</strong>. Daily challenge = <strong>2x</strong>. Streak bonus: 3 days = <strong>1.25x</strong> · 7 days = <strong>1.5x</strong> · 30 days = <strong>2x</strong>.</p>
+  </div>
+  <div style="margin-top:11px;"><button class="danger-btn" onclick="confirmReset()">🗑️ Reset All Data</button></div>
+</div>
+
+<div id="tab-badges" class="me-pane"><div class="badges-grid" id="badgesGrid"></div></div>
+
+</div>
 <nav class="bottom-nav">
   <button class="active" onclick="showTab('spot')"><span class="nav-icon">🔭</span>Spot</button>
   <button onclick="showTab('book')"><span class="nav-icon">📖</span>Book</button>
-  <button onclick="showTab('journal')"><span class="nav-icon">📓</span>Journal</button>
   <button onclick="showTab('map')"><span class="nav-icon">🗺️</span>Map</button>
-  <button onclick="showTab('stats')"><span class="nav-icon">📊</span>Stats</button>
   <button onclick="showTab('scoreboard')"><span class="nav-icon">🏆</span>Board</button>
-  <button onclick="showTab('badges')"><span class="nav-icon">🏅</span>Badges</button>
+  <button onclick="showTab('me')"><span class="nav-icon">👤</span>Me</button>
 </nav>
 
 <div class="modal-overlay" id="modalOverlay">
@@ -820,59 +928,104 @@ const SPECIES = [
   {id:'kookaburra',name:'Laughing Kookaburra',sci:'Dacelo novaeguineae',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5,inatId:2413},
   {id:'galah',name:'Galah',sci:'Eolophus roseicapilla',cat:'bird',emoji:'🦜',rarity:'common',maxPts:5,inatId:144560},
   {id:'magpie',name:'Australian Magpie',sci:'Gymnorhina tibicen',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5,inatId:8575},
-  {id:'wagtail',name:'Willie Wagtail',sci:'Rhipidura leucophrys',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5,inatId:8143},
   {id:'lorikeet',name:'Rainbow Lorikeet',sci:'Trichoglossus moluccanus',cat:'bird',emoji:'🦜',rarity:'common',maxPts:5,inatId:980095},
+  {id:'wagtail',name:'Willie Wagtail',sci:'Rhipidura leucophrys',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5,inatId:8143},
+  {id:'magpielark',name:'Magpie-lark',sci:'Grallina cyanoleuca',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5},
+  {id:'noisy_miner',name:'Noisy Miner',sci:'Manorina melanocephala',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5},
+  {id:'nh_honeyeater',name:'New Holland Honeyeater',sci:'Phylidonyris novaehollandiae',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5},
+  {id:'red_wattlebird',name:'Red Wattlebird',sci:'Anthochaera carunculata',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5},
+  {id:'silvereye',name:'Silvereye',sci:'Zosterops lateralis',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5},
+  {id:'welcome_swallow',name:'Welcome Swallow',sci:'Hirundo neoxena',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5},
+  {id:'rosella',name:'Adelaide Rosella',sci:'Platycercus elegans',cat:'bird',emoji:'🦜',rarity:'common',maxPts:5,inatId:18921},
   {id:'corella',name:'Little Corella',sci:'Cacatua sanguinea',cat:'bird',emoji:'🦅',rarity:'common',maxPts:5,inatId:116838},
   {id:'raven',name:'Australian Raven',sci:'Corvus coronoides',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5,inatId:8040},
   {id:'ibis',name:'Australian White Ibis',sci:'Threskiornis molucca',cat:'bird',emoji:'🦢',rarity:'common',maxPts:5,inatId:3740},
+  {id:'silver_gull',name:'Silver Gull',sci:'Chroicocephalus novaehollandiae',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5},
+  {id:'masked_lapwing',name:'Masked Lapwing',sci:'Vanellus miles',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5},
+  {id:'wood_duck',name:'Australian Wood Duck',sci:'Chenonetta jubata',cat:'bird',emoji:'🦆',rarity:'common',maxPts:5},
+  {id:'black_duck',name:'Pacific Black Duck',sci:'Anas superciliosa',cat:'bird',emoji:'🦆',rarity:'common',maxPts:5},
+  {id:'black_swan',name:'Black Swan',sci:'Cygnus atratus',cat:'bird',emoji:'🦢',rarity:'common',maxPts:5},
   {id:'pelican',name:'Australian Pelican',sci:'Pelecanus conspicillatus',cat:'bird',emoji:'🦢',rarity:'common',maxPts:5,inatId:4326},
-  {id:'emu',name:'Emu',sci:'Dromaius novaehollandiae',cat:'bird',emoji:'🦤',rarity:'common',maxPts:5,inatId:20504},
+  {id:'feral_pigeon',name:'Feral Pigeon',sci:'Columba livia',cat:'bird',emoji:'🕊️',rarity:'common',maxPts:5,intro:true},
+  {id:'house_sparrow',name:'House Sparrow',sci:'Passer domesticus',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5,intro:true},
+  {id:'blackbird',name:'Common Blackbird',sci:'Turdus merula',cat:'bird',emoji:'🐦',rarity:'common',maxPts:5,intro:true},
   {id:'fairy_wren',name:'Superb Fairy-wren',sci:'Malurus cyaneus',cat:'bird',emoji:'🐦',rarity:'uncommon',maxPts:15,inatId:12065},
-  {id:'rosella',name:'Adelaide Rosella',sci:'Platycercus elegans',cat:'bird',emoji:'🦜',rarity:'uncommon',maxPts:15,inatId:18921},
-  {id:'emu_wren',name:'Southern Emu-wren',sci:'Stipiturus malachurus',cat:'bird',emoji:'🐦',rarity:'uncommon',maxPts:15,inatId:12133},
-  {id:'osprey',name:'Osprey',sci:'Pandion haliaetus',cat:'bird',emoji:'🦅',rarity:'uncommon',maxPts:15,inatId:116999},
   {id:'wedge_eagle',name:'Wedge-tailed Eagle',sci:'Aquila audax',cat:'bird',emoji:'🦅',rarity:'uncommon',maxPts:15,inatId:5080},
-  {id:'malleefowl',name:'Malleefowl',sci:'Leipoa ocellata',cat:'bird',emoji:'🐔',rarity:'uncommon',maxPts:15,inatId:2040},
+  {id:'emu',name:'Emu',sci:'Dromaius novaehollandiae',cat:'bird',emoji:'🦤',rarity:'uncommon',maxPts:15,inatId:20504},
+  {id:'nankeen_kestrel',name:'Nankeen Kestrel',sci:'Falco cenchroides',cat:'bird',emoji:'🦅',rarity:'uncommon',maxPts:15},
+  {id:'tawny_frogmouth',name:'Tawny Frogmouth',sci:'Podargus strigoides',cat:'bird',emoji:'🦉',rarity:'uncommon',maxPts:15},
+  {id:'boobook',name:'Southern Boobook',sci:'Ninox boobook',cat:'bird',emoji:'🦉',rarity:'uncommon',maxPts:15},
+  {id:'sc_cockatoo',name:'Sulphur-crested Cockatoo',sci:'Cacatua galerita',cat:'bird',emoji:'🦜',rarity:'uncommon',maxPts:15},
+  {id:'wf_heron',name:'White-faced Heron',sci:'Egretta novaehollandiae',cat:'bird',emoji:'🦢',rarity:'uncommon',maxPts:15},
+  {id:'r_spoonbill',name:'Royal Spoonbill',sci:'Platalea regia',cat:'bird',emoji:'🦢',rarity:'uncommon',maxPts:15},
+  {id:'bs_kite',name:'Black-shouldered Kite',sci:'Elanus axillaris',cat:'bird',emoji:'🦅',rarity:'uncommon',maxPts:15},
   {id:'reg_parrot',name:'Regent Parrot',sci:'Polytelis anthopeplus',cat:'bird',emoji:'🦜',rarity:'rare',maxPts:40,inatId:19251},
   {id:'hooded_plover',name:'Hooded Plover',sci:'Thinornis cucullatus',cat:'bird',emoji:'🐦',rarity:'rare',maxPts:40,inatId:144487},
+  {id:'osprey',name:'Osprey',sci:'Pandion haliaetus',cat:'bird',emoji:'🦅',rarity:'rare',maxPts:40,inatId:116999},
+  {id:'malleefowl',name:'Malleefowl',sci:'Leipoa ocellata',cat:'bird',emoji:'🐔',rarity:'rare',maxPts:40,inatId:2040},
+  {id:'emu_wren',name:'Southern Emu-wren',sci:'Stipiturus malachurus',cat:'bird',emoji:'🐦',rarity:'rare',maxPts:40,inatId:12133},
   {id:'brolga',name:'Brolga',sci:'Antigone rubicunda',cat:'bird',emoji:'🦢',rarity:'very-rare',maxPts:80,inatId:3774},
+  {id:'glossy_cockatoo',name:'Glossy Black-Cockatoo',sci:'Calyptorhynchus lathami',cat:'bird',emoji:'🦜',rarity:'very-rare',maxPts:80},
   {id:'wg_kanga',name:'Western Grey Kangaroo',sci:'Macropus fuliginosus',cat:'mammal',emoji:'🦘',rarity:'common',maxPts:5,inatId:42881},
-  {id:'eg_kanga',name:'Eastern Grey Kangaroo',sci:'Macropus giganteus',cat:'mammal',emoji:'🦘',rarity:'common',maxPts:5,inatId:42888},
-  {id:'red_kanga',name:'Red Kangaroo',sci:'Osphranter rufus',cat:'mammal',emoji:'🦘',rarity:'common',maxPts:5,inatId:1453439},
-  {id:'euro',name:'Euro / Wallaroo',sci:'Osphranter robustus',cat:'mammal',emoji:'🦘',rarity:'common',maxPts:5,inatId:1453438},
   {id:'possum',name:'Common Brushtail Possum',sci:'Trichosurus vulpecula',cat:'mammal',emoji:'🐾',rarity:'common',maxPts:5,inatId:42808},
   {id:'ringtail',name:'Common Ringtail Possum',sci:'Pseudocheirus peregrinus',cat:'mammal',emoji:'🐾',rarity:'common',maxPts:5,inatId:42775},
-  {id:'wombat',name:'Southern Hairy-nosed Wombat',sci:'Lasiorhinus latifrons',cat:'mammal',emoji:'🐻',rarity:'common',maxPts:5,inatId:43007},
+  {id:'eg_kanga',name:'Eastern Grey Kangaroo',sci:'Macropus giganteus',cat:'mammal',emoji:'🦘',rarity:'common',maxPts:5,inatId:42888},
+  {id:'red_kanga',name:'Red Kangaroo',sci:'Osphranter rufus',cat:'mammal',emoji:'🦘',rarity:'common',maxPts:5,inatId:1453439},
+  {id:'rabbit',name:'European Rabbit',sci:'Oryctolagus cuniculus',cat:'mammal',emoji:'🐇',rarity:'common',maxPts:5,intro:true},
+  {id:'fox',name:'Red Fox',sci:'Vulpes vulpes',cat:'mammal',emoji:'🦊',rarity:'common',maxPts:5,intro:true},
   {id:'koala',name:'Koala',sci:'Phascolarctos cinereus',cat:'mammal',emoji:'🐨',rarity:'uncommon',maxPts:15,inatId:42983},
   {id:'echidna',name:'Short-beaked Echidna',sci:'Tachyglossus aculeatus',cat:'mammal',emoji:'🦔',rarity:'uncommon',maxPts:15,inatId:43239},
   {id:'sugar_glider',name:'Sugar Glider',sci:'Petaurus breviceps',cat:'mammal',emoji:'🐿️',rarity:'uncommon',maxPts:15,inatId:40276},
   {id:'flying_fox',name:'Grey-headed Flying Fox',sci:'Pteropus poliocephalus',cat:'mammal',emoji:'🦇',rarity:'uncommon',maxPts:15,inatId:40905},
+  {id:'wombat',name:'Southern Hairy-nosed Wombat',sci:'Lasiorhinus latifrons',cat:'mammal',emoji:'🐻',rarity:'uncommon',maxPts:15,inatId:43007},
+  {id:'euro',name:'Euro / Wallaroo',sci:'Osphranter robustus',cat:'mammal',emoji:'🦘',rarity:'uncommon',maxPts:15,inatId:1453438},
   {id:'yf_wallaby',name:'Yellow-footed Rock-wallaby',sci:'Petrogale xanthopus',cat:'mammal',emoji:'🦘',rarity:'rare',maxPts:40,inatId:42931},
   {id:'dunnart',name:'Fat-tailed Dunnart',sci:'Sminthopsis crassicaudata',cat:'mammal',emoji:'🐭',rarity:'rare',maxPts:40,inatId:40205},
   {id:'bandicoot',name:'Southern Brown Bandicoot',sci:'Isoodon obesulus',cat:'mammal',emoji:'🐾',rarity:'rare',maxPts:40,inatId:43294},
   {id:'platypus',name:'Platypus',sci:'Ornithorhynchus anatinus',cat:'mammal',emoji:'🦆',rarity:'very-rare',maxPts:80,inatId:43236},
-  {id:'numbat',name:'Numbat',sci:'Myrmecobius fasciatus',cat:'mammal',emoji:'🐾',rarity:'very-rare',maxPts:80,inatId:40262},
-  {id:'little_penguin',name:'Little Penguin',sci:'Eudyptula minor',cat:'marine',emoji:'🐧',rarity:'uncommon',maxPts:15,inatId:3817},
-  {id:'dolphin',name:'Indo-Pacific Bottlenose Dolphin',sci:'Tursiops aduncus',cat:'marine',emoji:'🐬',rarity:'uncommon',maxPts:15,inatId:41481},
-  {id:'aus_sealion',name:'Australian Sea Lion',sci:'Neophoca cinerea',cat:'marine',emoji:'🦭',rarity:'rare',maxPts:40,inatId:41759},
-  {id:'weedy_sd',name:'Weedy Seadragon',sci:'Phyllopteryx taeniolatus',cat:'marine',emoji:'🐉',rarity:'rare',maxPts:40,inatId:54536},
-  {id:'cuttlefish',name:'Giant Cuttlefish',sci:'Ascarosepion apama',cat:'marine',emoji:'🦑',rarity:'rare',maxPts:40,inatId:1500730},
-  {id:'great_white',name:'Great White Shark',sci:'Carcharodon carcharias',cat:'marine',emoji:'🦈',rarity:'very-rare',maxPts:80,inatId:50873},
-  {id:'leafy_sd',name:'Leafy Seadragon',sci:'Phycodurus eques',cat:'marine',emoji:'🐉',rarity:'very-rare',maxPts:80,inatId:49105},
-  {id:'sr_whale',name:'Southern Right Whale',sci:'Eubalaena australis',cat:'marine',emoji:'🐋',rarity:'legendary',maxPts:200,inatId:41571},
   {id:'bluetongue',name:'Eastern Blue-tongue',sci:'Tiliqua scincoides',cat:'reptile',emoji:'🦎',rarity:'common',maxPts:5,inatId:37456},
   {id:'shingleback',name:'Shingleback Lizard',sci:'Tiliqua rugosa',cat:'reptile',emoji:'🦎',rarity:'common',maxPts:5,inatId:37460},
-  {id:'net_dragon',name:'Central Netted Dragon',sci:'Ctenophorus nuchalis',cat:'reptile',emoji:'🦎',rarity:'uncommon',maxPts:15,inatId:31230},
-  {id:'sand_goanna',name:'Sand Goanna',sci:'Varanus gouldii',cat:'reptile',emoji:'🦎',rarity:'uncommon',maxPts:15,inatId:39414},
+  {id:'marbled_gecko',name:'Marbled Gecko',sci:'Christinus marmoratus',cat:'reptile',emoji:'🦎',rarity:'common',maxPts:5},
+  {id:'garden_skink',name:'Garden Skink',sci:'Lampropholis guichenoti',cat:'reptile',emoji:'🦎',rarity:'common',maxPts:5},
   {id:'tiger_snake',name:'Tiger Snake',sci:'Notechis scutatus',cat:'reptile',emoji:'🐍',rarity:'uncommon',maxPts:15,inatId:35178},
+  {id:'sand_goanna',name:'Sand Goanna',sci:'Varanus gouldii',cat:'reptile',emoji:'🦎',rarity:'uncommon',maxPts:15,inatId:39414},
+  {id:'brown_snake',name:'Eastern Brown Snake',sci:'Pseudonaja textilis',cat:'reptile',emoji:'🐍',rarity:'uncommon',maxPts:15},
+  {id:'bearded_dragon',name:'Bearded Dragon',sci:'Pogona barbata',cat:'reptile',emoji:'🦎',rarity:'uncommon',maxPts:15},
   {id:'king_brown',name:'King Brown Snake',sci:'Pseudechis australis',cat:'reptile',emoji:'🐍',rarity:'rare',maxPts:40,inatId:35161},
   {id:'w_bluetongue',name:'Western Blue-tongue',sci:'Tiliqua occipitalis',cat:'reptile',emoji:'🦎',rarity:'rare',maxPts:40,inatId:37459},
-  {id:'ros_goanna',name:"Rosenberg's Goanna",sci:'Varanus rosenbergi',cat:'reptile',emoji:'🦎',rarity:'rare',maxPts:40,inatId:39416},
-  {id:'emp_moth',name:'Emperor Gum Moth',sci:'Opodiphthera eucalypti',cat:'insect',emoji:'🦋',rarity:'uncommon',maxPts:15,inatId:68135},
-  {id:'bogong',name:'Bogong Moth',sci:'Agrotis infusa',cat:'insect',emoji:'🦋',rarity:'uncommon',maxPts:15,inatId:200008},
   {id:'pobblebonk',name:'Pobblebonk Frog',sci:'Limnodynastes dumerilii',cat:'amphibian',emoji:'🐸',rarity:'common',maxPts:5,inatId:22038},
+  {id:'froglet',name:'Common Froglet',sci:'Crinia signifera',cat:'amphibian',emoji:'🐸',rarity:'common',maxPts:5},
+  {id:'tree_frog',name:'Brown Tree Frog',sci:'Rawlinsonia ewingii',alt:'Litoria ewingii',cat:'amphibian',emoji:'🐸',rarity:'common',maxPts:5,inatId:1633164,altId:23668},
+  {id:'marsh_frog',name:'Spotted Marsh Frog',sci:'Limnodynastes tasmaniensis',cat:'amphibian',emoji:'🐸',rarity:'uncommon',maxPts:15},
+  {id:'honey_bee',name:'European Honey Bee',sci:'Apis mellifera',cat:'insect',emoji:'🐝',rarity:'common',maxPts:5,intro:true},
+  {id:'common_brown',name:'Common Brown',sci:'Heteronympha merope',cat:'insect',emoji:'🦋',rarity:'common',maxPts:5},
+  {id:'ladybird',name:'Ladybird',sci:'Coccinellidae',cat:'insect',emoji:'🐞',rarity:'common',maxPts:5},
+  {id:'orb_weaver',name:'Garden Orb-weaver',sci:'Eriophora',cat:'insect',emoji:'🕷️',rarity:'common',maxPts:5},
+  {id:'huntsman',name:'Huntsman Spider',sci:'Sparassidae',cat:'insect',emoji:'🕷️',rarity:'common',maxPts:5},
+  {id:'bull_ant',name:'Bull Ant',sci:'Myrmecia',cat:'insect',emoji:'🐜',rarity:'common',maxPts:5},
+  {id:'cicada',name:'Cicada',sci:'Cicadidae',cat:'insect',emoji:'🦗',rarity:'common',maxPts:5},
+  {id:'cabbage_white',name:'Cabbage White',sci:'Pieris rapae',cat:'insect',emoji:'🦋',rarity:'common',maxPts:5,intro:true},
+  {id:'garden_snail',name:'Garden Snail',sci:'Cornu aspersum',cat:'insect',emoji:'🐌',rarity:'common',maxPts:5,intro:true},
+  {id:'slater',name:'Slater (Woodlouse)',sci:'Armadillidium vulgare',cat:'insect',emoji:'🐛',rarity:'common',maxPts:5,intro:true},
+  {id:'emp_moth',name:'Emperor Gum Moth',sci:'Opodiphthera eucalypti',cat:'insect',emoji:'🦋',rarity:'uncommon',maxPts:15,inatId:68135},
+  {id:'monarch',name:'Monarch',sci:'Danaus plexippus',cat:'insect',emoji:'🦋',rarity:'uncommon',maxPts:15},
+  {id:'blue_banded_bee',name:'Blue-banded Bee',sci:'Amegilla',cat:'insect',emoji:'🐝',rarity:'uncommon',maxPts:15},
+  {id:'mantis',name:'Praying Mantis',sci:'Orthodera ministralis',cat:'insect',emoji:'🦗',rarity:'uncommon',maxPts:15},
+  {id:'blue_crab',name:'Blue Swimmer Crab',sci:'Portunus armatus',cat:'marine',emoji:'🦀',rarity:'common',maxPts:5},
+  {id:'moon_jelly',name:'Moon Jellyfish',sci:'Aurelia aurita',cat:'marine',emoji:'🌊',rarity:'common',maxPts:5},
+  {id:'little_penguin',name:'Little Penguin',sci:'Eudyptula minor',cat:'marine',emoji:'🐧',rarity:'uncommon',maxPts:15,inatId:3817},
+  {id:'dolphin',name:'Indo-Pacific Bottlenose Dolphin',sci:'Tursiops aduncus',cat:'marine',emoji:'🐬',rarity:'uncommon',maxPts:15,inatId:41481},
+  {id:'fur_seal',name:'New Zealand Fur Seal',sci:'Arctocephalus forsteri',cat:'marine',emoji:'🦭',rarity:'uncommon',maxPts:15},
+  {id:'aus_sealion',name:'Australian Sea Lion',sci:'Neophoca cinerea',cat:'marine',emoji:'🦭',rarity:'rare',maxPts:40,inatId:41759},
+  {id:'cuttlefish',name:'Giant Cuttlefish',sci:'Ascarosepion apama',cat:'marine',emoji:'🦑',rarity:'rare',maxPts:40,inatId:1500730},
+  {id:'weedy_sd',name:'Weedy Seadragon',sci:'Phyllopteryx taeniolatus',cat:'marine',emoji:'🐉',rarity:'rare',maxPts:40,inatId:54536},
+  {id:'leafy_sd',name:'Leafy Seadragon',sci:'Phycodurus eques',cat:'marine',emoji:'🐉',rarity:'very-rare',maxPts:80,inatId:49105},
+  {id:'sr_whale',name:'Southern Right Whale',sci:'Eubalaena australis',cat:'marine',emoji:'🐋',rarity:'legendary',maxPts:200,inatId:41571},
+  {id:'great_white',name:'Great White Shark',sci:'Carcharodon carcharias',cat:'marine',emoji:'🦈',rarity:'legendary',maxPts:200,inatId:50873}
 ];
-const CHALLENGE_POOL = SPECIES.filter(s => s.rarity === 'common');
+const CHALLENGE_POOL = SPECIES.filter(s => s.rarity === 'common' && !s.intro);   // introduced pests (fox, rabbit, pigeon...) never become "today's challenge"
+/* animals that only carry a scientific name get their iNaturalist photo id looked up once, then remembered on this device */
+try { const idc = JSON.parse(localStorage.getItem('ws_inatIds') || '{}'); SPECIES.forEach(s => { if (!s.inatId && idc[s.sci] > 0) s.inatId = idc[s.sci]; }); } catch (e) {}
 const RARITY_ORDER = ['common','uncommon','rare','very-rare','legendary'];
 const RARITY_LABELS = {common:'Common',uncommon:'Uncommon',rare:'Rare','very-rare':'Very Rare',legendary:'Legendary'};
 const RARITY_COLORS = {common:'#4caf50',uncommon:'#2196f3',rare:'#9c27b0','very-rare':'#ff9800',legendary:'#f44336'};
@@ -892,7 +1045,7 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;
 // lower-case, strip accents, turn punctuation/hyphens into spaces so "fairy wren" finds "Fairy-wren"
 const norm = s => String(s == null ? '' : s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
 const CAT_WORDS = {bird:'bird birds', mammal:'mammal mammals', reptile:'reptile reptiles', marine:'marine sea ocean', insect:'insect insects bug', amphibian:'frog frogs amphibian', other:'other'};
-SPECIES.forEach(s => { s._hay = norm(s.name + ' ' + s.sci + ' ' + (CAT_WORDS[s.cat] || '') + ' ' + RARITY_LABELS[s.rarity]); });
+SPECIES.forEach(s => { s._hay = norm(s.name + ' ' + s.sci + ' ' + (s.alt || '') + ' ' + (CAT_WORDS[s.cat] || '') + ' ' + RARITY_LABELS[s.rarity]); });
 
 /* ═════════ RANGER LEVELS ═════════ */
 const RANGER_LEVELS = [
@@ -972,11 +1125,12 @@ function renderCompletionNudge() {
 function getTodayChallenge() { const d = new Date(); const seed = d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate(); return CHALLENGE_POOL[seed % CHALLENGE_POOL.length]; }
 function isChallengeCompleted() { const sp = getTodayChallenge(), t = new Date().toDateString(); return state.sightings.some(s => s.speciesId === sp.id && s.isChallenge && new Date(s.ts).toDateString() === t); }
 function renderChallengeHero() {
-  const sp = getTodayChallenge(), done = isChallengeCompleted(), pc = photoCache[sp.id];
-  const ph = pc ? `<img class="challenge-photo" src="${pc.url}" alt="">` : `<div style="width:100%;height:165px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:52px;">${sp.emoji}</div>`;
-  const el = document.getElementById('challengeHero');
-  el.innerHTML = `<div class="challenge-hero">${ph}<div class="challenge-overlay"><div class="challenge-label">Daily Challenge${done ? ' — Completed!' : ''}</div><div class="challenge-name">${sp.emoji} ${esc(sp.name)}</div><div class="challenge-desc">${done ? 'Great work! Come back tomorrow.' : 'Spot this today for <strong>2x points!</strong>'}</div>${done ? '' : '<button class="challenge-btn" id="chBtn">Log Sighting →</button>'}</div><div class="challenge-badge">${done ? '✅ Done' : '⭐ 2x pts'}</div></div>`;
-  const b = document.getElementById('chBtn'); if (b) b.onclick = () => openModal(sp.id, true);
+  const sp = getTodayChallenge(), done = isChallengeCompleted(), pc = photoCache[sp.id], el = document.getElementById('challengeHero');
+  const ph = pc ? `<img class="challenge-photo" src="${esc(pc.url)}" alt="">` : `<div style="width:100%;height:112px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:52px;">${sp.emoji}</div>`;
+  // the whole card is the doorway: tap it to open the animal, no separate button competing with the tiles
+  el.innerHTML = `<div class="challenge-hero${done ? '' : ' tappable'}"${done ? '' : ` role="button" tabindex="0" aria-label="Open today’s challenge: ${esc(sp.name)}"`}>${ph}<div class="challenge-overlay"><div class="challenge-label">Daily Challenge${done ? ' — Completed!' : ''}</div><div class="challenge-name">${sp.emoji} ${esc(sp.name)}</div><div class="challenge-desc">${done ? 'Great work! Come back tomorrow.' : 'Spot this today for <strong>2x points!</strong> <span class="ch-go">Tap to log it ›</span>'}</div></div><div class="challenge-badge">${done ? '✅ Done' : '⭐ 2x pts'}</div></div>`;
+  const h = el.querySelector('.tappable');
+  if (h) { h.onclick = () => openTilePop(sp.id); h.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openTilePop(sp.id); } }; }
 }
 
 /* ═════════ SOUND / THEME / BURST ═════════ */
@@ -1136,24 +1290,72 @@ function currentPts(id, isChallenge) {
 }
 function hasRecovered(id) { const n = state.globalSpotCounts[id] || 0; return n > 0 && getEffectiveN(id) < n; }
 /* ═════════ PHOTOS ═════════ */
-async function loadAllPhotos() {
-  const ids = [...new Set(SPECIES.map(s => s.inatId))], batches = [];
-  for (let i = 0; i < ids.length; i += 30) batches.push(ids.slice(i, i + 30));
-  let loaded = 0, failed = 0;
+const photoOf = t => { const d = t && t.default_photo; if (d && d.medium_url) return d; const tp = ((t && t.taxon_photos) || []).map(x => x && x.photo).find(p => p && (p.medium_url || p.url)); return tp || null; };
+const setPhoto = (sp, ph) => { photoCache[sp.id] = {url: ph.medium_url || ph.url, credit: String(ph.attribution || 'iNaturalist').substring(0, 70)}; };
+async function fetchTaxaPhotos(ids) {
+  const uniq = [...new Set(ids.filter(Boolean))], batches = [], moved = []; let reached = false;
+  for (let i = 0; i < uniq.length; i += 30) batches.push(uniq.slice(i, i + 30));
   for (const batch of batches) {
     try {
       const res = await fetch('https://api.inaturalist.org/v1/taxa/' + batch.join(','));
       if (!res.ok) throw new Error('http');
+      reached = true;
       const data = await res.json();
-      for (const taxon of (data.results || [])) for (const sp of SPECIES.filter(s => s.inatId === taxon.id)) {
-        if (taxon.default_photo && taxon.default_photo.medium_url) { photoCache[sp.id] = {url: taxon.default_photo.medium_url, credit: (taxon.default_photo.attribution || 'iNaturalist').substring(0, 70)}; loaded++; } else failed++;
+      for (const taxon of (data.results || [])) {
+        const ph = photoOf(taxon), sps = SPECIES.filter(s => s.inatId === taxon.id);
+        if (ph) sps.forEach(sp => setPhoto(sp, ph));
+        else if (taxon.current_synonymous_taxon_ids && taxon.current_synonymous_taxon_ids.length) moved.push({from: taxon.id, to: taxon.current_synonymous_taxon_ids[0]});   // retired taxon: follow it to the current one
       }
-    } catch (e) { failed += batch.length; }
-    document.getElementById('bannerText').textContent = 'Loading photos… ' + loaded + ' loaded';
+    } catch (e) {}
   }
+  if (moved.length) {
+    try {
+      const res = await fetch('https://api.inaturalist.org/v1/taxa/' + moved.map(m => m.to).join(','));
+      if (res.ok) for (const taxon of ((await res.json()).results || [])) {
+        const ph = photoOf(taxon); if (!ph) continue;
+        moved.filter(m => m.to === taxon.id).forEach(m => SPECIES.filter(s => s.inatId === m.from).forEach(sp => setPhoto(sp, ph)));
+      }
+    } catch (e) {}
+  }
+  return reached;
+}
+// finds the iNaturalist id for animals that only have a scientific name (exact name match only, so a wrong animal can never be picked)
+async function resolveInatIds(list, say) {
+  let cache = {}; try { cache = JSON.parse(localStorage.getItem('ws_inatIds') || '{}'); } catch (e) {}
+  let n = 0, netFails = 0;
+  for (const sp of list) {
+    if (netFails >= 4) break;                                   // offline: give up quickly
+    n++; say('Finding photos… ' + n + ' of ' + list.length);
+    for (const name of [sp.sci, sp.alt].filter(Boolean)) {
+      let hit = null;
+      for (let tries = 0; tries < 2 && !hit; tries++) {          // one retry if the first request hiccups
+        try {
+          const j = await inatFetch('https://api.inaturalist.org/v1/taxa?q=' + encodeURIComponent(name) + '&taxon_id=1&is_active=true&per_page=10', 9000);
+          hit = (j.results || []).find(r => norm(r.name) === norm(name)) || null; netFails = 0; break;
+        } catch (e) { netFails++; await new Promise(r => setTimeout(r, 400)); }
+      }
+      if (hit) { sp.inatId = hit.id; cache[sp.sci] = hit.id; break; }
+    }
+    await new Promise(r => setTimeout(r, 140));
+  }
+  try { localStorage.setItem('ws_inatIds', JSON.stringify(cache)); } catch (e) {}
+}
+async function loadAllPhotos() {
+  const say = t => { const b = document.getElementById('bannerText'); if (b) b.textContent = t; };
+  const online = await fetchTaxaPhotos(SPECIES.map(s => s.inatId));
+  if (Object.keys(photoCache).length) { renderSpecies(); renderChallengeHero(); }          // the first photos appear straight away
+  const todo = online ? SPECIES.filter(s => !s.inatId && !s.custom && s.sci) : [], CH = 12;
+  for (let i = 0; i < todo.length; i += CH) {                                              // new animals: find ids a dozen at a time, photos appear as they arrive
+    const chunk = todo.slice(i, i + CH);
+    await resolveInatIds(chunk, () => say('Finding photos… ' + Math.min(i + CH, todo.length) + ' of ' + todo.length));
+    await fetchTaxaPhotos(chunk.map(s => s.inatId));
+    renderSpecies(); renderChallengeHero();
+  }
+  const lost = online ? SPECIES.filter(s => !photoCache[s.id] && s.altId && !s.custom) : [];               // last resort: an older iNaturalist id for renamed animals
+  if (lost.length) { lost.forEach(s => { s.inatId = s.altId; }); await fetchTaxaPhotos(lost.map(s => s.altId)); }
   photosLoaded = true;
   const pb = document.getElementById('photoBanner');
-  if (loaded > 0) pb.style.display = 'none';
+  if (BASE().some(s => photoCache[s.id])) pb.style.display = 'none';
   else { pb.style.display = ''; pb.innerHTML = '⚠️ Could not load photos — check connection.'; }
   renderSpecies(); renderChallengeHero();
 }
@@ -1182,31 +1384,78 @@ function clearSearch(focus) {
   if (focus) inp.focus();
 }
 function renderSpecies() { renderSpeciesCore(); renderInatCta(); }
-function tileHtml(sp, isSeen, chId) {
+/* The front page has three views: "hub" (big animal-group tiles), "cat" (the animals in one group) and "search" (results across everything). */
+const HINT_URL = /[?&#]hint\b/i.test(location.search + location.hash);          // add ?hint to the address to preview the first-time hint
+const hintOn = () => state.sightings.length === 0 || HINT_URL;                     // the hint only shows until the first sighting is logged
+const CATS = [['bird','🦅','Birds','#4aa3df'], ['mammal','🦘','Mammals','#e0913f'], ['reptile','🦎','Reptiles','#6bbf59'], ['amphibian','🐸','Frogs','#2fb59a'], ['marine','🐟','Marine','#3b8fd9'], ['insect','🦋','Bugs','#b569d6'], ['other','🐚','Other','#c9a24a']];
+function tileHtml(sp, isSeen, chId, hint) {
   const pc = photoCache[sp.id], isCh = sp.id === chId;
-  return `<button class="tile${isSeen ? '' : ' unspotted'}" data-id="${esc(sp.id)}" style="--rc:${RARITY_COLORS[sp.rarity]}" aria-label="${esc(sp.name)}">` +
-    `<div class="t-img">${pc ? `<img src="${esc(pc.url)}" alt="" loading="lazy">` : `<div class="t-emoji">${sp.emoji}</div>`}${isSeen ? '<span class="t-chk">✓</span>' : ''}${isCh ? '<span class="t-star">⭐</span>' : ''}</div>` +
+  return `<button class="tile${isSeen ? '' : ' unspotted'}${hint ? ' hint' : ''} g-${sp.rarity}" data-id="${esc(sp.id)}" style="--rc:${RARITY_COLORS[sp.rarity]}" aria-label="${esc(sp.name)}">` +
+    `<div class="t-img">${pc ? `<img src="${esc(pc.url)}" alt="" loading="lazy">` : `<div class="t-emoji">${sp.emoji}</div>`}${isSeen ? '<span class="t-chk">✓</span>' : ''}${isCh ? '<span class="t-ribbon">2× today</span>' : ''}</div>` +
     `<div class="t-name">${esc(sp.name)}</div>` +
     `<div class="t-extra"><span class="rarity-badge r-${sp.rarity}">${RARITY_LABELS[sp.rarity]}</span><span class="pts-badge pts-${sp.rarity}">${currentPts(sp.id, isCh)} pts${isCh ? ' ⭐' : ''}</span></div>` +
     `<span class="t-log" role="button" tabindex="0">📍 Log sighting</span></button>`;
 }
+function catStats(spotted, chId) {
+  return CATS.map(c => { const list = SPECIES.filter(s => s.cat === c[0]); return {key: c[0], emoji: c[1], name: c[2], color: c[3], list, seen: list.filter(s => spotted.has(s.id)).length, ch: list.some(s => s.id === chId)}; }).filter(c => c.list.length);
+}
+function catMosaic(list) {
+  const pick = list.slice(0, 4), n = pick.length;
+  return `<div class="cat-mosaic m${n > 3 ? 4 : n}">` + pick.map(sp => { const pc = photoCache[sp.id]; return `<div${pc ? '' : ' class="e"'}>${pc ? `<img src="${esc(pc.url)}" alt="" loading="lazy">` : sp.emoji}</div>`; }).join('') + '</div>';
+}
+function renderHub(stats, hint) {
+  document.getElementById('catGrid').innerHTML = stats.map((c, i) => {
+    const pct = Math.round(100 * c.seen / c.list.length);
+    return `<button type="button" class="cat-tile${hint && i === 0 ? ' hint' : ''}" data-cat="${c.key}" style="--cc:${c.color}" aria-label="${c.name}, ${c.seen} of ${c.list.length} spotted">` +
+      catMosaic(c.list) + '<div class="cat-tint"></div><div class="cat-shade"></div>' +
+      (c.ch ? '<span class="cat-star">⭐ 2× today</span>' : '') +
+      `<div class="cat-info"><div class="cat-name">${c.emoji} ${c.name}</div><div class="cat-count">${c.seen} of ${c.list.length} spotted</div><div class="cat-bar"><i style="width:${pct}%"></i></div></div></button>`;
+  }).join('');
+}
+function syncHint(view, on) {
+  const el = document.getElementById('tileHint'); if (!el) return;
+  const target = document.getElementById(view === 'hub' ? 'catGrid' : 'speciesGrid');
+  if (el.nextElementSibling !== target) target.parentNode.insertBefore(el, target);
+  el.lastElementChild.textContent = view === 'hub' ? 'Pick a group to begin' : 'Tap an animal you’ve seen';
+  el.classList.toggle('on', !!on && (view === 'hub' || view === 'cat'));
+}
 function renderSpeciesCore() {
   const raw = document.getElementById('searchInput').value, tokens = norm(raw).split(' ').filter(Boolean), chId = getTodayChallenge().id;
+  const view = tokens.length ? 'search' : (currentFilter === 'all' ? 'hub' : 'cat');
+  document.body.setAttribute('data-view', view);
+  if (view !== 'cat' && history.state && history.state.cat) { try { history.replaceState(null, ''); } catch (e) {} }
+  const meta = document.getElementById('searchMeta'), spotted = new Set(state.sightings.map(s => s.speciesId)), stats = catStats(spotted, chId);
+  if (view === 'hub') { meta.classList.remove('on'); meta.textContent = ''; renderHub(stats, hintOn()); syncHint('hub', hintOn()); return; }
   let list = SPECIES;
   if (currentFilter !== 'all') list = list.filter(s => s.cat === currentFilter);
   if (tokens.length) list = list.filter(s => tokens.every(t => s._hay.includes(t)));
   list = [...list].sort((a, b) => RARITY_ORDER.indexOf(b.rarity) - RARITY_ORDER.indexOf(a.rarity));
-  const meta = document.getElementById('searchMeta');
   if (tokens.length) { meta.classList.add('on'); meta.textContent = list.length + (list.length === 1 ? ' animal' : ' animals') + ' match “' + raw.trim() + '”'; }
   else { meta.classList.remove('on'); meta.textContent = ''; }
+  if (view === 'cat') {
+    const cs = stats.filter(c => c.key === currentFilter)[0] || {emoji: '', name: '', seen: 0, list: [], color: '#c9a24a'};
+    document.getElementById('chName').textContent = cs.emoji + ' ' + cs.name;
+    document.getElementById('chSub').textContent = cs.seen + ' of ' + cs.list.length + ' spotted';
+    document.getElementById('catHead').style.setProperty('--cc', cs.color);
+    document.getElementById('chBar').style.width = (cs.list.length ? Math.round(100 * cs.seen / cs.list.length) : 0) + '%';
+  }
+  document.getElementById('gridRow').textContent = view === 'cat' ? 'Rarest first' : 'Results';
   const grid = document.getElementById('speciesGrid');
-  if (!list.length) { grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="icon">🔍</div><p>No animals match “${esc(raw.trim())}”</p><button class="btn btn-secondary" onclick="clearSearch(true)">Clear search</button></div>`; return; }
-  const spotted = new Set(state.sightings.map(s => s.speciesId));
-  grid.innerHTML = list.map(sp => tileHtml(sp, spotted.has(sp.id), chId)).join('');
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="icon">🔍</div><p>${tokens.length ? 'No animals match “' + esc(raw.trim()) + '”' : 'No animals in this group yet.'}</p>${tokens.length ? '<button class="btn btn-secondary" onclick="clearSearch(true)">Clear search</button>' : '<button class="btn btn-primary" onclick="openInat()">🔎 Search all wildlife</button>'}</div>`;
+    syncHint(view, false); return;
+  }
+  const hn = view === 'cat' && hintOn();
+  grid.innerHTML = list.map((sp, i) => tileHtml(sp, spotted.has(sp.id), chId, hn && i === 0)).join('') +
+    (view === 'cat' ? '<button class="tile tile-more" aria-label="Search all wildlife"><div class="t-img"><div class="t-emoji">🔎</div></div><div class="t-name">Can’t see it? Search all wildlife</div></button>' : '');
+  syncHint(view, hn);
 }
+function openCat(k) { try { if (history.state && history.state.cat) history.replaceState({cat: k}, ''); else history.pushState({cat: k}, ''); } catch (e) {} setFilter(k); window.scrollTo(0, 0); }
+function closeCat() { if (history.state && history.state.cat) history.back(); else { setFilter('all'); window.scrollTo(0, 0); } }
 // tapping a tile expands it into a larger card; on wide screens the "Log sighting" button on the card logs straight away
 function onGridClick(e) {
   const t = e.target.closest('.tile'); if (!t) return;
+  if (t.classList.contains('tile-more')) { openInat(); return; }
   const id = t.dataset.id;
   if (e.target.closest('.t-log')) { openModal(id, id === getTodayChallenge().id); return; }
   openTilePop(id);
@@ -1225,6 +1474,14 @@ function openTilePop(id) {
 function closeTilePop() { const pop = document.getElementById('tilePop'); pop.classList.remove('open'); pop.setAttribute('aria-hidden', 'true'); }
 function initHomeGrid() {
   document.getElementById('speciesGrid').addEventListener('click', onGridClick);
+  document.getElementById('catGrid').addEventListener('click', e => { const t = e.target.closest('.cat-tile'); if (t) openCat(t.dataset.cat); });
+  document.getElementById('catBack').addEventListener('click', closeCat);
+  document.getElementById('catSearch').addEventListener('click', () => openInat());
+  window.addEventListener('popstate', e => { setFilter((e.state && e.state.cat) || 'all'); window.scrollTo(0, 0); });   // the phone's back gesture leaves a group
+  document.querySelector('.bottom-nav button').addEventListener('click', () => {                                       // tapping Spot while inside a group goes back to the groups
+    if (document.getElementById('tab-spot').classList.contains('active') && document.body.getAttribute('data-view') === 'cat') closeCat();
+  }, true);
+  document.getElementById('meSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; showMePane(b.dataset.p); window.scrollTo(0, 0); });
   const pop = document.getElementById('tilePop');
   pop.addEventListener('click', e => { if (e.target === pop) closeTilePop(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && pop.classList.contains('open')) closeTilePop(); });
@@ -1694,8 +1951,7 @@ const FACTS = {
   koala: {t: 'Koalas have fingerprints almost identical to human ones. They evolved them independently, which is called convergent evolution.', s: 'ScienceInsights'},
   echidna: {t: 'Echidnas lay eggs! Only the echidnas and the platypus, five living species in all, are egg-laying mammals.', s: 'Wikipedia; WildlifeDB'},
   sugar_glider: {t: 'Sugar gliders glide on skin membranes stretching from their front legs to their back legs, much like flying squirrels, though the two aren’t closely related.', s: 'Wikipedia'},
-  platypus: {t: 'Underwater, a platypus shuts its eyes, ears and nostrils and finds prey with electric sensors in its bill that pick up the tiny signals from muscles.', s: 'University of Western Australia; Australian Platypus Conservancy'},
-  numbat: {t: 'The numbat is active by day and eats almost nothing but termites. It has been reintroduced to fenced reserves in South Australia.', s: 'Wikipedia'}
+  platypus: {t: 'Underwater, a platypus shuts its eyes, ears and nostrils and finds prey with electric sensors in its bill that pick up the tiny signals from muscles.', s: 'University of Western Australia; Australian Platypus Conservancy'}
 };
 function factOf(sp) { return (sp && !sp.custom && FACTS[sp.id]) || null; }
 function revealFact(sp) { const f = factOf(sp); return f ? `<div class="reveal-fact"><b>💡 Did you know?</b>${esc(f.t)}</div>` : ''; }
@@ -2184,13 +2440,23 @@ function checkBadges() {
 function renderBadges() { document.getElementById('badgesGrid').innerHTML = BADGES.map(b => `<div class="badge-card${unlockedBadges.has(b.id) ? ' unlocked' : ''}"><div class="badge-icon">${b.icon}</div><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`).join(''); }
 
 /* ═════════ NAVIGATION / RESET ═════════ */
-const TAB_ORDER = ['spot','book','journal','map','stats','scoreboard','badges'];
-function showTab(name) {
+const ME_PANES = ['journal', 'stats', 'badges'], NAV_ORDER = ['spot', 'book', 'map', 'scoreboard', 'me'];
+let mePane = 'journal';
+try { const sv = localStorage.getItem('ws_mePane'); if (ME_PANES.indexOf(sv) > -1) mePane = sv; } catch (e) {}
+function showMePane(p, animate) {
+  mePane = p; try { localStorage.setItem('ws_mePane', p); } catch (e) {}
+  ME_PANES.forEach(n => document.getElementById('tab-' + n).classList.toggle('on', n === p));
+  document.querySelectorAll('#meSeg button').forEach(b => b.classList.toggle('on', b.dataset.p === p));
+  if (p === 'journal') renderJournal(); else if (p === 'stats') renderStats(animate !== false); else renderBadges();
+}
+function showTab(name) {   // 'journal', 'stats' and 'badges' still work: they open the Me tab on that page
+  let pane = null;
+  if (ME_PANES.indexOf(name) > -1) { pane = name; name = 'me'; }
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
-  document.querySelectorAll('.bottom-nav button')[TAB_ORDER.indexOf(name)].classList.add('active');
-  if (name === 'book') renderBook(); if (name === 'scoreboard') onBoardTab(); if (name === 'map') renderMap(); if (name === 'stats') renderStats(true); if (name === 'journal') renderJournal(); if (name === 'badges') renderBadges();
+  document.querySelectorAll('.bottom-nav button')[NAV_ORDER.indexOf(name)].classList.add('active');
+  if (name === 'book') renderBook(); if (name === 'scoreboard') onBoardTab(); if (name === 'map') renderMap(); if (name === 'me') showMePane(pane || mePane);
   window.scrollTo(0, 0);
 }
 function renderAll() { renderSpecies(); renderJournal(); renderStats(false); renderBadges(); renderBook(); renderChallengeHero(); renderStreakBadge(false); renderRangerLevel(); renderCompletionNudge(); document.getElementById('headerScore').textContent = '⭐ ' + state.totalScore + ' pts'; }
@@ -2279,7 +2545,7 @@ async function afterFirebaseConnected() {
 // keeps the pinned search bar sitting exactly under the header, whatever the phone's notch/header height is
 function syncHeaderH() { const h = document.querySelector('.app-header'); if (h) document.documentElement.style.setProperty('--hdr-h', h.offsetHeight + 'px'); }
 (function init() {
-  loadLocalState(); loadCustom(); loadGroups(); applyThemeClasses(); initHomeGrid(); renderAll(); renderBoardTabs(); renderGlobalVis(); updateUsernameDisplay(); initSky(); initBookNav();
+  loadLocalState(); loadCustom(); loadGroups(); applyThemeClasses(); initHomeGrid(); showMePane(mePane, false); renderAll(); renderBoardTabs(); renderGlobalVis(); updateUsernameDisplay(); initSky(); initBookNav();
   syncHeaderH(); window.addEventListener('resize', syncHeaderH); window.addEventListener('orientationchange', syncHeaderH);
   if (window.ResizeObserver) new ResizeObserver(syncHeaderH).observe(document.querySelector('.app-header'));
   waitForFirebase(onFirebaseReady); loadAllPhotos(); initGyroGloss();
